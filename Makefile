@@ -20,13 +20,8 @@ RM = rm -rf
 
 SRCS = 	 lib/ft_sarrprint.c \
 lib/ft_sarrsize.c lib/ft_chrpos.c \
-lib/ft_bzero.c \
 lib/ft_sarradd.c \
 lib/ft_sarrfree.c \
-lib/ft_strdup.c \
-lib/ft_substr.c \
-lib/ft_strlcpy.c \
-lib/ft_split.c \
 src/minishell.c \
 src/resource/parser.c \
 src/resource/init_learning.c \
