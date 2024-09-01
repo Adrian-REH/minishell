@@ -168,4 +168,6 @@ int ft_sarrsize(char **arr);
 
 void ft_free_p2(char **p2);
 
+char **do_exec(char *line, char **env);
+
 #endif
