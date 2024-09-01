@@ -94,6 +94,7 @@ typedef struct s_exec
     t_file file;                               // fichero Salida para esta ejecucion
     int status;                                // Estado de las ejecuciones
     t_cmd *cmd;                                // Aqui se guardan los comandos a ejecutarse en cada funcion
+    struct s_handler *handler;                 // Aqui se guardan los comandos a ejecutarse en cada funcion
     int *(*func[20][20])(struct s_exec *rule); // Son funciones de ejecucion, personalizadas
     // struct s_exec *next;
 } t_exec;
@@ -152,7 +153,6 @@ void tactions_init(t_automata *a);
 void operators_init(t_handler *a);
 void tactions_handler_init(t_handler *a);
 int ft_strlen(const char *str);
-// size_t ft_strlcpy(char *dest, char *src, size_t size);
 char *ft_strdup(const char *str);
 char *ft_substr(const char *str, unsigned int start, size_t len);
 void ft_bzero(void *str, size_t n);

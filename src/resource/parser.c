@@ -55,7 +55,7 @@ int *handler_execute(t_handler *a)
 
     while (a->info->tokens[++i])
     {
-
+        a->exec[i].handler = a;
         a->exec[i].priority = 0;
         a->exec[i].file.input = a->fd[0];
         a->exec[i].file.output = a->fd[1];
