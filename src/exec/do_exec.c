@@ -70,10 +70,9 @@ char **do_exec(char *line, char **env)
     else
     {
         cmd = get_path(command[0], env);
-        free(command[0]);
-        command[0] = cmd;
+        if (strcmp(cmd, command[0]) != 0)
+            command[0] = (free(command[0]), cmd);
         return (command);
     }
-
     return (NULL);
 }

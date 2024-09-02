@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Usuario/Desktop/Proyectos/c/minishell/src",
-      "program": "c:/Users/Usuario/Desktop/Proyectos/c/minishell/src/build/Debug/outDebug",
+      "cwd": "c:/Users/Usuario/Desktop/Proyectos/c/minishell/minishell/src/exec",
+      "program": "c:/Users/Usuario/Desktop/Proyectos/c/minishell/minishell/src/exec/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

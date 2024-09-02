@@ -14,7 +14,7 @@ void ft_conf_and(t_handler *s, int i)
     }
     else
         s->exec[i].state[0] = 1;
-    if (s->info->oid != (s->info->id + 1))
+    if (s->info->oid != (s->info->id + 1)) // todo el estado dle anterior comando
     {
         s->exec[i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
         pipe(s->exec[i].cmd[1].fd_aux);
@@ -22,6 +22,7 @@ void ft_conf_and(t_handler *s, int i)
     else
         s->exec[i].state[1] = 1;
     s->info->oid = s->info->id + 1;
+
     s->exec[i].func[0][0] = ft_exec_and;
     // s->exec[i].func[0][1] = ft_finish;
 }

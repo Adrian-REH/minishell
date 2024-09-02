@@ -39,7 +39,8 @@ src/exec/ft_exec_or.c\
 src/exec/ft_exec_cmd.c\
 src/exec/ft_exec_greater.c\
 src/exec/do_exec.c\
-src/exec/ft_exec_heredoc.c
+src/exec/ft_exec_heredoc.c\
+src/exec/ft_exec_pipe.c
 		
 
 LIBFT = lib/libft/libft.a

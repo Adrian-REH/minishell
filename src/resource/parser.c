@@ -37,7 +37,9 @@ int evaluate(t_automata *a)
     a->i = -1;
     while (++a->i < ft_strlen(a->str))
     {
+        printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
         a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
+        printf("new state: %d\n", a->state);
         if (a->fsa[a->state])
         {
             a->fsa[a->state](a, a->data);
@@ -61,6 +63,17 @@ int *handler_execute(t_handler *a)
         a->exec[i].priority = 0;
         a->exec[i].file.input = a->fd[0];
         a->exec[i].file.output = a->fd[1];
+        if (i == 0)
+        {
+            close(a->exec[0].file.input);
+            a->exec[0].file.input = 0;
+        }
+        if (i == (a->info->len_tokens))
+        {
+            printf("%d\n", a->info->len_tokens);
+            close(a->exec[i].file.output);
+            a->exec[i].file.output = 1;
+        }
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         // Verifico si es un cmd o un file o si es un idstr
         if (a->state[2] == NOT_OPERATOR)
@@ -125,6 +138,7 @@ int *execute_command(t_handler *s)
     exec = s->exec;
     while (++i < s->info->len_tokens)
     {
+
         if (exec[i].func[0][0])
             exec[i].state = exec[i].func[0][0](&(exec[i]));
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
