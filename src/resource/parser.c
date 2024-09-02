@@ -37,9 +37,7 @@ int evaluate(t_automata *a)
     a->i = -1;
     while (++a->i < ft_strlen(a->str))
     {
-        printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
         a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
-        printf("new state: %d\n", a->state);
         if (a->fsa[a->state])
             a->fsa[a->state](a, a->data);
         if (a->fta[a->ostate][a->state])
@@ -60,7 +58,6 @@ int *handler_execute(t_handler *a)
         a->exec[i].file.input = a->fd[0];
         a->exec[i].file.output = a->fd[1];
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
-        printf("[0]%d|[1]%d|[2]%d\n", a->state[0], a->state[1], a->state[2]);
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
             a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
         a->state[0] = a->state[1];
@@ -91,6 +88,7 @@ void init_handler(t_handler *s, void *data)
     s->state[0] = 0;
     s->state[1] = 0;
     s->state[2] = 0;
+    s->info->last_cmd = "";
 }
 
 /**
@@ -109,18 +107,18 @@ int *execute_command(t_handler *s)
     t_exec *exec;
 
     i = -1;
+    exec = s->exec;
+    exec[0].state = ft_calloc(sizeof(int), 2);
+    exec[0].state[0] = 0;
+    exec[0].state[1] = 0;
     while (++i < s->info->len_tokens)
     {
-        exec = s->exec;
-        exec[i].state = malloc(sizeof(int) * 2);
-        exec[i].state[0] = 0;
-        exec[i].state[1] = 0;
-
         if (exec[i].func[0][0])
             exec[i].state = exec[i].func[0][0](&(exec[i]));
-        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
-            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
-        free(exec[i].state);
+        //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
+        //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
+        if (exec[i + 1].cmd)
+            exec[i + 1].state = exec[i].state;
     }
 
     return (exec[i].state);
@@ -150,6 +148,7 @@ t_handler *ft_parser(t_handler *s)
     if (info.len_tokens == 0)
         return s;
     init_handler(s, &info);
+
     handler_execute(s);
     execute_command(s);
     return (s);

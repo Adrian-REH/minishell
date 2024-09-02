@@ -166,8 +166,8 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][1][NOT_OPERATOR] = ft_conf_less;
     a->fta[NOT_OPERATOR][2][NOT_OPERATOR] = ft_conf_heredoc;
     a->fta[NOT_OPERATOR][3][NOT_OPERATOR] = ft_conf_append;
-    a->fta[NOT_OPERATOR][4][NOT_OPERATOR] = ft_conf_and;
+    a->fta[NOT_OPERATOR][4][NOT_OPERATOR] = ft_conf_amper;
     a->fta[NOT_OPERATOR][5][NOT_OPERATOR] = ft_conf_pipe;
     a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_or;
-    a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_amper;
+    a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_and;
 }

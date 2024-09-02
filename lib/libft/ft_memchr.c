@@ -12,16 +12,10 @@
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+void *ft_memchr(const void *s, int c, size_t n)
 {
 	while (n-- > 0)
 		if (*(unsigned char *)s++ == (unsigned char)c)
 			return ((void *)(s - 1));
 	return (0);
 }
-
-/* int	main()
-{
-	for (int i = -200; i < 0; i++)
-		printf("%s\n", ft_memchr("Adrian Ramon", -100, 10));
-} */

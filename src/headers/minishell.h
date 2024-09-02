@@ -23,6 +23,7 @@ typedef struct s_data
     char **tokens;
     int is_op;
     int len_tokens;
+    char *last_cmd;
 } t_data;
 
 typedef struct s_file
@@ -74,6 +75,7 @@ typedef struct s_automata
 typedef struct s_cmd
 {
     char **cmd;    // El el desgloce del comando
+    char *line;    // El el desgloce del comando
     int fd_aux[2]; // fd auxiliar para redireccionar
     pid_t pid;     // El pid del proceso
     int status;    // El estado de ejecucion del comando
@@ -89,6 +91,7 @@ typedef struct s_exec
     // Propiedades para ejecutar
     // cuantos comandos va a ejecutarse y como
     int priority;
+    int finish;
     int *state;
     int op;
     t_file file;                               // fichero Salida para esta ejecucion

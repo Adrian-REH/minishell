@@ -35,6 +35,7 @@ src/fsm/ft_conf_append.c \
 src/fsm/ft_conf_amper.c \
 src/exec/ft_exec_and.c \
 src/exec/ft_exec_or.c\
+src/exec/do_exec.c\
 src/exec/ft_exec_heredoc.c
 		
 
