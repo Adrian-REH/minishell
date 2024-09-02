@@ -2,7 +2,6 @@
 
 void ft_conf_heredoc(t_handler *s, int i)
 {
-    printf("(<< | %s)\n", s->info->tokens[i]);
     s->exec[i].cmd = malloc(sizeof(t_cmd));
     s->exec[i].op = HEREDOC;
     s->exec[i].cmd->cmd = ft_split(s->info->tokens[i - 1], ' ');

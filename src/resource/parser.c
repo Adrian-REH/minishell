@@ -39,9 +39,13 @@ int evaluate(t_automata *a)
     {
         a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
         if (a->fsa[a->state])
+        {
             a->fsa[a->state](a, a->data);
+        }
         if (a->fta[a->ostate][a->state])
+        {
             a->fta[a->ostate][a->state](a, a->data);
+        }
         a->ostate = a->state;
     }
     return (a->state);
@@ -58,8 +62,18 @@ int *handler_execute(t_handler *a)
         a->exec[i].file.input = a->fd[0];
         a->exec[i].file.output = a->fd[1];
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
+        // Verifico si es un cmd o un file o si es un idstr
+        if (a->state[2] == NOT_OPERATOR)
+        {
+            if (do_exec(a->info->tokens[i], a->env) && (1 == a->info->len_tokens))
+                a->state[2] = UNIQ_COMMAND;
+        }
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
+        {
+
+            printf("%d|%d|%d\n", a->state[0], a->state[1], a->state[2]);
             a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
+        }
         a->state[0] = a->state[1];
         a->state[1] = a->state[2];
     }
@@ -88,7 +102,8 @@ void init_handler(t_handler *s, void *data)
     s->state[0] = 0;
     s->state[1] = 0;
     s->state[2] = 0;
-    s->info->last_cmd = "";
+    s->info->id = 0;
+    s->info->oid = 30;
 }
 
 /**
@@ -108,17 +123,14 @@ int *execute_command(t_handler *s)
 
     i = -1;
     exec = s->exec;
-    exec[0].state = ft_calloc(sizeof(int), 2);
-    exec[0].state[0] = 0;
-    exec[0].state[1] = 0;
     while (++i < s->info->len_tokens)
     {
         if (exec[i].func[0][0])
             exec[i].state = exec[i].func[0][0](&(exec[i]));
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
-        if (exec[i + 1].cmd)
-            exec[i + 1].state = exec[i].state;
+        // if (exec[i + 1].cmd)
+        //    exec[i + 1].state = exec[i].state;
     }
 
     return (exec[i].state);
@@ -133,7 +145,6 @@ t_handler *ft_parser(t_handler *s)
 
     ft_bzero(&a, sizeof(t_automata));
     ft_bzero(&info, sizeof(t_data));
-
     automata_init(&a, &info);
     a.str = s->line;
     finalstate = evaluate(&a);

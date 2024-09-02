@@ -12,6 +12,7 @@ static int *ft_exec(t_exec *e)
 	}
 	else if (e->cmd->pid == 0)
 	{
+
 		/* 		if (dup2(e->file.fd_aux[WRITE], STDOUT_FILENO) == -1)
 					(close(e->file.fd_aux[WRITE]), close(e->file.fd_aux[READ]), ft_print_error("dup2", 1, NULL));
 				if (dup2(e->file.fd_aux[READ], STDIN_FILENO) == -1)
@@ -20,6 +21,7 @@ static int *ft_exec(t_exec *e)
 		 */
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1) // Se supone que ya se verifico que el path esta bien y que se puede ejecutar directamente.
 			ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
+		exit(0);
 	}
 	//(close(e->file.fd_aux[WRITE]), close(e->file.fd_aux[READ]));
 	return NULL;
@@ -27,19 +29,18 @@ static int *ft_exec(t_exec *e)
 
 int *ft_exec_and(t_exec *e)
 {
-	printf("sadasdsad\n");
-	if (e->state[0] == 0 && e->cmd[0].cmd)
+	if (e->state[0] == 0)
 	{
 		ft_exec(e);
 		waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		e->state[0] = WEXITSTATUS(e->cmd->status);
+		e->state[0] = WEXITSTATUS(e->cmd[0].pid);
 	}
-	printf("sadasdsad\n");
-	if (e->state[0] == 0 && e->cmd[1].cmd)
+	e->cmd++;
+	if (e->state[1] == 0)
 	{
 		ft_exec(e);
-		waitpid(e->cmd[1].pid, &e->cmd[1].status, 0);
-		e->state[1] = WEXITSTATUS(e->cmd[1].status);
+		waitpid(e->cmd->pid, &e->cmd->status, 0);
+		e->state[1] = WEXITSTATUS(e->cmd->status);
 	}
 	if (e->state[1] != 0 || e->state[1] != 0)
 		e->status = -1;

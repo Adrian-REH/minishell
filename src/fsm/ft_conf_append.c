@@ -2,7 +2,6 @@
 
 void ft_conf_append(t_handler *s, int i)
 {
-    printf(">>%s\n", s->info->tokens[i]);
     s->exec[i].cmd = malloc(sizeof(t_cmd) * (3));
     s->exec[i].op = APPEND;
     s->exec[i].cmd[0].cmd = ft_split(s->info->tokens[i - 1], ' ');

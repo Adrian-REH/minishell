@@ -33,8 +33,11 @@ src/fsm/ft_conf_heredoc.c \
 src/fsm/ft_conf_greater.c \
 src/fsm/ft_conf_append.c \
 src/fsm/ft_conf_amper.c \
+src/fsm/ft_conf_cmd.c \
 src/exec/ft_exec_and.c \
 src/exec/ft_exec_or.c\
+src/exec/ft_exec_cmd.c\
+src/exec/ft_exec_greater.c\
 src/exec/do_exec.c\
 src/exec/ft_exec_heredoc.c
 		

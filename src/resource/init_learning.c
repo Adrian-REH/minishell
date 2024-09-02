@@ -48,8 +48,8 @@ void alphabet_init(t_automata *a)
  **/
 void operators_init(t_handler *a)
 {
-    a->operators = ft_sarradd(a->operators, "<");
     a->operators = ft_sarradd(a->operators, ">");
+    a->operators = ft_sarradd(a->operators, "<");
     a->operators = ft_sarradd(a->operators, "<<");
     a->operators = ft_sarradd(a->operators, ">>");
     a->operators = ft_sarradd(a->operators, "&");
@@ -142,12 +142,14 @@ void tactions_init(t_automata *a)
     a->fta[HEREDOC][NOT_OPERATOR] = get_token;
     a->fta[GREATER][NOT_OPERATOR] = get_token;
     a->fta[APPEND][NOT_OPERATOR] = get_token;
+
     a->fta[OPEN_PAREN][SPACES_BTW] = get_token;
     a->fta[OPEN_PAREN][SPACES_NW] = get_token;
     a->fta[OPEN_PAREN][NOT_OPERATOR] = get_token;
     a->fta[SPACES_BTW][OPEN_PAREN] = get_token;
     a->fta[SPACES_NW][OPEN_PAREN] = get_token;
     a->fta[NOT_OPERATOR][OPEN_PAREN] = get_token;
+
     a->fta[CLOSE_PAREN][SPACES_BTW] = get_token;
     a->fta[CLOSE_PAREN][SPACES_NW] = get_token;
     a->fta[CLOSE_PAREN][NOT_OPERATOR] = get_token;
@@ -162,6 +164,7 @@ void tactions_init(t_automata *a)
  **/
 void tactions_handler_init(t_handler *a)
 {
+    a->fta[EMPTY][EMPTY][UNIQ_COMMAND] = ft_conf_cmd;
     a->fta[NOT_OPERATOR][0][NOT_OPERATOR] = ft_conf_greater;
     a->fta[NOT_OPERATOR][1][NOT_OPERATOR] = ft_conf_less;
     a->fta[NOT_OPERATOR][2][NOT_OPERATOR] = ft_conf_heredoc;

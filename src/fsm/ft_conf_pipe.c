@@ -2,7 +2,6 @@
 
 void ft_conf_pipe(t_handler *s, int i)
 {
-    printf("\n|%s\n", s->info->tokens[i]);
     s->exec[i].cmd = malloc(sizeof(t_cmd) * (3));
     s->exec[i].op = PIPE;
     s->exec[i].cmd[0].cmd = ft_split(s->info->tokens[i - 1], ' ');

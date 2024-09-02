@@ -18,12 +18,14 @@
 #include "../../lib/libft/libft.h"
 #define READ 0
 #define WRITE 1
+
 typedef struct s_data
 {
     char **tokens;
     int is_op;
     int len_tokens;
-    char *last_cmd;
+    int id;
+    int oid;
 } t_data;
 
 typedef struct s_file
@@ -53,8 +55,7 @@ typedef enum e_states
     NOT_OPERATOR, // 14 Not operators
     OPEN_PAREN,   // 15 Open parenthesis (()
     CLOSE_PAREN,  // 16 Close parenthesis ())
-    OPEN_BRACE,   // 17 Open brace ({)
-    CLOSE_BRACE   // 18 Close brace (})
+    UNIQ_COMMAND,
 } t_states;
 typedef struct s_automata
 {
@@ -129,6 +130,8 @@ int *ft_exec_wildcard(t_exec *e);
 int *ft_exec_or(t_exec *e);
 int *ft_exec_and(t_exec *e);
 int *ft_exec_heredoc(t_exec *e);
+int *ft_exec_cmd(t_exec *e);
+int *ft_exec_greater(t_exec *e);
 
 t_handler *ft_parser(t_handler *s);
 t_handler *ft_execute(t_handler *s);
@@ -141,6 +144,7 @@ void ft_conf_heredoc(t_handler *s, int i);
 void ft_conf_pipe(t_handler *s, int i);
 void ft_conf_greater(t_handler *s, int i);
 void ft_conf_less(t_handler *s, int i);
+void ft_conf_cmd(t_handler *s, int i);
 
 void alphabet_init(t_automata *a);
 void errors_init(t_automata *a);
