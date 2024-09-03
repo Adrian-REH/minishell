@@ -129,15 +129,19 @@ typedef struct s_handler
 int *ft_pipe(t_exec *e);
 int *ft_builtins(t_exec *e);
 int *ft_signals(t_exec *e);
-int *ft_exec_pipe(t_exec *e);
 int *ft_exec_wildcard(t_exec *e);
-int *ft_exec_or(t_exec *e);
+
 int *ft_exec_and(t_exec *e);
+int *ft_exec_pipe(t_exec *e);
+int *ft_exec_or(t_exec *e);
 int *ft_exec_heredoc(t_exec *e);
 int *ft_exec_cmd(t_exec *e);
 int *ft_exec_greater(t_exec *e);
 int *ft_exec_amper(t_exec *e);
+int *ft_exec_append(t_exec *e);
+int *ft_exec_less(t_exec *e);
 void init_handler(t_handler *s);
+
 t_handler *ft_parser(t_handler *s);
 t_handler *ft_execute(t_handler *s);
 t_handler *ft_error(t_handler *s);
