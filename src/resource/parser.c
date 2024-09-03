@@ -26,6 +26,8 @@ int idstr(char *alphabet[], char *str)
     int i;
 
     i = -1;
+    if (strcmp(str, " ") == 0)
+        return (0);
     while (alphabet[++i])
         if (strcmp(alphabet[i], str) == 0)
             return (i);
@@ -56,37 +58,38 @@ int evaluate(t_automata *a)
 int *handler_execute(t_handler *a)
 {
     int i = -1;
+    int j = 0;
 
+    a->exec[0].file.input = 0;
     while (a->info->tokens[++i])
     {
         a->exec[i].handler = a;
-        a->exec[i].priority = 0;
-        a->exec[i].file.input = a->fd[0];
-        a->exec[i].file.output = a->fd[1];
-        if (i == 0)
+        if (strcmp("(", a->info->tokens[i]) == 0)
+            a->exec[i].priority = 1;
+        else if (strcmp(")", a->info->tokens[i]) == 0)
+            a->exec[i].priority = 0;
+        if (a->exec[i].priority)
+            a->exec[i].priority = 1;
+        if (i < (a->info->len_tokens) && i > 0)
         {
-            close(a->exec[0].file.input);
-            a->exec[0].file.input = 0;
-        }
-        if (i == (a->info->len_tokens))
-        {
-            printf("%d\n", a->info->len_tokens);
-            close(a->exec[i].file.output);
-            a->exec[i].file.output = 1;
+            a->exec[i].file.input = a->fd[0];
+            a->exec[i].file.output = a->fd[1];
         }
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         // Verifico si es un cmd o un file o si es un idstr
+
         if (a->state[2] == NOT_OPERATOR)
         {
-            if (do_exec(a->info->tokens[i], a->env) && (1 == a->info->len_tokens))
+            if (do_exec(a->info->tokens[i], a->env))
                 a->state[2] = UNIQ_COMMAND;
         }
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
         {
-
-            printf("%d|%d|%d\n", a->state[0], a->state[1], a->state[2]);
+            printf("%d|%d|%d|%d\n", a->state[0], a->state[1], a->state[2], i);
+            j++;
             a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
         }
+        a->len_exec = j;
         a->state[0] = a->state[1];
         a->state[1] = a->state[2];
     }
@@ -132,15 +135,21 @@ void init_handler(t_handler *s, void *data)
 int *execute_command(t_handler *s)
 {
     int i;
+    int j;
     t_exec *exec;
 
     i = -1;
+    j = 0;
     exec = s->exec;
-    while (++i < s->info->len_tokens)
+    while (++i < s->info->len_tokens && j < s->len_exec)
     {
-
+        if (j == s->len_exec - 1)
+            exec[i].file.output = 1;
         if (exec[i].func[0][0])
-            exec[i].state = exec[i].func[0][0](&(exec[i]));
+        {
+            j++;
+            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+        }
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
         // if (exec[i + 1].cmd)
@@ -165,6 +174,7 @@ t_handler *ft_parser(t_handler *s)
     if (finalstate > a.errorlen)
         get_token(&a, &info);
     s->code = finalstate;
+    info.tokens = ft_sarradd(info.tokens, " ");
 
     // LIMPIAR PARA QUE NO TENGAN ESPACIOS NI ADELANTE NI ATRAS
     ft_sarrprint(info.tokens);

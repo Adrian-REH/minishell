@@ -118,6 +118,7 @@ typedef struct s_handler
     char **env;                                             // Esto debe ser el entorno
     char *line;                                             // Esto debe ser la linea de comando
     struct s_exec *exec;                                    // Esto debe llenarse con la estructura de ejecucion
+    int len_exec;                                           // Esto debe llenarse con la estructura de ejecucion
     struct s_handler *(*seg)(struct s_handler *rule);       // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;

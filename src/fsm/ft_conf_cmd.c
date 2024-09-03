@@ -2,7 +2,6 @@
 
 void ft_conf_cmd(t_handler *s, int i)
 {
-    i++;
     s->exec[i].state = ft_calloc(sizeof(int), 2);
     s->exec[i].state[0] = 0;
     s->exec[i].state[1] = 0;
