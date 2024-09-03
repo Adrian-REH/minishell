@@ -1,9 +1,9 @@
 #include "../headers/minishell.h"
 
-void ft_conf_and(t_handler *s, int i)
+void ft_conf_or(t_handler *s, int i)
 {
     s->exec[i].cmd = ft_calloc(sizeof(t_cmd), 3);
-    s->exec[i].op = AND;
+    s->exec[i].op = OR;
     s->exec[i].state = ft_calloc(sizeof(int), 2);
     s->exec[i].state[0] = 0;
     s->exec[i].state[1] = 0;

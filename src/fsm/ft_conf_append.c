@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-void ft_conf_greater(t_handler *s, int i)
+void ft_conf_append(t_handler *s, int i)
 {
     printf("ft_conf_greater\n");
     s->exec[i].handler = s;
@@ -19,7 +19,7 @@ void ft_conf_greater(t_handler *s, int i)
         s->exec[i].state[0] = 1;
     if (s->info->oid != (i + 1))
     {
-        s->exec[i].file.output = open(s->info->tokens[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+        s->exec[i].file.input = open(s->info->tokens[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
         s->exec[i].state[1] = 0;
     }
     else
