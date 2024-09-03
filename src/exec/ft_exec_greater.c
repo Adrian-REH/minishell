@@ -33,7 +33,6 @@ int *ft_exec_greater(t_exec *e)
 {
     if (e->state[0] == 0)
     {
-        printf("asd\n");
         ft_exec(e);
         waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
         e->state[0] = WEXITSTATUS(e->cmd[0].pid);

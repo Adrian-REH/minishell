@@ -80,6 +80,7 @@ typedef struct s_cmd
     int fd_aux[2]; // fd auxiliar para redireccionar
     pid_t pid;     // El pid del proceso
     int status;    // El estado de ejecucion del comando
+    int towait;    // espero o no espero
                    // struct s_cmd *next; // d
 } t_cmd;
 /*
@@ -110,16 +111,19 @@ luego debo programar la matriz de estados.
 
 typedef struct s_handler
 {
-    char **operators; //
-    t_data *info;     //
-    int state[3];
+    char **operators;                                       //
+    pid_t *pids;                                            //
+    t_cmd *w_cmd;                                           //
+    int n_pids;                                             //
+    t_data *info;                                           //
+    int state[3];                                           //
     int fd[2];                                              // este es el fd padre que se va a usar para cada el hijo
     int code;                                               // Aqui debe tener el codigo de error
     char **env;                                             // Esto debe ser el entorno
     char *line;                                             // Esto debe ser la linea de comando
     struct s_exec *exec;                                    // Esto debe llenarse con la estructura de ejecucion
     int len_exec;                                           // Esto debe llenarse con la estructura de ejecucion
-    struct s_handler *(*seg)(struct s_handler *rule);       // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
+    struct s_handler *(*seg[5])(struct s_handler *rule);    // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
 
@@ -133,10 +137,13 @@ int *ft_exec_and(t_exec *e);
 int *ft_exec_heredoc(t_exec *e);
 int *ft_exec_cmd(t_exec *e);
 int *ft_exec_greater(t_exec *e);
-
+int *ft_exec_amper(t_exec *e);
+void init_handler(t_handler *s);
 t_handler *ft_parser(t_handler *s);
 t_handler *ft_execute(t_handler *s);
 t_handler *ft_error(t_handler *s);
+t_handler *ft_clear(t_handler *s);
+
 void ft_conf_or(t_handler *s, int i);
 void ft_conf_and(t_handler *s, int i);
 void ft_conf_amper(t_handler *s, int i);

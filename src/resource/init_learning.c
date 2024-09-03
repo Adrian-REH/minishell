@@ -48,6 +48,7 @@ void alphabet_init(t_automata *a)
  **/
 void operators_init(t_handler *a)
 {
+    // a->operators = ft_sarradd(NULL, " ");
     a->operators = ft_sarradd(a->operators, ">");
     a->operators = ft_sarradd(a->operators, "<");
     a->operators = ft_sarradd(a->operators, "<<");
@@ -128,6 +129,8 @@ void tactions_init(t_automata *a)
     a->fta[SPACES_BTW][LESS] = get_token;
     a->fta[SPACES_BTW][GREATER] = get_token;
     a->fta[SPACES_BTW][AMPER] = get_token;
+    a->fta[AMPER][SPACES_NW] = get_token;
+    a->fta[AMPER][NOT_OPERATOR] = get_token;
     a->fta[PIPE][SPACES_NW] = get_token;
     a->fta[OR][SPACES_NW] = get_token;
     a->fta[AND][SPACES_NW] = get_token;
@@ -170,6 +173,7 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][2][NOT_OPERATOR] = ft_conf_heredoc;
     a->fta[NOT_OPERATOR][3][NOT_OPERATOR] = ft_conf_append;
     a->fta[NOT_OPERATOR][4][NOT_OPERATOR] = ft_conf_amper;
+    a->fta[NOT_OPERATOR][4][EMPTY] = ft_conf_amper;
     a->fta[NOT_OPERATOR][5][NOT_OPERATOR] = ft_conf_pipe;
     a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_pipe; // TODO
     a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_or;
