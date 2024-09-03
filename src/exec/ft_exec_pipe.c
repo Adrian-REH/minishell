@@ -72,9 +72,7 @@ static int *ft_exec_give_cmd(t_exec *e)
         close(e->file.input);
     if (e->file.output != 1)
         close(e->file.output);
-    /*     (close(e->file.output), close(e->cmd->fd_aux[WRITE]));
-        e->file.input = e->cmd->fd_aux[READ];
-     */
+
     return NULL;
 }
 

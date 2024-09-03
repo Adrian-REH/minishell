@@ -129,23 +129,24 @@ void tactions_init(t_automata *a)
     a->fta[SPACES_BTW][LESS] = get_token;
     a->fta[SPACES_BTW][GREATER] = get_token;
     a->fta[SPACES_BTW][AMPER] = get_token;
+
     a->fta[AMPER][SPACES_NW] = get_token;
     a->fta[AMPER][NOT_OPERATOR] = get_token;
     a->fta[PIPE][SPACES_NW] = get_token;
-    a->fta[OR][SPACES_NW] = get_token;
-    a->fta[AND][SPACES_NW] = get_token;
-    a->fta[LESS][SPACES_NW] = get_token;
-    a->fta[HEREDOC][SPACES_NW] = get_token;
-    a->fta[GREATER][SPACES_NW] = get_token;
-    a->fta[APPEND][SPACES_NW] = get_token;
     a->fta[PIPE][NOT_OPERATOR] = get_token;
+    a->fta[OR][SPACES_NW] = get_token;
     a->fta[OR][NOT_OPERATOR] = get_token;
+    a->fta[AND][SPACES_NW] = get_token;
     a->fta[AND][NOT_OPERATOR] = get_token;
+    a->fta[LESS][SPACES_NW] = get_token;
     a->fta[LESS][NOT_OPERATOR] = get_token;
+    a->fta[HEREDOC][SPACES_NW] = get_token;
     a->fta[HEREDOC][NOT_OPERATOR] = get_token;
+    a->fta[GREATER][SPACES_NW] = get_token;
     a->fta[GREATER][NOT_OPERATOR] = get_token;
+    a->fta[APPEND][SPACES_NW] = get_token;
     a->fta[APPEND][NOT_OPERATOR] = get_token;
-
+    // Parentesis
     a->fta[OPEN_PAREN][SPACES_BTW] = get_token;
     a->fta[OPEN_PAREN][SPACES_NW] = get_token;
     a->fta[OPEN_PAREN][NOT_OPERATOR] = get_token;
@@ -162,8 +163,8 @@ void tactions_init(t_automata *a)
 }
 
 /**
- *	Transition actions, they trigger when going
- * 		from one state to another.
+ *	Transision de configuracion,
+ *		Se encarga de llamar a la funcion correspondiente, acorde al estado actual.
  **/
 void tactions_handler_init(t_handler *a)
 {
@@ -173,9 +174,15 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][2][NOT_OPERATOR] = ft_conf_heredoc;
     a->fta[NOT_OPERATOR][3][NOT_OPERATOR] = ft_conf_append;
     a->fta[NOT_OPERATOR][4][NOT_OPERATOR] = ft_conf_amper;
-    a->fta[NOT_OPERATOR][4][EMPTY] = ft_conf_amper;
     a->fta[NOT_OPERATOR][5][NOT_OPERATOR] = ft_conf_pipe;
-    a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_pipe; // TODO
     a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_or;
     a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_and;
+    // a->fta[NOT_OPERATOR][1][EMPTY] = ft_error_handler;
+    // a->fta[NOT_OPERATOR][1][EMPTY] = ft_error_handler;
+    // a->fta[NOT_OPERATOR][2][EMPTY] = ft_error_handler;
+    // a->fta[NOT_OPERATOR][3][EMPTY] = ft_error_handler;
+    a->fta[NOT_OPERATOR][4][EMPTY] = ft_conf_amper;
+    a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_pipe;
+    a->fta[NOT_OPERATOR][6][EMPTY] = ft_conf_or;
+    a->fta[NOT_OPERATOR][7][EMPTY] = ft_conf_and;
 }
