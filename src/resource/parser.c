@@ -39,9 +39,9 @@ int evaluate(t_automata *a)
     a->i = -1;
     while (++a->i < ft_strlen(a->str))
     {
-        printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
+        // printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
         a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
-        printf("new state: %d\n", a->state);
+        // printf("new state: %d\n", a->state);
         if (a->fsa[a->state])
         {
             a->fsa[a->state](a, a->data);
@@ -70,25 +70,22 @@ int *handler_execute(t_handler *a)
             a->exec[i].priority = 0;
         if (a->exec[i].priority)
             a->exec[i].priority = 1;
-        if (i < (a->info->len_tokens) && i > 0)
-        {
-            a->exec[i].file.input = a->fd[0];
-            a->exec[i].file.output = a->fd[1];
-        }
+
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         // Verifico si es un cmd o un file o si es un idstr
-
-        if (a->state[2] == NOT_OPERATOR)
+        if (a->state[1] == NOT_OPERATOR && a->state[2] == EMPTY)
         {
-            if (do_exec(a->info->tokens[i], a->env))
-                a->state[2] = UNIQ_COMMAND;
+            if (do_exec(a->info->tokens[i - 1], a->env))
+            {
+                a->state[1] = UNIQ_COMMAND;
+            }
         }
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
         {
-            printf("%d|%d|%d|%d\n", a->state[0], a->state[1], a->state[2], i);
             j++;
             a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
         }
+
         a->len_exec = j;
         a->state[0] = a->state[1];
         a->state[1] = a->state[2];
@@ -144,12 +141,27 @@ int *execute_command(t_handler *s)
     while (++i < s->info->len_tokens && j < s->len_exec)
     {
         if (j == s->len_exec - 1)
+        {
+            printf("exec[%d] | %d | len_exec - 1: %d\n", i, j, s->len_exec - 1);
             exec[i].file.output = 1;
+        }
         if (exec[i].func[0][0])
         {
+            if (j < (s->len_exec) && j > 0)
+            {
+                s->exec[i].file.input = s->fd[0];
+                pipe(s->fd);
+                // s->exec[i].file.input = s->fd[0];
+                s->exec[i].file.output = s->fd[1];
+            }
             j++;
+            if (j == 1 && 1 != s->len_exec)
+                exec[i].file.output = s->fd[1];
+            else if (j == s->len_exec)
+                exec[i].file.output = 1;
             exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
         }
+
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
         // if (exec[i + 1].cmd)
@@ -175,10 +187,7 @@ t_handler *ft_parser(t_handler *s)
         get_token(&a, &info);
     s->code = finalstate;
     info.tokens = ft_sarradd(info.tokens, " ");
-
-    // LIMPIAR PARA QUE NO TENGAN ESPACIOS NI ADELANTE NI ATRAS
     ft_sarrprint(info.tokens);
-    // Execution init
     info.len_tokens = ft_sarrsize(info.tokens);
     if (info.len_tokens == 0)
         return s;
@@ -186,5 +195,13 @@ t_handler *ft_parser(t_handler *s)
 
     handler_execute(s);
     execute_command(s);
+    return (s);
+}
+t_handler *ft_config(t_handler *s)
+{
+    return (s);
+}
+t_handler *ft_exec(t_handler *s)
+{
     return (s);
 }

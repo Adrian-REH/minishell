@@ -12,9 +12,14 @@ static int *ft_exec(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
+        printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2", 1, ""));
-        (close(e->handler->fd[WRITE]), close(e->handler->fd[READ]));
+        if (e->file.input != 0)
+            close(e->file.input);
+        if (e->file.output != 1)
+            close(e->file.output);
+        printf("file.output: %d\n", e->cmd->fd_aux[WRITE]);
         if (dup2(e->cmd->fd_aux[WRITE], STDOUT_FILENO) == -1)
             (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]), ft_print_error("dup2", 1, NULL));
         (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]));
@@ -47,11 +52,12 @@ static int *ft_exec_give_cmd(t_exec *e)
             p_heredoc = ft_strtrim(p_heredoc, "\n");
             e->cmd->cmd = do_exec(p_heredoc, e->handler->env);
         }
-
+        printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2", 1, ""));
-        if (e->file.input != 1)
+            (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2: ", 1, "input error"));
+        if (e->file.input != 0)
             close(e->file.input);
+        printf("file.output: %d\n", e->file.output);
         if (e->file.output != 1)
         {
             if (dup2(e->file.output, STDOUT_FILENO) == -1)
@@ -62,6 +68,10 @@ static int *ft_exec_give_cmd(t_exec *e)
             ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
         exit(0);
     }
+    if (e->file.input != 0)
+        close(e->file.input);
+    if (e->file.output != 1)
+        close(e->file.output);
     /*     (close(e->file.output), close(e->cmd->fd_aux[WRITE]));
         e->file.input = e->cmd->fd_aux[READ];
      */
@@ -70,7 +80,6 @@ static int *ft_exec_give_cmd(t_exec *e)
 
 int *ft_exec_pipe(t_exec *e)
 {
-    printf("ft_exec_pipe\n");
     if (e->state[0] == 0)
     {
         ft_exec(e);
