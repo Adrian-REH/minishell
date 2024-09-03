@@ -112,7 +112,6 @@ luego debo programar la matriz de estados.
 typedef struct s_handler
 {
     char **operators;                                       //
-    pid_t *pids;                                            //
     t_cmd *w_cmd;                                           //
     int n_pids;                                             //
     t_data *info;                                           //

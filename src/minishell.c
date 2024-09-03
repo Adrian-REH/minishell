@@ -1,6 +1,18 @@
 
 #include "headers/minishell.h"
+t_cmd *delete_cmd(t_cmd *cmds, int i)
+{
+    int j;
 
+    j = i;
+    while (cmds[j].pid)
+    {
+        cmds[j] = cmds[j + 1];
+        j++;
+    }
+    cmds[j].pid = 0;
+    return cmds;
+}
 int main(int argc, char **argv, char **argenv)
 {
     (void)argv;
@@ -30,16 +42,17 @@ int main(int argc, char **argv, char **argenv)
             clear_history();
         handler.seg[0](&handler);
         handler.seg[1](&handler);
-        if (handler.pids)
+        if (handler.w_cmd)
         {
             i = -1;
-            while (handler.pids[++i])
+            while (handler.w_cmd[++i].pid)
             {
-                pid_t result = waitpid(handler.pids[i], &status, WNOHANG);
-                if (result == handler.pids[i])
+                pid_t result = waitpid(handler.w_cmd[i].pid, &status, WNOHANG);
+                if (result == handler.w_cmd[i].pid)
                 {
-                    printf("[%d] Done\n", i + 1);
-                    handler.pids[i] = 0;
+                    printf("[%d] Done\t\t\t%s\n", i + 1, handler.w_cmd[i].cmd[0]);
+                    handler.n_pids--;
+                    handler.w_cmd = delete_cmd(handler.w_cmd, i);
                 }
             }
         }

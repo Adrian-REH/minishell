@@ -32,24 +32,23 @@ void *ft_realloc(void *ptr, size_t size)
     }
     return new;
 }
-pid_t *add_pid(pid_t *pids, pid_t pid)
+t_cmd *add_cmd(t_cmd *cmds, t_cmd cmd)
 {
     int i;
 
     i = 0;
-    if (pids == NULL)
+    if (cmds == NULL)
     {
-        pids = ft_calloc(sizeof(pid_t), 2);
-        pids[0] = pid;
-        pids[1] = 0;
-        return pids;
+        cmds = ft_calloc(sizeof(t_cmd), 2);
+        cmds[0] = cmd;
+        cmds[1].pid = 0;
+        return cmds;
     }
-    while (pids[i])
+    while (cmds[i].pid)
         i++;
-    pids = ft_realloc(pids, sizeof(pid_t) * (i + 2));
-    pids[i++] = pid;
-    pids[i] = 0;
-    return pids;
+    cmds = ft_realloc(cmds, sizeof(t_cmd) * (i + 2));
+    cmds[i++] = cmd;
+    return cmds;
 }
 
 int *ft_exec_amper(t_exec *e)
@@ -64,7 +63,7 @@ int *ft_exec_amper(t_exec *e)
         {
             e->handler->n_pids++;
             printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
-            e->handler->pids = add_pid(e->handler->pids, e->cmd->pid);
+            e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
         }
     }
     e->cmd++;
@@ -79,9 +78,8 @@ int *ft_exec_amper(t_exec *e)
             if (result == 0)
             {
                 e->handler->n_pids++;
+                e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
                 printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
-                if (e->handler->pids)
-                    e->handler->pids = add_pid(e->handler->pids, e->cmd->pid);
             }
         }
         e->state[1] = WEXITSTATUS(e->cmd[0].pid);

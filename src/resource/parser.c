@@ -196,9 +196,9 @@ t_handler *ft_parser(t_handler *s)
     handler_execute(s);
     int i;
     i = 0;
-    if (s->pids)
+    if (s->w_cmd)
     {
-        while (s->pids[i])
+        while (s->w_cmd[i].pid)
             i++;
         s->n_pids = i;
     }
