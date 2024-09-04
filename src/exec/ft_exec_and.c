@@ -16,6 +16,7 @@ static int *ft_exec(t_exec *e)
 
 int *ft_exec_and(t_exec *e)
 {
+	char *p_heredoc;
 	if (e->state[1] != 0)
 	{
 		ft_putstr_fd(">", STDOUT_FILENO);
@@ -27,14 +28,14 @@ int *ft_exec_and(t_exec *e)
 	{
 		ft_exec(e);
 		waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		e->state[0] = WEXITSTATUS(e->cmd[0].pid);
+		e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 	e->cmd++;
 	if (e->state[0] == 0)
 	{
 		ft_exec(e);
 		waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		e->state[0] = WEXITSTATUS(e->cmd[0].pid);
+		e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 
 	if (e->state[1] != 0 || e->state[1] != 0)

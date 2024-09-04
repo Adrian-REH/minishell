@@ -35,7 +35,6 @@ static int *ft_exec(t_exec *e)
 }
 static int *ft_exec_give_cmd(t_exec *e)
 {
-    char *p_heredoc;
     //	return (ft_print_error("pipe", 1, ""), NULL);
     e->cmd->pid = fork();
     if (e->cmd->pid < 0)
@@ -45,13 +44,7 @@ static int *ft_exec_give_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        if (e->state[1] != 0)
-        {
-            ft_putstr_fd(">", STDOUT_FILENO);
-            p_heredoc = get_next_line(STDIN_FILENO);
-            p_heredoc = ft_strtrim(p_heredoc, "\n");
-            e->cmd->cmd = do_exec(p_heredoc, e->handler->env);
-        }
+
         printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2: ", 1, "input error"));
@@ -78,6 +71,15 @@ static int *ft_exec_give_cmd(t_exec *e)
 
 int *ft_exec_pipe(t_exec *e)
 {
+    char *p_heredoc;
+    printf("ft_exec_pipe: %d\n", e->state[1]);
+    if (e->state[1] != 0)
+    {
+        ft_putstr_fd(">", STDOUT_FILENO);
+        p_heredoc = get_next_line(STDIN_FILENO);
+        p_heredoc = ft_strtrim(p_heredoc, "\n");
+        e->cmd[1].cmd = do_exec(p_heredoc, e->handler->env);
+    }
     if (e->state[0] == 0)
     {
         ft_exec(e);

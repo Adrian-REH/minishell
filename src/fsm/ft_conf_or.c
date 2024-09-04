@@ -23,6 +23,6 @@ void ft_conf_or(t_handler *s, int i)
         s->exec[i].state[1] = 1;
     s->info->oid = i + 1;
 
-    s->exec[i].func[0][0] = ft_exec_and;
+    s->exec[i].func[0][0] = ft_exec_or;
     // s->exec[i].func[0][1] = ft_finish;
 }

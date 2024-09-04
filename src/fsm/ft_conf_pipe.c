@@ -17,7 +17,7 @@ void ft_conf_pipe(t_handler *s, int i)
     }
     else
         s->exec[i].state[0] = 1;
-    if (s->info->tokens[i + 1] && s->info->oid != (i + 1))
+    if (strcmp(s->info->tokens[i + 1], " ") && s->info->oid != (i + 1))
     {
         s->exec[i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
         pipe(s->exec[i].cmd[1].fd_aux);
