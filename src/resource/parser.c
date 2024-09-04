@@ -1,38 +1,5 @@
 #include "../headers/minishell.h"
 
-int ft_strlen(const char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-        i++;
-    return i;
-}
-
-int idx(char *alphabet[], char c)
-{
-    int i;
-
-    i = -1;
-    while (alphabet[++i])
-        if (ft_chrpos(alphabet[i], c, 0) != -1)
-            return (i);
-    return (i);
-}
-
-int idstr(char *alphabet[], char *str)
-{
-    int i;
-
-    i = -1;
-    if (strcmp(str, " ") == 0)
-        return (0);
-    while (alphabet[++i])
-        if (strcmp(alphabet[i], str) == 0)
-            return (i);
-    return (NOT_OPERATOR);
-}
 int evaluate(t_automata *a)
 {
     a->ostate = 0;
@@ -156,7 +123,6 @@ int *execute_command(t_handler *s)
                 exec[i].file.output = 1;
             exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
         }
-
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
         // if (exec[i + 1].cmd)

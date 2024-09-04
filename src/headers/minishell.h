@@ -170,12 +170,8 @@ void get_token(t_automata *a, void *data);
 void tactions_init(t_automata *a);
 void operators_init(t_handler *a);
 void tactions_handler_init(t_handler *a);
-int ft_strlen(const char *str);
-char *ft_strdup(const char *str);
-char *ft_substr(const char *str, unsigned int start, size_t len);
 void ft_bzero(void *str, size_t n);
 int ft_chrpos(char *str, int chr, int start);
-int idx(char *alphabet[], char c);
 int evaluate(t_automata *a);
 void automata_init(t_automata *a, void *data);
 int ft_sarrprint(char **arr);
@@ -183,9 +179,11 @@ char **ft_sarradd(char **arr, char *string);
 void ft_sarrfree(char ***arr);
 int ft_sarrsize(char **arr);
 // char **ft_split(char *s, char c);
-
+t_cmd *delete_cmd(t_cmd *cmds, int i);
 void ft_free_p2(char **p2);
-
+int idx(char *alphabet[], char c);
+int idstr(char *alphabet[], char *str);
+char *get_path(char *command, char **env);
 char **do_exec(char *line, char **env);
-
+char *find_str(char *str, char **env);
 #endif

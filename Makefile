@@ -22,6 +22,11 @@ SRCS = 	 lib/ft_sarrprint.c \
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
 lib/ft_sarrfree.c \
+lib/ft_idbystr.c \
+lib/ft_idbychar.c \
+lib/ft_find_str.c \
+lib/ft_get_path.c \
+lib/ft_delete_cmd.c \
 src/minishell.c \
 src/resource/parser.c \
 src/resource/init_learning.c \
