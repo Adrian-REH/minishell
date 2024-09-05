@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ainit.c                                            :+:      :+:    :+:   */
+/*   init_learning.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvasquez <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 16:34:39 by jvasquez          #+#    #+#             */
-/*   Updated: 2023/11/26 16:34:42 by jvasquez         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:17:23 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,22 @@ void operators_init(t_handler *a)
     a->operators = ft_sarradd(a->operators, "|");
     a->operators = ft_sarradd(a->operators, "||");
     a->operators = ft_sarradd(a->operators, "&&");
+}
+
+/**
+ * 	Builtins definitions
+ **/
+void builtings_init(t_handler *a)
+{
+    // a->operators = ft_sarradd(NULL, " ");
+    a->builtins = ft_sarradd(a->builtins, "echo");
+    a->builtins = ft_sarradd(a->builtins, "echo -n");
+    a->builtins = ft_sarradd(a->builtins, "pwd");
+    a->builtins = ft_sarradd(a->builtins, "env");
+    a->builtins = ft_sarradd(a->builtins, "cd");
+    a->builtins = ft_sarradd(a->builtins, "export");
+    a->builtins = ft_sarradd(a->builtins, "unset");
+    a->builtins = ft_sarradd(a->builtins, "exit");
 }
 
 int get_state(int i, int j)
@@ -185,4 +201,19 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_pipe;
     a->fta[NOT_OPERATOR][6][EMPTY] = ft_conf_or;
     a->fta[NOT_OPERATOR][7][EMPTY] = ft_conf_and;
+}
+/**
+ *	Transision de configuracion,
+ *		Se encarga de llamar a la funcion correspondiente, acorde al estado actual.
+ **/
+void tactions_builtins_init(t_handler *a)
+{
+    a->fb[0] = ft_exec_echo;//hijo
+    a->fb[1] = ft_exec_echon;//hijo
+    a->fb[2] = ft_exec_pwd;//hijo
+    a->fb[3] = ft_exec_env;//hijo
+    a->fb[4] = ft_exec_cd;
+    a->fb[5] = ft_exec_export;
+    a->fb[6] = ft_exec_unset;
+    a->fb[7] = ft_exec_exit;
 }

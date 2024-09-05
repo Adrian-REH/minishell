@@ -84,7 +84,7 @@ int *ft_exec_pipe(t_exec *e)
     {
         ft_exec(e);
         waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-        e->state[0] = WEXITSTATUS(e->cmd[0].pid);
+        e->state[1] = WEXITSTATUS(e->cmd[0].pid);
     }
     e->cmd++;
 
@@ -96,5 +96,6 @@ int *ft_exec_pipe(t_exec *e)
         e->status = -1;
     e->file.input = e->cmd->fd_aux[READ];
     e->file.output = e->cmd->fd_aux[WRITE];
+    e->handler->code = e->state[1];
     return e->state;
 }

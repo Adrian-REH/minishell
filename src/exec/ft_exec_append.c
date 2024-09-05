@@ -29,5 +29,6 @@ int *ft_exec_append(t_exec *e)
     }
     if (e->state[1] != 0 || e->state[1] != 0)
         e->status = -1;
+    e->handler->code = e->state[1];
     return e->state;
 }

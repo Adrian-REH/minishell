@@ -40,20 +40,18 @@ int *handler_execute(t_handler *a)
 
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         // Verifico si es un cmd o un file o si es un idstr
-        if (a->state[1] == NOT_OPERATOR && a->state[2] == EMPTY)
+        if (a->state[1] == NOT_OPERATOR )
         {
-            if (do_exec(a->info->tokens[i - 1], a->env))
-            {
+            if (do_exec(a->info->tokens[i - 1], a->env) && a->state[2] == EMPTY)
                 a->state[1] = UNIQ_COMMAND;
-            }
         }
         // printf("state[0]: %d | state[1]: %d | state[2]: %d\n", a->state[0], a->state[1], a->state[2]);
+        //VErifico si el cmd es un built-in y que tipo es
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
         {
             j++;
             a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
         }
-
         a->len_exec = j;
         a->state[0] = a->state[1];
         a->state[1] = a->state[2];
@@ -73,7 +71,9 @@ void automata_init(t_automata *a, void *data)
 void init_handler(t_handler *s)
 {
     operators_init(s);
+    builtings_init(s);
     tactions_handler_init(s);
+    tactions_builtins_init(s);
     if (pipe(s->fd) == -1)
         return;
 }
@@ -104,7 +104,6 @@ int *execute_command(t_handler *s)
         {
             if (j == s->len_exec - 1)
             {
-                // printf("exec[%d] | %d | len_exec - 1: %d\n", i, j, s->len_exec - 1);
                 exec[i].file.output = 1;
                 if (exec[i].cmd[1].cmd)
                     exec[i].cmd[1].towait = 1;
@@ -113,7 +112,6 @@ int *execute_command(t_handler *s)
             {
                 s->exec[i].file.input = s->fd[0];
                 pipe(s->fd);
-                // s->exec[i].file.input = s->fd[0];
                 s->exec[i].file.output = s->fd[1];
             }
             j++;
@@ -148,12 +146,13 @@ t_handler *ft_parser(t_handler *s)
         get_token(&a, &info);
     s->code = finalstate;
     info.tokens = ft_sarradd(info.tokens, " ");
-    ft_sarrprint(info.tokens);
+    //ft_sarrprint(info.tokens);
     info.len_tokens = ft_sarrsize(info.tokens);
     s->info = &info;
     s->state[0] = 0;
     s->state[1] = 0;
     s->state[2] = 0;
+    s->code = 0;
     s->info->id = 0;
     s->info->oid = 30;
     s->exec = malloc(sizeof(t_exec) * (ft_sarrsize(s->info->tokens) + 1));

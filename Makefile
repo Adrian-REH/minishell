@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/08/19 18:07:56 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/05 11:16:34 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ RM = rm -rf
 SRCS = 	 lib/ft_sarrprint.c \
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/ft_isbuiltin.c \
 lib/ft_sarrfree.c \
 lib/ft_idbystr.c \
 lib/ft_idbychar.c \
@@ -39,10 +40,18 @@ src/fsm/ft_conf_greater.c \
 src/fsm/ft_conf_append.c \
 src/fsm/ft_conf_amper.c \
 src/fsm/ft_conf_cmd.c \
+src/exec/builtins/ft_exec_echo.c \
+src/exec/builtins/ft_exec_cd.c \
+src/exec/builtins/ft_exec_pwd.c \
+src/exec/builtins/ft_exec_export.c \
+src/exec/builtins/ft_exec_unset.c \
+src/exec/builtins/ft_exec_env.c \
+src/exec/builtins/ft_exec_exit.c \
 src/exec/ft_exec_and.c \
 src/exec/ft_exec_or.c\
 src/exec/ft_exec_cmd.c\
 src/exec/ft_exec_greater.c\
+src/exec/dispatch_command.c\
 src/exec/ft_exec_amper.c\
 src/exec/ft_exec_append.c\
 src/exec/ft_exec_less.c\
@@ -70,11 +79,11 @@ all : $(NAME)
 fclean : clean
 	$(RM) $(NAME)
 	make clean -C lib/libft
+	make fclean -C lib/libft
 	@echo "$(CYAN) ✨ ¡CLEANED! ✨ $(DEF_COLOR)"
 
 clean :
 	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
-	$(RM) $(NAME)
 	$(RM) $(OBJ)
 	make clean -C lib/libft
 

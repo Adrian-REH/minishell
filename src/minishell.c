@@ -1,5 +1,16 @@
 
 #include "headers/minishell.h"
+char **toarr(char **argenv)
+{
+    char **arr;
+    int i;
+
+    i = -1;
+    arr = malloc(sizeof(char *) * (ft_sarrsize(argenv) + 1));
+    while (argenv[++i])
+        arr[i] = ft_strdup(argenv[i]);
+    return arr;
+}
 
 int main(int argc, char **argv, char **argenv)
 {
@@ -9,7 +20,7 @@ int main(int argc, char **argv, char **argenv)
     char *comand;
     t_handler handler;
 
-    handler.env = argenv;
+    handler.env = toarr(argenv);
     // struct t_rule (*seg[1])(struct t_rule pedidos) = {ft_parser};
     handler.seg[0] = ft_parser;
     handler.seg[1] = ft_clear;

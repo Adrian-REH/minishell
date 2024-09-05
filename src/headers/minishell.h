@@ -10,11 +10,15 @@
 #include <sys/types.h> // Para fstat
 #include <sys/stat.h>  // Para stat, lstat, fsta
 #include <inttypes.h>  // Incluir para uintmax_t e intmax_t
-#include <fcntl.h>
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+# include	<signal.h>
+# include	<limits.h>
+# include	<dirent.h>
+# include	<sys/ioctl.h>
+# include	<sys/param.h>
 #include "../../lib/libft/libft.h"
 #define READ 0
 #define WRITE 1
@@ -81,6 +85,7 @@ typedef struct s_cmd
     pid_t pid;     // El pid del proceso
     int status;    // El estado de ejecucion del comando
     int towait;    // espero o no espero
+    struct s_handler *handler;    // espero o no espero
                    // struct s_cmd *next; // d
 } t_cmd;
 /*
@@ -112,6 +117,7 @@ luego debo programar la matriz de estados.
 typedef struct s_handler
 {
     char **operators;                                       //
+    char **builtins;                                       //
     t_cmd *w_cmd;                                           //
     int n_pids;                                             //
     t_data *info;                                           //
@@ -123,8 +129,19 @@ typedef struct s_handler
     struct s_exec *exec;                                    // Esto debe llenarse con la estructura de ejecucion
     int len_exec;                                           // Esto debe llenarse con la estructura de ejecucion
     struct s_handler *(*seg[5])(struct s_handler *rule);    // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
+    void (*fb[10])(struct s_cmd *cmd); // Son funciones de ejecucion, personalizadas
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
+
+int dispatch_command(t_exec *e);
+void ft_exec_echo(t_cmd *cmd);
+void ft_exec_echon(t_cmd *cmd);
+void ft_exec_cd(t_cmd *cmd);
+void ft_exec_pwd(t_cmd *cmd);
+void ft_exec_export(t_cmd *cmd);
+void ft_exec_unset(t_cmd *cmd);
+void ft_exec_env(t_cmd *cmd);
+void ft_exec_exit(t_cmd *cmd);
 
 int *ft_pipe(t_exec *e);
 int *ft_builtins(t_exec *e);
@@ -141,12 +158,13 @@ int *ft_exec_amper(t_exec *e);
 int *ft_exec_append(t_exec *e);
 int *ft_exec_less(t_exec *e);
 void init_handler(t_handler *s);
-
+void tactions_builtins_init(t_handler *a);
+void builtings_init(t_handler *a);
 t_handler *ft_parser(t_handler *s);
 t_handler *ft_execute(t_handler *s);
 t_handler *ft_error(t_handler *s);
 t_handler *ft_clear(t_handler *s);
-
+int ft_isbuiltin(char **builtins, char *token);
 void ft_conf_or(t_handler *s, int i);
 void ft_conf_and(t_handler *s, int i);
 void ft_conf_amper(t_handler *s, int i);

@@ -1,6 +1,12 @@
 
 #include "../headers/minishell.h"
 
+
+int ft_verify_cmd()
+{
+return 0;
+}
+
 char **do_exec(char *line, char **env)
 {
     char *cmd;
