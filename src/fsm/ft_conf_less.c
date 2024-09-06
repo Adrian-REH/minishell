@@ -2,7 +2,6 @@
 
 void ft_conf_less(t_handler *s, int i)
 {
-    printf("ft_conf_less\n");
     s->exec[i].handler = s;
     s->exec[i].cmd = ft_calloc(sizeof(t_cmd), 3);
     s->exec[i].op = LESS;

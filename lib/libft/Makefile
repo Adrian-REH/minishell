@@ -69,14 +69,16 @@ BONUS_FILES = \
 	ft_lstmap_bonus.c\
 	
 
-CORE_OBJS = $(patsubst %.c, %.o, $(CORE_FILES))
-UTILS_OBJS = $(patsubst %.c, %.o, $(UTILS_FILES))
-BONUS_OBJS = $(patsubst %.c, %.o, $(BONUS_FILES))
+CORE_OBJS = $(patsubst %.c, obj/%.o, $(CORE_FILES))
+UTILS_OBJS = $(patsubst %.c, obj/%.o, $(UTILS_FILES))
+BONUS_OBJS = $(patsubst %.c, obj/%.o, $(BONUS_FILES))
 OBJS_CORE_UTILS = $(CORE_OBJS) $(UTILS_OBJS)
 #Genero archivos que digan que se ejecuto los default y/o bonus
 DEFAULT_PART = .default
 BONUS_PART = .bonus
-
+obj/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
 $(NAME): $(DEFAULT_PART)
 $(DEFAULT_PART): $(OBJS_CORE_UTILS)
 	$(PACK) $(NAME) $(OBJS_CORE_UTILS)

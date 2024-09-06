@@ -14,11 +14,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
-# include	<signal.h>
-# include	<limits.h>
-# include	<dirent.h>
-# include	<sys/ioctl.h>
-# include	<sys/param.h>
+#include <signal.h>
+#include <limits.h>
+#include <dirent.h>
+#include <sys/ioctl.h>
+#include <sys/param.h>
 #include "../../lib/libft/libft.h"
 #define READ 0
 #define WRITE 1
@@ -79,14 +79,14 @@ typedef struct s_automata
 
 typedef struct s_cmd
 {
-    char **cmd;    // El el desgloce del comando
-    char *line;    // El el desgloce del comando
-    int fd_aux[2]; // fd auxiliar para redireccionar
-    pid_t pid;     // El pid del proceso
-    int status;    // El estado de ejecucion del comando
-    int towait;    // espero o no espero
-    struct s_handler *handler;    // espero o no espero
-                   // struct s_cmd *next; // d
+    char **cmd;                // El el desgloce del comando
+    char *line;                // El el desgloce del comando
+    int fd_aux[2];             // fd auxiliar para redireccionar
+    pid_t pid;                 // El pid del proceso
+    int status;                // El estado de ejecucion del comando
+    int towait;                // espero o no espero
+    struct s_handler *handler; // espero o no espero
+                               // struct s_cmd *next; // d
 } t_cmd;
 /*
 Aqui les dare las propiedades para ejecutarse,
@@ -117,7 +117,7 @@ luego debo programar la matriz de estados.
 typedef struct s_handler
 {
     char **operators;                                       //
-    char **builtins;                                       //
+    char **builtins;                                        //
     t_cmd *w_cmd;                                           //
     int n_pids;                                             //
     t_data *info;                                           //
@@ -129,7 +129,7 @@ typedef struct s_handler
     struct s_exec *exec;                                    // Esto debe llenarse con la estructura de ejecucion
     int len_exec;                                           // Esto debe llenarse con la estructura de ejecucion
     struct s_handler *(*seg[5])(struct s_handler *rule);    // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
-    void (*fb[10])(struct s_cmd *cmd); // Son funciones de ejecucion, personalizadas
+    void (*fb[10])(struct s_cmd *cmd);                      // Son funciones de ejecucion, personalizadas
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
 
@@ -183,6 +183,11 @@ int get_state(int i, int j);
 void sactions_init(t_automata *a);
 void get_token(t_automata *a, void *data);
 // void	count_player(t_automata *a, void *data);
+
+/*Service Exception*/
+void ft_conf_exception(t_handler *s, int i);
+void ft_token_exception(t_automata *a, void *data);
+void ft_execute_exception(t_cmd *cmd);
 
 /* Transition Actions */
 void tactions_init(t_automata *a);

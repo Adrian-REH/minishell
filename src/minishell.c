@@ -24,11 +24,11 @@ int main(int argc, char **argv, char **argenv)
     // struct t_rule (*seg[1])(struct t_rule pedidos) = {ft_parser};
     handler.seg[0] = ft_parser;
     handler.seg[1] = ft_clear;
-    // inicializar info aqui y liberar luego
+    // handler.seg[2] = ft_handler_exceptions;
+    //  inicializar info aqui y liberar luego
     init_handler(&handler);
     int i;
     int status;
-
     while (1)
     {
         comand = readline("minishell> ");

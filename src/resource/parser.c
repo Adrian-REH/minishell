@@ -40,13 +40,13 @@ int *handler_execute(t_handler *a)
 
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         // Verifico si es un cmd o un file o si es un idstr
-        if (a->state[1] == NOT_OPERATOR )
+        if (a->state[1] == NOT_OPERATOR)
         {
             if (do_exec(a->info->tokens[i - 1], a->env) && a->state[2] == EMPTY)
                 a->state[1] = UNIQ_COMMAND;
         }
         // printf("state[0]: %d | state[1]: %d | state[2]: %d\n", a->state[0], a->state[1], a->state[2]);
-        //VErifico si el cmd es un built-in y que tipo es
+        // VErifico si el cmd es un built-in y que tipo es
         if (a->fta[a->state[0]][a->state[1]][a->state[2]])
         {
             j++;
@@ -76,6 +76,7 @@ void init_handler(t_handler *s)
     tactions_builtins_init(s);
     if (pipe(s->fd) == -1)
         return;
+    s->code = 0;
 }
 
 /**
@@ -99,7 +100,6 @@ int *execute_command(t_handler *s)
     exec = s->exec;
     while (++i < s->info->len_tokens && j < s->len_exec)
     {
-
         if (exec[i].func[0][0])
         {
             if (j == s->len_exec - 1)
@@ -119,7 +119,15 @@ int *execute_command(t_handler *s)
                 exec[i].file.output = s->fd[1];
             else if (j == s->len_exec)
                 exec[i].file.output = 1;
-            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+            if (exec[i].func[EMPTY][EMPTY](&(exec[i])))
+            {
+                exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+                if (exec[i].state[1] != 0)
+                    exec[i].status = exec[i].state[1];
+                if (exec[i].state[0] != 0)
+                    exec[i].status = exec[i].state[0];
+                exec[i].handler->code = exec[i].status;
+            }
         }
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
@@ -141,23 +149,23 @@ t_handler *ft_parser(t_handler *s)
     ft_bzero(&info, sizeof(t_data));
     automata_init(&a, &info);
     a.str = s->line;
+    // Inicio la evaluacion de tokens y las dejo en un char **
     finalstate = evaluate(&a);
     if (finalstate > a.errorlen)
         get_token(&a, &info);
-    s->code = finalstate;
+    // Podria abrir una funcion para verificas si el ultimo estado puede ser un error de sintaxis
     info.tokens = ft_sarradd(info.tokens, " ");
-    //ft_sarrprint(info.tokens);
     info.len_tokens = ft_sarrsize(info.tokens);
     s->info = &info;
     s->state[0] = 0;
     s->state[1] = 0;
     s->state[2] = 0;
-    s->code = 0;
     s->info->id = 0;
     s->info->oid = 30;
     s->exec = malloc(sizeof(t_exec) * (ft_sarrsize(s->info->tokens) + 1));
     if (!s->exec)
         return (s);
+    // Proceso los tokens y configuro el entorno para la ejecucion
     handler_execute(s);
     int i;
     i = 0;
@@ -169,6 +177,7 @@ t_handler *ft_parser(t_handler *s)
     }
     if (info.len_tokens <= 1)
         return s;
+    // Ejecuto los comandos en base a las configuraciones.
     execute_command(s);
     return (s);
 }
@@ -181,7 +190,6 @@ t_handler *ft_clear(t_handler *s)
     s->exec = 0;
     s->len_exec = 0;
     s->info = 0;
-    s->code = 0;
     s->line = NULL;
     s->fd[0] = 0;
     s->fd[1] = 0;

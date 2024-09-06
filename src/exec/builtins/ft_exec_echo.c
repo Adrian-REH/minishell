@@ -21,5 +21,6 @@ void ft_exec_echon(struct s_cmd *cmd)
         printf("%d", cmd->handler->code);
     else
         printf("%s", result);
+    free(result);
     exit(0);
 }

@@ -176,6 +176,8 @@ void tactions_init(t_automata *a)
     a->fta[SPACES_BTW][CLOSE_PAREN] = get_token;
     a->fta[SPACES_NW][CLOSE_PAREN] = get_token;
     a->fta[NOT_OPERATOR][CLOSE_PAREN] = get_token;
+
+    // a->fta[NOT_OPERATOR][CLOSE_PAREN] = get_token;
 }
 
 /**
@@ -193,10 +195,10 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][5][NOT_OPERATOR] = ft_conf_pipe;
     a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_or;
     a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_and;
-    // a->fta[NOT_OPERATOR][1][EMPTY] = ft_error_handler;
-    // a->fta[NOT_OPERATOR][1][EMPTY] = ft_error_handler;
-    // a->fta[NOT_OPERATOR][2][EMPTY] = ft_error_handler;
-    // a->fta[NOT_OPERATOR][3][EMPTY] = ft_error_handler;
+    a->fta[NOT_OPERATOR][1][EMPTY] = ft_conf_exception;
+    a->fta[NOT_OPERATOR][1][EMPTY] = ft_conf_exception;
+    a->fta[NOT_OPERATOR][2][EMPTY] = ft_conf_exception;
+    a->fta[NOT_OPERATOR][3][EMPTY] = ft_conf_exception;
     a->fta[NOT_OPERATOR][4][EMPTY] = ft_conf_amper;
     a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_pipe;
     a->fta[NOT_OPERATOR][6][EMPTY] = ft_conf_or;
@@ -208,10 +210,10 @@ void tactions_handler_init(t_handler *a)
  **/
 void tactions_builtins_init(t_handler *a)
 {
-    a->fb[0] = ft_exec_echo;//hijo
-    a->fb[1] = ft_exec_echon;//hijo
-    a->fb[2] = ft_exec_pwd;//hijo
-    a->fb[3] = ft_exec_env;//hijo
+    a->fb[0] = ft_exec_echo;  // hijo
+    a->fb[1] = ft_exec_echon; // hijo
+    a->fb[2] = ft_exec_pwd;   // hijo
+    a->fb[3] = ft_exec_env;   // hijo
     a->fb[4] = ft_exec_cd;
     a->fb[5] = ft_exec_export;
     a->fb[6] = ft_exec_unset;

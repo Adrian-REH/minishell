@@ -20,8 +20,7 @@ static int *ft_exec_give_cmd(t_exec *e)
                 (ft_print_error("dup2", 1, NULL));
             close(e->file.output);
         }
-        if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1) // Se supone que ya se verifico que el path esta bien y que se puede ejecutar directamente.
-            ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
+        dispatch_command(e);
         exit(0);
     }
     if (e->file.input != 0)

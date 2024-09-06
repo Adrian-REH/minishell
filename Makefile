@@ -17,8 +17,9 @@ CC = gcc
 CFLAGS = -Werror -Wall -Wextra -g3  #-fsanitize=thread 
 
 RM = rm -rf
-
+OBJ_DIRS = obj/
 SRCS = 	 lib/ft_sarrprint.c \
+src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
 lib/ft_isbuiltin.c \
@@ -47,11 +48,11 @@ src/exec/builtins/ft_exec_export.c \
 src/exec/builtins/ft_exec_unset.c \
 src/exec/builtins/ft_exec_env.c \
 src/exec/builtins/ft_exec_exit.c \
+src/exec/dispatch_command.c\
 src/exec/ft_exec_and.c \
 src/exec/ft_exec_or.c\
 src/exec/ft_exec_cmd.c\
 src/exec/ft_exec_greater.c\
-src/exec/dispatch_command.c\
 src/exec/ft_exec_amper.c\
 src/exec/ft_exec_append.c\
 src/exec/ft_exec_less.c\
@@ -61,7 +62,10 @@ src/exec/ft_exec_pipe.c
 		
 
 LIBFT = lib/libft/libft.a
-OBJ =  $(SRCS:.c=.o) 
+OBJ = $(patsubst %.c, $(OBJ_DIRS)%.o, $(SRCS))
+
+obj/%.o: %.c | $(OBJ_DIRS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
 CYAN = \033[0;96m
@@ -74,7 +78,16 @@ $(NAME) : $(OBJ)
 	@echo "$(CYAN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
 
-all : $(NAME)
+$(OBJ_DIRS):
+	mkdir -p obj/lib 
+	mkdir -p obj/src 
+	mkdir -p obj/src/excep
+	mkdir -p obj/src/resource 
+	mkdir -p obj/src/exec 
+	mkdir -p obj/src/exec/builtins 
+	mkdir -p obj/src/fsm
+
+all :$(OBJ_DIR) $(NAME)
 
 fclean : clean
 	$(RM) $(NAME)
@@ -85,6 +98,7 @@ fclean : clean
 clean :
 	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
 	$(RM) $(OBJ)
+	$(RM) $(OBJ_DIRS)
 	make clean -C lib/libft
 
 re : fclean all
