@@ -12,6 +12,7 @@ void ft_conf_amper(t_handler *s, int i)
     s->exec[i].cmd[0].cmd = 0;
     if (s->info->oid != (i - 1))
     {
+        s->exec[i].cmd[0].line = s->info->tokens[i - 1];
         s->exec[i].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
         s->exec[i].cmd[0].towait = 0;
         pipe(s->exec[i].cmd[0].fd_aux);
@@ -20,6 +21,7 @@ void ft_conf_amper(t_handler *s, int i)
         s->exec[i].state[0] = 1;
     if (s->info->tokens[i + 1] && s->info->oid != (i + 1))
     {
+        s->exec[i].cmd[1].line = s->info->tokens[i + 1];
         s->exec[i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
         s->exec[i].cmd[1].towait = 0;
         pipe(s->exec[i].cmd[1].fd_aux);

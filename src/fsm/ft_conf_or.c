@@ -9,6 +9,7 @@ void ft_conf_or(t_handler *s, int i)
     s->exec[i].state[1] = 0;
     if (s->info->oid != (i - 1))
     {
+        s->exec[i].cmd[0].line = s->info->tokens[i - 1];
         s->exec[i].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
         pipe(s->exec[i].cmd[0].fd_aux);
     }
@@ -16,6 +17,7 @@ void ft_conf_or(t_handler *s, int i)
         s->exec[i].state[0] = 1;
     if (strcmp(s->info->tokens[i + 1], " ") && s->info->oid != (i + 1)) // todo el estado dle anterior comando
     {
+        s->exec[i].cmd[0].line = s->info->tokens[i + 1];
         s->exec[i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
         pipe(s->exec[i].cmd[1].fd_aux);
     }

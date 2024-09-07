@@ -11,6 +11,7 @@ void ft_conf_greater(t_handler *s, int i)
     s->exec[i].cmd[0].cmd = 0;
     if (s->info->oid != (i - 1))
     {
+        s->exec[i].cmd[0].line = s->info->tokens[i - 1];
         s->exec[i].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
         pipe(s->exec[i].cmd[0].fd_aux);
     }

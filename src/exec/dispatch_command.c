@@ -3,8 +3,8 @@
 int dispatch_command(t_exec *e)
 {
 	int type;
-	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 
+	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (type == NOT_OPERATOR)
 	{
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)

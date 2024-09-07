@@ -9,6 +9,7 @@ void ft_conf_heredoc(t_handler *s, int i)
     s->exec[i].state[1] = 0;
     if (s->info->oid != (i - 1))
     {
+        s->exec[i].cmd[1].line = s->info->tokens[i - 1];
         s->exec[i].cmd[1].cmd = do_exec(s->info->tokens[i - 1], s->env);
         pipe(s->exec[i].cmd[1].fd_aux);
     }

@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 16:34:39 by jvasquez          #+#    #+#             */
-/*   Updated: 2024/09/05 12:17:23 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/07 23:13:18 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void sactions_init(t_automata *a)
  **/
 void tactions_init(t_automata *a)
 {
-    a->fsa[PIPE] = get_token;
     a->fta[NOT_OPERATOR][PIPE] = get_token;
     a->fta[NOT_OPERATOR][LESS] = get_token;
     a->fta[NOT_OPERATOR][GREATER] = get_token;
@@ -146,7 +145,7 @@ void tactions_init(t_automata *a)
     a->fta[SPACES_BTW][LESS] = get_token;
     a->fta[SPACES_BTW][GREATER] = get_token;
     a->fta[SPACES_BTW][AMPER] = get_token;
-
+    
     a->fta[AMPER][SPACES_NW] = get_token;
     a->fta[AMPER][NOT_OPERATOR] = get_token;
     a->fta[PIPE][SPACES_NW] = get_token;
