@@ -133,6 +133,7 @@ typedef struct s_handler
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
 
+void *ft_realloc(void *ptr, size_t size);
 int dispatch_command(t_exec *e);
 void ft_exec_echo(t_cmd *cmd);
 void ft_exec_echon(t_cmd *cmd);

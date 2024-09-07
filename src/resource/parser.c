@@ -27,7 +27,7 @@ int *handler_execute(t_handler *a)
     int i = -1;
     int j = 0;
 
-    a->exec[0].file.input = 0;
+    // a->exec[0].file.input = 0;
     while (a->info->tokens[++i])
     {
         a->exec[i].handler = a;
@@ -110,24 +110,23 @@ int *execute_command(t_handler *s)
             }
             if (j < (s->len_exec) && j > 0)
             {
-                s->exec[i].file.input = s->fd[0];
+                if (s->exec[i].op == PIPE)
+                    s->exec[i].file.input = s->fd[0];
                 pipe(s->fd);
                 s->exec[i].file.output = s->fd[1];
             }
-            j++;
             if (j == 1 && 1 != s->len_exec)
                 exec[i].file.output = s->fd[1];
             else if (j == s->len_exec)
                 exec[i].file.output = 1;
-            if (exec[i].func[EMPTY][EMPTY](&(exec[i])))
-            {
-                exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
-                if (exec[i].state[1] != 0)
-                    exec[i].status = exec[i].state[1];
-                if (exec[i].state[0] != 0)
-                    exec[i].status = exec[i].state[0];
-                exec[i].handler->code = exec[i].status;
-            }
+            j++;
+
+            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+            if (exec[i].state[1] != 0)
+                exec[i].status = exec[i].state[1];
+            if (exec[i].state[0] != 0)
+                exec[i].status = exec[i].state[0];
+            exec[i].handler->code = exec[i].status;
         }
         //        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
         //            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
@@ -154,6 +153,7 @@ t_handler *ft_parser(t_handler *s)
     if (finalstate > a.errorlen)
         get_token(&a, &info);
     // Podria abrir una funcion para verificas si el ultimo estado puede ser un error de sintaxis
+    // ft_sarrprint(info.tokens);
     info.tokens = ft_sarradd(info.tokens, " ");
     info.len_tokens = ft_sarrsize(info.tokens);
     s->info = &info;

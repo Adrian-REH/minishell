@@ -19,7 +19,6 @@ int *ft_exec_cmd(t_exec *e)
 {
 	int type;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
-
 	if (e->state[0] == 0 && ((type < 4 && type >= 0) || type == NOT_OPERATOR))
 	{
 		ft_exec(e);
