@@ -30,15 +30,15 @@ int *handler_execute(t_handler *a)
 	// a->exec[0].file.input = 0;
 	while (a->info->tokens[++i])
 	{
-		a->exec[i].handler = a;
-		if (strcmp("(", a->info->tokens[i]) == 0)
-			a->exec[i].priority = 1;
-		else if (strcmp(")", a->info->tokens[i]) == 0)
-			a->exec[i].priority = 0;
-		if (a->exec[i].priority)
-			a->exec[i].priority = 1;
 
 		a->state[2] = idstr(a->operators, a->info->tokens[i]);
+		a->exec[a->info->i].handler = a;
+		if (strcmp("(", a->info->tokens[i]) == 0)
+			a->exec[a->info->i].priority = 1;
+		else if (strcmp(")", a->info->tokens[i]) == 0)
+			a->exec[a->info->i].priority = 0;
+		if (a->exec[a->info->i].priority)
+			a->exec[a->info->i].priority = 1;
 		// Verifico si es un cmd o un file o si es un idstr
 		if (a->state[1] == NOT_OPERATOR)
 		{
@@ -48,7 +48,7 @@ int *handler_execute(t_handler *a)
 		if (a->state[0] == 5 && a->state[2] == 2)
 		{
 			a->info->oid = -1;
-			a->exec[i - 1].state[1] = 1;
+			a->exec[a->info->i - 1].state[1] = 2;
 		}
 		// printf("state[0]: %d | state[1]: %d | state[2]: %d\n", a->state[0], a->state[1], a->state[2]);
 		// VErifico si el cmd es un built-in y que tipo es
@@ -60,6 +60,7 @@ int *handler_execute(t_handler *a)
 		a->len_exec = j;
 		a->state[0] = a->state[1];
 		a->state[1] = a->state[2];
+	
 	}
 	return (a->state);
 }
@@ -101,8 +102,7 @@ int *execute_command(t_handler *s)
 	i = -1;
 	j = 0;
 	exec = s->exec;
-	printf("Num de exec: %d\n", s->len_exec);
-	while (++i < s->info->len_tokens && j < s->len_exec)
+	while (++i < s->len_exec)
 	{
 		if (exec[i].func[0][0])
 		{
@@ -115,8 +115,8 @@ int *execute_command(t_handler *s)
 			}
 			if (j < (s->len_exec) && j > 0)
 			{
-				//if (s->exec[i].op == PIPE)
-				//close(s->exec[i].file.input);
+				//if (s->exec[s->info->i].op == PIPE)
+				//close(s->exec[s->info->i].file.input);
 				exec[i].file.input = s->fd[0];
 				pipe(s->fd);
 				exec[i].file.output = s->fd[1];
@@ -132,8 +132,6 @@ int *execute_command(t_handler *s)
 			if (exec[i].state[0] != 0)
 				exec[i].status = exec[i].state[0];
 			exec[i].handler->code = exec[i].status;
-		//printf("file.input: %d\n", exec[i].file.input);
-		//printf("file.output: %d\n", exec[i].file.output);
 		}
 		//        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
 		//            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
@@ -167,7 +165,7 @@ t_handler *ft_parser(t_handler *s)
 	s->state[0] = 0;
 	s->state[1] = 0;
 	s->state[2] = 0;
-	s->info->id = 0;
+	s->info->i = 0;
 	s->info->oid = 30;
 	s->exec = 0;
 	if (pipe(s->fd) == -1)
@@ -203,8 +201,6 @@ t_handler *ft_clear(t_handler *s)
 	s->line = NULL;
 	s->fd[0] = -1;
 	s->fd[1] = -1;
-	free(s->exec->cmd);
-	free(s->exec);
 	s->exec = 0;
 	return (s);
 }

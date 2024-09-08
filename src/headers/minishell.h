@@ -28,7 +28,7 @@ typedef struct s_data
     char **tokens;
     int is_op;
     int len_tokens;
-    int id;
+    int i;
     int oid;
 } t_data;
 

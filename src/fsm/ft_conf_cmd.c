@@ -2,17 +2,16 @@
 
 void ft_conf_cmd(t_handler *s, int i)
 {
-    s->exec[i].state = ft_calloc(sizeof(int), 2);
-    s->exec[i].state[0] = 0;
-    s->exec[i].state[1] = 0;
-    s->exec[i].cmd = malloc(sizeof(t_cmd));
-    s->exec[i].cmd->handler = s;
-    s->exec[i].cmd->line = s->info->tokens[i];
-    s->exec[i].cmd->cmd = do_exec(s->info->tokens[i], s->env);
-    s->exec[i].op = UNIQ_COMMAND;
-    pipe(s->exec[i].cmd->fd_aux);
-    // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
+    s->exec[s->info->i].state = ft_calloc(sizeof(int), 2);
+    s->exec[s->info->i].state[0] = 0;
+    s->exec[s->info->i].state[1] = 0;
+    s->exec[s->info->i].cmd = malloc(sizeof(t_cmd));
+    s->exec[s->info->i].cmd->handler = s;
+    s->exec[s->info->i].cmd->line = s->info->tokens[i];
+    s->exec[s->info->i].cmd->cmd = do_exec(s->info->tokens[i], s->env);
+    s->exec[s->info->i].op = UNIQ_COMMAND;
+    pipe(s->exec[s->info->i].cmd->fd_aux);
     s->info->oid = i;
-    //diferenciar entre builtings
-    s->exec[i].func[0][0] = ft_exec_cmd;
+    s->exec[s->info->i].func[0][0] = ft_exec_cmd;
+    s->info->i++;
 }
