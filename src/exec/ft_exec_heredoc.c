@@ -10,13 +10,13 @@ static int *ft_exec_give_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        printf("cmd: %s\n", e->cmd->line);
-        printf("file.input: %d\n", e->file.input);
+        //printf("cmd: %s\n", e->cmd->line);
+        //printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
             close(e->file.input);
-        printf("file.output: %d\n", e->file.output);
+        //printf("file.output: %d\n", e->file.output);
         if (e->file.output != 1)
         {
             if (dup2(e->file.output, STDOUT_FILENO) == -1)
@@ -45,8 +45,8 @@ static void ft_heredoc(t_exec *e)
     else if (e->cmd->pid == 0)
     {
         close(e->cmd->fd_aux[READ]);
-        printf("file.input: %d\n", e->file.input);
-        printf("file.output: %d\n", e->file.output);
+        //printf("file.input: %d\n", e->file.input);
+        //printf("file.output: %d\n", e->file.output);
         while (1)
         {
             ft_putstr_fd("heredoc>", STDOUT_FILENO);
