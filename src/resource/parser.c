@@ -60,7 +60,6 @@ int *handler_execute(t_handler *a)
 		a->len_exec = j;
 		a->state[0] = a->state[1];
 		a->state[1] = a->state[2];
-	
 	}
 	return (a->state);
 }
@@ -115,8 +114,8 @@ int *execute_command(t_handler *s)
 			}
 			if (j < (s->len_exec) && j > 0)
 			{
-				//if (s->exec[s->info->i].op == PIPE)
-				//close(s->exec[s->info->i].file.input);
+				// if (s->exec[s->info->i].op == PIPE)
+				// close(s->exec[s->info->i].file.input);
 				exec[i].file.input = s->fd[0];
 				pipe(s->fd);
 				exec[i].file.output = s->fd[1];
@@ -125,7 +124,7 @@ int *execute_command(t_handler *s)
 			if (j == 1 && 1 != s->len_exec)
 				exec[i].file.output = s->fd[1];
 			else if (j == s->len_exec)
-				exec[i].file.output= 1;
+				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
 			if (exec[i].state[1] != 0)
 				exec[i].status = exec[i].state[1];
@@ -158,7 +157,7 @@ t_handler *ft_parser(t_handler *s)
 	if (finalstate > a.errorlen)
 		get_token(&a, &info);
 	// Podria abrir una funcion para verificas si el ultimo estado puede ser un error de sintaxis
-	ft_sarrprint(info.tokens);
+	// ft_sarrprint(info.tokens);
 	info.tokens = ft_sarradd(info.tokens, " ");
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;

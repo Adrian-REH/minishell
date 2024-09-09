@@ -1,9 +1,9 @@
 #include "../../headers/minishell.h"
 
-char	*local_path(int i)
+char *local_path(int i)
 {
-	char	*s;
-	char	*res;
+	char *s;
+	char *res;
 
 	s = malloc(sizeof(char) * (MAXPATHLEN + 1));
 	if (!s)
@@ -25,36 +25,34 @@ char	*local_path(int i)
 
 char *ft_getenv(t_cmd *cmd, char *str)
 {
-	int		i;
+	int i;
 
 	i = -1;
 	while (cmd->handler->env[++i])
 	{
 		if (!ft_strncmp(cmd->handler->env[i], str, ft_strlen(str)))
-			return(cmd->handler->env[i]+ ft_strlen(str) + 1);
+			return (cmd->handler->env[i] + ft_strlen(str) + 1);
 	}
 	return NULL;
 }
-void	change_value_pwd(char *s, t_cmd *cmd, int control)
+void change_value_pwd(char *s, t_cmd *cmd, int control)
 {
-	int		i;
-	char	*temp;
+	int i;
+	char *temp;
 
 	i = -1;
 	s = local_path(0);
 	while (cmd->handler->env[++i])
 	{
-		if (control == 0 && cmd->handler->env[i]
-			&& !ft_strncmp(cmd->handler->env[i], "OLDPWD", 6))
+		if (control == 0 && cmd->handler->env[i] && !ft_strncmp(cmd->handler->env[i], "OLDPWD", 6))
 		{
 			temp = ft_strjoin("OLDPWD=", s);
 			free(cmd->handler->env[i]);
 			cmd->handler->env[i] = temp;
 		}
-		if (control == 1 && cmd->handler->env[i]
-			&& !ft_strncmp(cmd->handler->env[i], "PWD", 3))
+		if (control == 1 && cmd->handler->env[i] && !ft_strncmp(cmd->handler->env[i], "PWD", 3))
 		{
-			printf("PWD:%s\n",cmd->handler->env[i]);
+			// printf("PWD:%s\n", cmd->handler->env[i]);
 			temp = ft_strjoin("PWD=", s);
 			free(cmd->handler->env[i]);
 			cmd->handler->env[i] = temp;
@@ -64,28 +62,75 @@ void	change_value_pwd(char *s, t_cmd *cmd, int control)
 }
 void ft_exec_cd(t_cmd *cmd)
 {
-	char	*temp;
+	char *temp;
 
-	change_value_pwd(NULL, cmd, 0);
-	if (cmd->cmd[1] == 0)
+	char *line;
+	char **str;
+	size_t len;
+
+	cmd->status = 0;
+	line = ft_strnstr(cmd->line, "cd", ft_strlen(cmd->line));
+	if (line)
 	{
-		//chdir(ft_getenv(cmd,"HOME"));
-		chdir(getenv("HOME"));
-		return ;
+		len = ft_strlen("cd"); // Longitud de la subcadena
+		memmove(line, line + len, strlen(line + len) + 1);
 	}
-	temp = cmd->cmd[1];
-	if (!ft_strncmp(temp, "-", 2))
+	line = ft_strtrim(line, " ");
+	str = ft_split(line, ' ');
+	if (ft_sarrsize(str) > 1)
+	{
+		ft_putstr_fd(" too many arguments\n", 2);
+		cmd->status = 1;
+		return;
+	}
+	change_value_pwd(NULL, cmd, 0);
+	if (str[0] == 0)
+	{
+		// chdir(ft_getenv(cmd,"HOME"));
+		chdir(getenv("HOME"));
+		return;
+	}
+	temp = str[0];
+	if (ft_isdigit(temp[0])) // verificar tambien si es un directorio accesible
+	{
+		ft_putstr_fd(" No such file or directory\n", 2);
+		cmd->status = 1;
+		return;
+	}
+	if (temp[0] == '~')
+	{
+		temp = ft_strjoin(getenv("HOME"), temp + 1);
+	}
+	else if (!ft_strncmp(temp, "-", 2))
 	{
 		chdir(getenv("OLDPWD"));
-		//chdir(ft_getenv(cmd,"OLDPWD"));
+		// chdir(ft_getenv(cmd,"OLDPWD"));
+	}
+	else if (ft_strchr(temp, '$'))
+	{
+		temp = ft_getenv(cmd, temp + 1);
+		if (temp)
+		{
+			if (chdir(temp) == -1)
+			{
+				printf("No such file or directory");
+				cmd->status = 1;
+			}
+			else
+			{
+				change_value_pwd(NULL, cmd, 1);
+				return;
+			}
+		}
 	}
 	else if (chdir(temp) == -1)
 		printf("No such file or directory");
 	else
-	{		
+	{
 		change_value_pwd(NULL, cmd, 1);
-	free(temp);
-		return ;
+		free(temp);
+		return;
 	}
 	free(temp);
+	cmd->status = 0;
 }
