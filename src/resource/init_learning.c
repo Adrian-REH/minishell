@@ -145,7 +145,7 @@ void tactions_init(t_automata *a)
     a->fta[SPACES_BTW][LESS] = get_token;
     a->fta[SPACES_BTW][GREATER] = get_token;
     a->fta[SPACES_BTW][AMPER] = get_token;
-    
+
     a->fta[AMPER][SPACES_NW] = get_token;
     a->fta[AMPER][NOT_OPERATOR] = get_token;
     a->fta[PIPE][SPACES_NW] = get_token;

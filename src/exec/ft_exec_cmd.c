@@ -10,7 +10,7 @@ static int *ft_exec(t_exec *e)
 	}
 	else if (e->cmd->pid == 0)
 	{
-		dispatch_command(e);
+		dispatch_command_built(e);
 		exit(0);
 	}
 	return NULL;
@@ -25,10 +25,8 @@ int *ft_exec_cmd(t_exec *e)
 		waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
 		e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
-	else if ((type >= 4 && type <= 7) && e->handler->fb[type])
-	{
+	else if ((type >= 4) && e->handler->fb[type])
 		e->handler->fb[type](e->cmd);
-	}
 	e->state[0] = e->cmd->status;
 	return e->state;
 }

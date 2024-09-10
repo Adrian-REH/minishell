@@ -126,10 +126,6 @@ int *execute_command(t_handler *s)
 			else if (j == s->len_exec)
 				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
-			if (exec[i].state[1] != 0)
-				exec[i].status = exec[i].state[1];
-			if (exec[i].state[0] != 0)
-				exec[i].status = exec[i].state[0];
 			exec[i].handler->code = exec[i].status;
 		}
 		//        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])

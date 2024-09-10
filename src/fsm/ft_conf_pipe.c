@@ -12,6 +12,7 @@ void ft_conf_pipe(t_handler *s, int i)
     s->exec[s->info->i].cmd[0].cmd = 0;
     if (s->info->oid != (i - 1))
     {
+        s->exec[s->info->i].cmd[0].status = 0;
         s->exec[s->info->i].cmd[0].line = s->info->tokens[i - 1];
         s->exec[s->info->i].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
         pipe(s->exec[s->info->i].cmd[0].fd_aux);
@@ -20,6 +21,7 @@ void ft_conf_pipe(t_handler *s, int i)
         s->exec[s->info->i].state[0] = 1;
     if (strcmp(s->info->tokens[i + 1], " ") && s->info->oid != (i + 1))
     {
+        s->exec[s->info->i].cmd[1].status = 0;
         s->exec[s->info->i].cmd[1].line = s->info->tokens[i + 1];
         s->exec[s->info->i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
         pipe(s->exec[s->info->i].cmd[1].fd_aux);

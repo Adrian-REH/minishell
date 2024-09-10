@@ -8,7 +8,9 @@ void ft_conf_cmd(t_handler *s, int i)
     s->exec[s->info->i].cmd = malloc(sizeof(t_cmd));
     s->exec[s->info->i].cmd->handler = s;
     s->exec[s->info->i].cmd->line = s->info->tokens[i];
-    s->exec[s->info->i].cmd->cmd = do_exec(s->info->tokens[i], s->env);
+    if (ft_strchr(s->info->tokens[i], '$') && ft_isalpha(ft_strchr(s->info->tokens[i], '$')[1]))
+        s->exec[s->info->i].cmd->line = ft_getenv(s->exec[s->info->i].cmd, s->info->tokens[i] + 1);
+    s->exec[s->info->i].cmd->cmd = do_exec(s->exec[s->info->i].cmd->line, s->env);
     s->exec[s->info->i].op = UNIQ_COMMAND;
     pipe(s->exec[s->info->i].cmd->fd_aux);
     s->info->oid = i;

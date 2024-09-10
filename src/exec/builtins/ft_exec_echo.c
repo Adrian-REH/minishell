@@ -74,7 +74,6 @@ void ft_process_quote(struct s_cmd *cmd)
 }
 void ft_exec_echo(struct s_cmd *cmd)
 {
-
     ft_process_quote(cmd);
     printf("\n");
     exit(0);
