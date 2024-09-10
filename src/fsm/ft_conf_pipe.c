@@ -24,7 +24,7 @@ void ft_conf_pipe(t_handler *s, int i)
         s->exec[s->info->i].cmd[1].status = 0;
         s->exec[s->info->i].cmd[1].line = s->info->tokens[i + 1];
         s->exec[s->info->i].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
-        pipe(s->exec[s->info->i].cmd[1].fd_aux);
+        // pipe(s->exec[s->info->i].cmd[1].fd_aux);
     }
     else
         s->exec[s->info->i].state[1] = 1;

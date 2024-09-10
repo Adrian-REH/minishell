@@ -10,14 +10,12 @@ static int *ft_exec(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        // printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2", 1, ""));
         if (e->file.input != 0)
             close(e->file.input);
         if (e->file.output != 1)
             close(e->file.output);
-        // printf("file.output: %d\n", e->cmd->fd_aux[WRITE]);
         if (dup2(e->cmd->fd_aux[WRITE], STDOUT_FILENO) == -1)
             (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]), ft_print_error("dup2", 1, NULL));
         (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]));
@@ -41,12 +39,10 @@ static int *ft_exec_give_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        // printf("file.input: %d\n", e->file.input);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2: ", 1, "input error"));
+            (ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
             close(e->file.input);
-        // printf("file.output: %d\n", e->file.output);
         if (e->file.output != 1)
         {
             if (dup2(e->file.output, STDOUT_FILENO) == -1)
@@ -89,7 +85,7 @@ int *ft_exec_pipe(t_exec *e)
     e->state[1] = WEXITSTATUS(e->cmd->status);
 
     if (e->cmd[0].status != 0 || e->cmd[1].status != 0)
-        e->status = -1;
+        e->status = 1;
     e->file.input = e->cmd->fd_aux[READ];
     e->file.output = e->cmd->fd_aux[WRITE];
     e->handler->code = e->status;

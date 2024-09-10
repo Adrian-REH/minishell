@@ -26,7 +26,6 @@ int dispatch_command_built(t_exec *e)
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (type == NOT_OPERATOR)
 	{
-		// Verificar si es un directorio o no
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
 			ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
 	}

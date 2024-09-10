@@ -107,6 +107,8 @@ int *execute_command(t_handler *s)
 		{
 			if (j == s->len_exec - 1)
 			{
+				// close(s->fd[1]);
+				// close(exec[i].file.input);
 				exec[i].file.input = s->fd[0];
 				exec[i].file.output = 1;
 				if (exec[i].cmd[1].cmd)
@@ -117,23 +119,21 @@ int *execute_command(t_handler *s)
 				// if (s->exec[s->info->i].op == PIPE)
 				// close(s->exec[s->info->i].file.input);
 				exec[i].file.input = s->fd[0];
+				close(s->fd[1]);
 				pipe(s->fd);
 				exec[i].file.output = s->fd[1];
 			}
 			j++;
 			if (j == 1 && 1 != s->len_exec)
-				exec[i].file.output = s->fd[1];
+				exec[i].file.output = (s->fd[1]);
 			else if (j == s->len_exec)
 				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
 			exec[i].handler->code = exec[i].status;
 		}
-		//        while (exec[i].func[exec[i].state[0]][exec[i].state[1]])
-		//            exec->state = exec[i].func[exec[i].state[0]][exec[i].state[1]](&(exec[i]));
-		// if (exec[i + 1].cmd)
-		//    exec[i + 1].state = exec[i].state;
 	}
-
+	close(s->fd[0]);
+	close(s->fd[1]);
 	return (exec[i].state);
 }
 
