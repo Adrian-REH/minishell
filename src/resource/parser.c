@@ -151,7 +151,7 @@ t_handler *ft_parser(t_handler *s)
 	if (finalstate > a.errorlen)
 		get_token(&a, &info);
 	// Podria abrir una funcion para verificas si el ultimo estado puede ser un error de sintaxis
-	ft_sarrprint(info.tokens);
+	// ft_sarrprint(info.tokens);
 	info.tokens = ft_sarradd(info.tokens, " ");
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;

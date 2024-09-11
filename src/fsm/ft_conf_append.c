@@ -2,6 +2,7 @@
 
 void ft_conf_append(t_handler *s, int i)
 {
+    int j = s->info->i;
     s->exec[s->info->i].handler = s;
     s->exec[s->info->i].cmd = ft_calloc(sizeof(t_cmd), 3);
     s->exec[s->info->i].op = APPEND;
@@ -22,6 +23,8 @@ void ft_conf_append(t_handler *s, int i)
     if (s->info->oid != (i + 1))
     {
         s->exec[s->info->i].file.output = open(s->info->tokens[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+        while (s->exec[--j].op == APPEND)
+            s->exec[j].file.output = s->exec[s->info->i].file.output;
         s->exec[s->info->i].state[1] = 0;
     }
     else

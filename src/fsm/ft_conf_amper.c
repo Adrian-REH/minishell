@@ -9,6 +9,8 @@ void ft_conf_amper(t_handler *s, int i)
     s->exec[s->info->i].state[0] = 0;
     s->exec[s->info->i].state[1] = 0;
     s->exec[s->info->i].cmd[0].cmd = 0;
+    s->exec[s->info->i].file.input = 0;
+    s->exec[s->info->i].file.output = 1;
     if (s->info->oid != (i - 1))
     {
         s->exec[s->info->i].cmd[0].line = s->info->tokens[i - 1];

@@ -16,6 +16,7 @@ static int *ft_exec(t_exec *e)
         dispatch_command(e);
         exit(0);
     }
+    close(e->file.input);
     return NULL;
 }
 int *ft_exec_less(t_exec *e)
@@ -26,5 +27,6 @@ int *ft_exec_less(t_exec *e)
         waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
         e->state[0] = WEXITSTATUS(e->cmd->status);
     }
+    e->cmd->status = WEXITSTATUS(e->cmd->status);
     return e->state;
 }

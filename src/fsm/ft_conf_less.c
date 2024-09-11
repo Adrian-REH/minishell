@@ -2,6 +2,7 @@
 
 void ft_conf_less(t_handler *s, int i)
 {
+    int j = s->info->i;
     s->exec[s->info->i].handler = s;
     s->exec[s->info->i].cmd = ft_calloc(sizeof(t_cmd), 3);
     s->exec[s->info->i].op = LESS;
@@ -23,6 +24,8 @@ void ft_conf_less(t_handler *s, int i)
     {
         s->exec[s->info->i].cmd[0].line = s->info->tokens[i + 1];
         s->exec[s->info->i].file.input = open(s->info->tokens[i + 1], O_RDONLY, 0777);
+        while (s->exec[--j].op == LESS)
+            s->exec[j].file.input = s->exec[s->info->i].file.input;
         s->exec[s->info->i].state[1] = 0;
     }
     else
