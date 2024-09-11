@@ -10,12 +10,13 @@ static int *ft_exec(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (close(e->file.input), ft_print_error("dup2", 1, NULL));
-        close(e->file.input);
+        if (dup2(e->file.output, STDOUT_FILENO) == -1)
+            (close(e->file.output), ft_print_error("dup2", 1, NULL));
+        close(e->file.output);
         dispatch_command(e);
         exit(0);
     }
+    close(e->file.output);
     return NULL;
 }
 int *ft_exec_append(t_exec *e)

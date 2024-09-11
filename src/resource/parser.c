@@ -32,6 +32,7 @@ int *handler_execute(t_handler *a)
 	{
 
 		a->state[2] = idstr(a->operators, a->info->tokens[i]);
+
 		a->exec[a->info->i].handler = a;
 		if (strcmp("(", a->info->tokens[i]) == 0)
 			a->exec[a->info->i].priority = 1;
@@ -50,7 +51,6 @@ int *handler_execute(t_handler *a)
 			a->info->oid = -1;
 			a->exec[a->info->i - 1].state[1] = 2;
 		}
-		// printf("state[0]: %d | state[1]: %d | state[2]: %d\n", a->state[0], a->state[1], a->state[2]);
 		// VErifico si el cmd es un built-in y que tipo es
 		if (a->fta[a->state[0]][a->state[1]][a->state[2]])
 		{
@@ -105,10 +105,8 @@ int *execute_command(t_handler *s)
 	{
 		if (exec[i].func[0][0])
 		{
-			if (j == s->len_exec - 1)
+			if ((j == s->len_exec - 1) && exec[i].op == PIPE)
 			{
-				// close(s->fd[1]);
-				// close(exec[i].file.input);
 				exec[i].file.input = s->fd[0];
 				exec[i].file.output = 1;
 				if (exec[i].cmd[1].cmd)
@@ -126,7 +124,7 @@ int *execute_command(t_handler *s)
 			j++;
 			if (j == 1 && 1 != s->len_exec)
 				exec[i].file.output = (s->fd[1]);
-			else if (j == s->len_exec)
+			else if (j == s->len_exec && exec[i].op == PIPE)
 				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
 			exec[i].handler->code = exec[i].status;
@@ -153,7 +151,7 @@ t_handler *ft_parser(t_handler *s)
 	if (finalstate > a.errorlen)
 		get_token(&a, &info);
 	// Podria abrir una funcion para verificas si el ultimo estado puede ser un error de sintaxis
-	// ft_sarrprint(info.tokens);
+	ft_sarrprint(info.tokens);
 	info.tokens = ft_sarradd(info.tokens, " ");
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;
