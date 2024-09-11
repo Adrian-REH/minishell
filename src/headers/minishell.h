@@ -40,6 +40,20 @@ typedef struct s_file
     char *end_heredoc;
 } t_file;
 
+typedef enum e_operators
+{
+    OP_EMPTY,   // 0
+    OP_GREATER, // 1
+    OP_LESS,    // 2
+    OP_HEREDOC, // 3
+    OP_APPEND,  // 4
+    OP_AMPER,   // 5
+    OP_PIPE,    // 6
+    OP_OR,      // 7
+    OP_AND,     // 8
+    OP_INVALID, // 9
+} t_operators;
+
 typedef enum e_states
 {
     EMPTY,        // 0  Empty input

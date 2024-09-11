@@ -46,7 +46,7 @@ int *handler_execute(t_handler *a)
 			if (do_exec(a->info->tokens[i - 1], a->env) && a->state[2] == EMPTY)
 				a->state[1] = UNIQ_COMMAND;
 		}
-		if (a->state[0] == 5 && a->state[2] == 2)
+		if (a->state[0] == OP_PIPE && (a->state[2] == OP_HEREDOC || a->state[2] == OP_GREATER))
 		{
 			a->info->oid = -1;
 			a->exec[a->info->i - 1].state[1] = 2;
@@ -112,19 +112,19 @@ int *execute_command(t_handler *s)
 				if (exec[i].cmd[1].cmd)
 					exec[i].cmd[1].towait = 1;
 			}
-			if (j < (s->len_exec) && j > 0)
+			if (j < (s->len_exec) && j > 0 && (exec[i].op == PIPE || exec[i].op == GREATER))
 			{
-				// if (s->exec[s->info->i].op == PIPE)
-				// close(s->exec[s->info->i].file.input);
 				exec[i].file.input = s->fd[0];
 				close(s->fd[1]);
 				pipe(s->fd);
 				exec[i].file.output = s->fd[1];
 			}
 			j++;
-			if (j == 1 && 1 != s->len_exec)
+			if (j == 1 && 1 != s->len_exec && (exec[i].op == PIPE || exec[i + 1].op == PIPE))
+			{
 				exec[i].file.output = (s->fd[1]);
-			else if (j == s->len_exec && exec[i].op == PIPE)
+			}
+			else if (j == s->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC))
 				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
 			exec[i].handler->code = exec[i].status;

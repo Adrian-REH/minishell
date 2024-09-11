@@ -2,6 +2,7 @@
 
 void ft_conf_less(t_handler *s, int i)
 {
+    char *line;
     int j = s->info->i;
     s->exec[s->info->i].handler = s;
     s->exec[s->info->i].cmd = ft_calloc(sizeof(t_cmd), 3);
@@ -22,8 +23,17 @@ void ft_conf_less(t_handler *s, int i)
         s->exec[s->info->i].state[0] = 1;
     if (s->info->oid != (i + 1))
     {
-        s->exec[s->info->i].cmd[0].line = s->info->tokens[i + 1];
-        s->exec[s->info->i].file.input = open(s->info->tokens[i + 1], O_RDONLY, 0777);
+        line = s->info->tokens[i + 1];
+        line = ft_strtrim(line, "\"");
+        s->exec[s->info->i].file.input = open(line, O_RDONLY, 0777);
+        if (s->exec[s->info->i].file.input == -1)
+        {
+            ft_putstr_fd(" No such file or directory\n", 2);
+            s->exec[s->info->i].state[1] = 1;
+            s->exec[s->info->i].state[0] = 1;
+            s->exec[s->info->i].status = 1;
+        }
+        free(line);
         while (s->exec[--j].op == LESS)
             s->exec[j].file.input = s->exec[s->info->i].file.input;
         s->exec[s->info->i].state[1] = 0;

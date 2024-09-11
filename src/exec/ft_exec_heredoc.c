@@ -10,8 +10,10 @@ static int *ft_exec_give_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        printf("file.output: %d\n", e->file.output);
-        printf("file.input: %d\n", e->file.input);
+        if (e->file.output == -1)
+            (ft_putstr_fd(" No such file or directory", 2), exit(1));
+        if (e->file.input == -1)
+            (ft_putstr_fd(" No such file or directory", 2), exit(1));
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
@@ -70,11 +72,15 @@ int *ft_exec_heredoc(t_exec *e)
     printf("ft_exec_heredoc\n");
     ft_heredoc(e);
     e->cmd++;
-    ft_exec_give_cmd(e);
-    waitpid(e->cmd->pid, &e->cmd->status, 0);
-    e->state[1] = WEXITSTATUS(e->cmd->status);
-    if (e->state[1] != 0 || e->state[1] != 0)
-        e->status = -1;
+    if (e->state[1] == 0)
+    {
+        ft_exec_give_cmd(e);
+        waitpid(e->cmd->pid, &e->cmd->status, 0);
+        e->state[1] = WEXITSTATUS(e->cmd->status);
+    }
+    e->status = WEXITSTATUS(e->cmd->status);
+    if (e->state[1] != 0)
+        e->status = 1;
     e->file.input = e->cmd->fd_aux[READ];
     e->file.output = e->cmd->fd_aux[WRITE];
     e->handler->code = e->state[1];

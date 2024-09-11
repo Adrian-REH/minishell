@@ -28,7 +28,7 @@ static int *ft_exec(t_exec *e)
     e->file.input = e->cmd->fd_aux[READ];
     return NULL;
 }
-static int *ft_exec_give_cmd(t_exec *e)
+static int *ft_exec_sec_cmd(t_exec *e)
 {
     //	return (ft_print_error("pipe", 1, ""), NULL);
     e->cmd->pid = fork();
@@ -39,6 +39,8 @@ static int *ft_exec_give_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
+        printf("e->file.input: %d\n", e->file.input);
+        printf("e->file.output: %d\n", e->file.output);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
@@ -62,7 +64,6 @@ static int *ft_exec_give_cmd(t_exec *e)
 int *ft_exec_pipe(t_exec *e)
 {
     char *p_heredoc;
-    // printf("ft_exec_pipe: \n");
     if (e->state[1] == 1)
     {
         ft_putstr_fd(">", STDOUT_FILENO);
@@ -72,22 +73,21 @@ int *ft_exec_pipe(t_exec *e)
     }
     if (e->state[0] == 0)
     {
-        // printf("cmd[0]: %s\n", e->cmd->line);
         ft_exec(e);
         waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-        e->state[1] = WEXITSTATUS(e->cmd->status);
+        e->state[0] = WEXITSTATUS(e->cmd->status);
     }
     e->cmd++;
-
-    // printf("cmd[1]: %s\n", e->cmd->line);
-    ft_exec_give_cmd(e);
-    waitpid(e->cmd->pid, &e->cmd->status, 0);
-    e->state[1] = WEXITSTATUS(e->cmd->status);
-
-    if (e->cmd[0].status != 0 || e->cmd[1].status != 0)
+    if (e->state[1] == 0)
+    {
+        ft_exec_sec_cmd(e);
+        waitpid(e->cmd->pid, &e->cmd->status, 0);
+        e->state[1] = WEXITSTATUS(e->cmd->status);
+    }
+    if (e->state[1] != 0)
         e->status = 1;
-    e->file.input = e->cmd->fd_aux[READ];
-    e->file.output = e->cmd->fd_aux[WRITE];
+    // e->file.input = e->cmd->fd_aux[READ];
+    // e->file.output = e->cmd->fd_aux[WRITE];
     e->handler->code = e->status;
     return e->state;
 }

@@ -2,6 +2,7 @@
 
 void ft_conf_greater(t_handler *s, int i)
 {
+    char *line;
     int j = s->info->i;
     s->exec[s->info->i].handler = s;
     s->exec[s->info->i].cmd = ft_calloc(sizeof(t_cmd), 3);
@@ -22,7 +23,11 @@ void ft_conf_greater(t_handler *s, int i)
         s->exec[s->info->i].state[0] = 1;
     if (s->info->oid != (i + 1))
     {
-        s->exec[s->info->i].file.output = open(s->info->tokens[i + 1], O_WRONLY | O_CREAT, 0777);
+        line = s->info->tokens[i + 1];
+        line = ft_strtrim(line, "\"");
+        s->exec[s->info->i].file.output = open(line, O_WRONLY | O_CREAT, 0777);
+        printf("s->exec[s->info->i].file.output: %d\n", s->exec[s->info->i].file.output);
+        free(line);
         while (s->exec[--j].op == GREATER)
             s->exec[j].file.output = s->exec[s->info->i].file.output;
         s->exec[s->info->i].state[1] = 0;

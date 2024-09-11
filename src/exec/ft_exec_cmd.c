@@ -27,6 +27,7 @@ int *ft_exec_cmd(t_exec *e)
 	}
 	else if ((type >= 4) && e->handler->fb[type])
 		e->handler->fb[type](e->cmd);
-	e->state[0] = e->cmd->status;
+	if (e->state[0] != 0)
+		e->status = 1;
 	return e->state;
 }

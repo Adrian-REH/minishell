@@ -38,7 +38,7 @@ int *ft_exec_and(t_exec *e)
 	}
 	e->cmd--;
 	if (e->state[1] != 0 || e->state[1] != 0)
-		e->status = -1;
-    e->handler->code = e->state[1];
+		e->status = 1;
+	e->handler->code = e->state[1];
 	return e->state;
 }
