@@ -206,6 +206,9 @@ t_handler *ft_parser(t_handler *s);
 t_handler *ft_execute(t_handler *s);
 t_handler *ft_error(t_handler *s);
 t_handler *ft_clear(t_handler *s);
+t_handler *ft_execute(t_handler *s);
+t_handler *ft_config(t_handler *s);
+
 int ft_isbuiltin(char **builtins, char *token);
 void ft_conf_or(t_handler *s, int i);
 void ft_conf_and(t_handler *s, int i);

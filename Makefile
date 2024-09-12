@@ -30,17 +30,19 @@ lib/ft_find_str.c \
 lib/ft_get_path.c \
 lib/ft_delete_cmd.c \
 src/minishell.c \
-src/resource/parser.c \
+src/fsm/parser.c \
+src/fsm/config.c \
+src/fsm/execute.c \
 src/resource/init_learning.c \
-src/fsm/ft_conf_and.c \
-src/fsm/ft_conf_pipe.c \
-src/fsm/ft_conf_or.c \
-src/fsm/ft_conf_less.c \
-src/fsm/ft_conf_heredoc.c \
-src/fsm/ft_conf_greater.c \
-src/fsm/ft_conf_append.c \
-src/fsm/ft_conf_amper.c \
-src/fsm/ft_conf_cmd.c \
+src/config/ft_conf_and.c \
+src/config/ft_conf_pipe.c \
+src/config/ft_conf_or.c \
+src/config/ft_conf_less.c \
+src/config/ft_conf_heredoc.c \
+src/config/ft_conf_greater.c \
+src/config/ft_conf_append.c \
+src/config/ft_conf_amper.c \
+src/config/ft_conf_cmd.c \
 src/exec/builtins/ft_exec_echo.c \
 src/exec/builtins/ft_exec_cd.c \
 src/exec/builtins/ft_exec_pwd.c \
@@ -86,6 +88,7 @@ $(OBJ_DIRS):
 	mkdir -p obj/src/exec 
 	mkdir -p obj/src/exec/builtins 
 	mkdir -p obj/src/fsm
+	mkdir -p obj/src/config
 
 all :$(OBJ_DIR) $(NAME)
 

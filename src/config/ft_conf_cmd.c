@@ -6,7 +6,6 @@ void ft_conf_cmd(t_handler *s, int i)
     t_exec *exec;
     t_block *b;
 
-    printf("ft_conf_cmd: %d\n", s->info->i);
     b = &(s->block[s->info->i]);
     if (s->block[s->info->i].isnext)
     {

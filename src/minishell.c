@@ -1,5 +1,6 @@
 
 #include "headers/minishell.h"
+
 char **toarr(char **argenv)
 {
     char **arr;
@@ -23,7 +24,9 @@ int main(int argc, char **argv, char **argenv)
     handler.env = toarr(argenv);
     // struct t_rule (*seg[1])(struct t_rule pedidos) = {ft_parser};
     handler.seg[0] = ft_parser;
-    handler.seg[1] = ft_clear;
+    handler.seg[1] = ft_config;
+    handler.seg[2] = ft_execute;
+    handler.seg[3] = ft_clear;
     // handler.seg[2] = ft_handler_exceptions;
     //  inicializar info aqui y liberar luego
     init_handler(&handler);
@@ -39,6 +42,8 @@ int main(int argc, char **argv, char **argenv)
                    break; */
         handler.seg[0](&handler);
         handler.seg[1](&handler);
+        handler.seg[2](&handler);
+        handler.seg[3](&handler);
         if (handler.w_cmd)
         {
             i = -1;
