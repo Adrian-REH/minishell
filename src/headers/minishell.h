@@ -38,6 +38,7 @@ typedef struct s_file
     int output;
     int fd_aux[2];
     char *end_heredoc;
+    char *dir_file;
 } t_file;
 
 typedef enum e_operators

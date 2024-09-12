@@ -39,8 +39,6 @@ static int *ft_exec_sec_cmd(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        printf("e->file.input: %d\n", e->file.input);
-        printf("e->file.output: %d\n", e->file.output);
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)

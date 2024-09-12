@@ -25,18 +25,20 @@ void ft_conf_greater(t_handler *s, int i)
     {
         line = s->info->tokens[i + 1];
         line = ft_strtrim(line, "\"");
+        s->exec[s->info->i].file.dir_file = line; // Tengo que liberar la linea
         s->exec[s->info->i].file.output = open(line, O_WRONLY | O_CREAT, 0777);
-        printf("s->exec[s->info->i].file.output: %d\n", s->exec[s->info->i].file.output);
-        free(line);
-        while (s->exec[--j].op == GREATER)
-            s->exec[j].file.output = s->exec[s->info->i].file.output;
         s->exec[s->info->i].state[1] = 0;
     }
     else
         s->exec[s->info->i].state[1] = 1;
+    while (s->exec[--j].op == GREATER)
+    {
+        s->exec[j].file.dir_file = s->exec[s->info->i].file.dir_file;
+    }
     s->exec[s->info->i].cmd[1].cmd = NULL;
     s->info->oid = i + 1;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
-    s->exec[s->info->i].func[0][0] = ft_exec_greater;
+    if (s->exec[s->info->i - 1].op != GREATER)
+        s->exec[s->info->i].func[0][0] = ft_exec_greater;
     s->info->i++;
 }

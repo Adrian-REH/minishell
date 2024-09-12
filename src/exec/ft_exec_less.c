@@ -10,8 +10,7 @@ static int *ft_exec(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        if (e->file.output == -1)
-            (ft_putstr_fd(" No such file or directory", 2), exit(1));
+        e->file.input = open(e->file.dir_file, O_RDONLY);
         if (e->file.input == -1)
             (ft_putstr_fd(" No such file or directory", 2), exit(1));
         if (dup2(e->file.input, STDIN_FILENO) == -1)

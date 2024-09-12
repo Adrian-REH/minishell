@@ -2,6 +2,7 @@
 
 void ft_conf_append(t_handler *s, int i)
 {
+    char *line;
     int j = s->info->i;
     s->exec[s->info->i].handler = s;
     s->exec[s->info->i].cmd = ft_calloc(sizeof(t_cmd), 3);
@@ -22,16 +23,19 @@ void ft_conf_append(t_handler *s, int i)
         s->exec[s->info->i].state[0] = 1;
     if (s->info->oid != (i + 1))
     {
-        s->exec[s->info->i].file.output = open(s->info->tokens[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+        line = s->info->tokens[i + 1];
+        line = ft_strtrim(line, "\"");
+        s->exec[s->info->i].file.dir_file = line; // Tengo que liberar la linea
         while (s->exec[--j].op == APPEND)
-            s->exec[j].file.output = s->exec[s->info->i].file.output;
+            s->exec[j].file.dir_file = s->exec[s->info->i].file.dir_file;
         s->exec[s->info->i].state[1] = 0;
     }
     else
         s->exec[s->info->i].state[1] = 1;
     s->exec[s->info->i].cmd[1].cmd = NULL;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
-    s->exec[s->info->i].func[0][0] = ft_exec_append;
+    if (s->exec[s->info->i - 1].op != APPEND)
+        s->exec[s->info->i].func[0][0] = ft_exec_append;
 
     s->info->oid = i + 1;
     s->info->i++;

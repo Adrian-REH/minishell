@@ -112,7 +112,7 @@ int *execute_command(t_handler *s)
 				if (exec[i].cmd[1].cmd)
 					exec[i].cmd[1].towait = 1;
 			}
-			if (j < (s->len_exec) && j > 0 && (exec[i].op == PIPE || exec[i].op == GREATER))
+			if (j < (s->len_exec) && j > 0 && (exec[i].op == PIPE || exec[i].op == GREATER || exec[i].op == LESS))
 			{
 				exec[i].file.input = s->fd[0];
 				close(s->fd[1]);
@@ -120,11 +120,11 @@ int *execute_command(t_handler *s)
 				exec[i].file.output = s->fd[1];
 			}
 			j++;
-			if (j == 1 && 1 != s->len_exec && (exec[i].op == PIPE || exec[i + 1].op == PIPE))
+			if (j == 1 && 1 != s->len_exec && (exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == LESS))
 			{
 				exec[i].file.output = (s->fd[1]);
 			}
-			else if (j == s->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC))
+			else if (j == s->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
 				exec[i].file.output = 1;
 			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
 			exec[i].handler->code = exec[i].status;

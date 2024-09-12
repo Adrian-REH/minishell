@@ -18,21 +18,18 @@ void ft_conf_heredoc(t_handler *s, int i)
         pipe(s->exec[s->info->i].cmd[1].fd_aux);
     }
     else
-    {
         s->exec[s->info->i].state[1] = 1;
-        // Transferir los heredocs
-        while (s->exec[--j].op == HEREDOC)
-        {
-            s->exec[s->info->i].cmd[1].line = s->exec[j].cmd[1].line;
-            s->exec[s->info->i].cmd[1].cmd = s->exec[j].cmd[1].cmd;
-            close(s->exec[j].cmd[1].fd_aux[0]);
-            close(s->exec[j].cmd[1].fd_aux[1]);
-            s->exec[j].state[1] = 1;
-            pipe(s->exec[s->info->i].cmd[1].fd_aux);
-            s->exec[s->info->i].state[1] = 0;
-        }
-    }
 
+    // Transferir los heredocs
+    while (s->exec[--j].op == HEREDOC)
+    {
+        s->exec[s->info->i].cmd[1].line = s->exec[j].cmd[1].line;
+        s->exec[s->info->i].cmd[1].cmd = s->exec[j].cmd[1].cmd;
+        s->exec[s->info->i].cmd[1].fd_aux[0] = (s->exec[j].cmd[1].fd_aux[0]);
+        s->exec[s->info->i].cmd[1].fd_aux[1] = (s->exec[j].cmd[1].fd_aux[1]);
+        s->exec[j].state[1] = 1;
+        s->exec[s->info->i].state[1] = 0;
+    }
     s->exec[s->info->i].file.end_heredoc = ft_strjoin(s->info->tokens[i + 1], "\n");
     pipe(s->exec[s->info->i].cmd[0].fd_aux);
 
