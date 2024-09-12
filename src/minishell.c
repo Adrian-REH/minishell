@@ -37,8 +37,6 @@ int main(int argc, char **argv, char **argenv)
             add_history(comand);
         /*        if (strcmp(comand, "exit") == 0)
                    break; */
-        if (strcmp(comand, "clear") == 0)
-            clear_history();
         handler.seg[0](&handler);
         handler.seg[1](&handler);
         if (handler.w_cmd)

@@ -55,6 +55,13 @@ typedef enum e_operators
     OP_INVALID, // 9
 } t_operators;
 
+typedef enum e_op_block
+{
+    BLOCK_EMPTY, // 0
+    BLOCK_AND,   // 1
+    BLOCK_OR,    // 2
+} t_op_block;
+
 typedef enum e_states
 {
     EMPTY,        // 0  Empty input
@@ -76,6 +83,23 @@ typedef enum e_states
     CLOSE_PAREN,  // 16 Close parenthesis ())
     UNIQ_COMMAND,
 } t_states;
+
+typedef struct s_block
+{
+    struct s_exec *prev_exec; // lista de ejeciones anteriores
+    struct s_exec *next_exec; // Lista de ejecuciones siguientes
+    int len_exec_prev;        // Cantidad de ejecuciones
+    int len_exec_next;        // Cantidad de ejecuciones
+    int len_exec;             // Cantidad de ejecuciones
+    int op;                   // Operador
+    int priority;             // Prioridad de ejecucion
+    int type;                 // Tipo de ejecucion
+    int fd[2];                // este es el fd padre que se va a usar para cada el hijo
+    t_file file;              // fichero Salida para esta ejecucion
+    int status;               // Estado de la ejecucion
+    int isnext;               // Si es siguiente
+} t_block;
+
 typedef struct s_automata
 {
     void *data;                                            //
@@ -116,6 +140,7 @@ typedef struct s_exec
     int finish;
     int *state;
     int op;
+    struct s_exec *blocks;
     t_file file;                               // fichero Salida para esta ejecucion
     int status;                                // Estado de las ejecuciones
     t_cmd *cmd;                                // Aqui se guardan los comandos a ejecutarse en cada funcion
@@ -131,23 +156,23 @@ luego debo programar la matriz de estados.
 
 typedef struct s_handler
 {
-    char **operators;                                       //
-    char **builtins;                                        //
+    char **operators; //
+    char **builtins;  //
+    t_block *block;   //
+    int len_block;    //
+    char *line;
     t_cmd *w_cmd;                                           //
     int n_pids;                                             //
     t_data *info;                                           //
     int state[3];                                           //
-    int fd[2];                                              // este es el fd padre que se va a usar para cada el hijo
     int code;                                               // Aqui debe tener el codigo de error
     char **env;                                             // Esto debe ser el entorno
-    char *line;                                             // Esto debe ser la linea de comando
-    struct s_exec *exec;                                    // Esto debe llenarse con la estructura de ejecucion
-    int len_exec;                                           // Esto debe llenarse con la estructura de ejecucion
     struct s_handler *(*seg[5])(struct s_handler *rule);    // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
     void (*fb[10])(struct s_cmd *cmd);                      // Son funciones de ejecucion, personalizadas
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
 
+t_exec *add_exec(t_exec *execs, t_exec exec);
 char *ft_getenv(t_cmd *cmd, char *str);
 void *ft_realloc(void *ptr, size_t size);
 int dispatch_command(t_exec *e);

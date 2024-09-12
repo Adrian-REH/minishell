@@ -26,21 +26,46 @@ int *handler_execute(t_handler *a)
 {
 	int i = -1;
 	int j = 0;
+	t_exec *exec;
+	int i_exec;
 
 	// a->exec[0].file.input = 0;
+	a->block[a->info->i].op = BLOCK_EMPTY;
+	a->block[a->info->i].isnext = 0;
+	a->block[a->info->i].len_exec_prev = 0;
+	a->block[a->info->i].len_exec_next = 0;
+	a->block[a->info->i].len_exec = 0;
+	a->block[a->info->i].prev_exec = 0;
+	a->block[a->info->i].next_exec = 0;
 	while (a->info->tokens[++i])
 	{
+		if (a->block[a->info->i].isnext)
+		{
+			a->block[a->info->i].next_exec = ft_realloc(a->block[a->info->i].next_exec, sizeof(t_exec) * (a->block[a->info->i].len_exec_next + 1));
+			exec = a->block[a->info->i].next_exec;
+			i_exec = a->block[a->info->i].len_exec_next;
+		}
+		else
+		{
+			a->block[a->info->i].prev_exec = ft_realloc(a->block[a->info->i].prev_exec, sizeof(t_exec) * (a->block[a->info->i].len_exec_prev + 1));
+			i_exec = a->block[a->info->i].len_exec_prev;
+			exec = a->block[a->info->i].prev_exec;
+		}
 
 		a->state[2] = idstr(a->operators, a->info->tokens[i]);
-
-		a->exec[a->info->i].handler = a;
-		if (strcmp("(", a->info->tokens[i]) == 0)
-			a->exec[a->info->i].priority = 1;
-		else if (strcmp(")", a->info->tokens[i]) == 0)
-			a->exec[a->info->i].priority = 0;
-		if (a->exec[a->info->i].priority)
-			a->exec[a->info->i].priority = 1;
+		exec[i_exec].handler = a;
+		if (a->state[2] == 9)
+		{
+			a->block[a->info->i].priority = 1;
+			a->state[2] = 0;
+		}
+		else if (a->state[2] == 10)
+		{
+			a->block[a->info->i].priority = 1;
+			a->state[2] = 0;
+		}
 		// Verifico si es un cmd o un file o si es un idstr
+
 		if (a->state[1] == NOT_OPERATOR)
 		{
 			if (do_exec(a->info->tokens[i - 1], a->env) && a->state[2] == EMPTY)
@@ -49,15 +74,17 @@ int *handler_execute(t_handler *a)
 		if (a->state[0] == OP_PIPE && (a->state[2] == OP_HEREDOC || a->state[2] == OP_GREATER))
 		{
 			a->info->oid = -1;
-			a->exec[a->info->i - 1].state[1] = 2;
+			exec[i_exec - 1].state[1] = 2;
 		}
 		// VErifico si el cmd es un built-in y que tipo es
 		if (a->fta[a->state[0]][a->state[1]][a->state[2]])
 		{
 			j++;
 			a->fta[a->state[0]][a->state[1]][a->state[2]](a, i - 1);
+			if (a->state[1] == OP_AND || a->state[1] == OP_OR)
+				a->state[1] = 0;
 		}
-		a->len_exec = j;
+		a->block[a->info->i].len_exec = j;
 		a->state[0] = a->state[1];
 		a->state[1] = a->state[2];
 	}
@@ -92,7 +119,7 @@ void init_handler(t_handler *s)
  * poder ejecutar la siguiente funcion. El objetivo es poder ejecutar los distintos estados del comando si es que lo necesita.
  * Hasta devolver un finish.
  */
-int *execute_command(t_handler *s)
+/* int *execute_command(t_handler *s)
 {
 	int i;
 	int j;
@@ -101,6 +128,8 @@ int *execute_command(t_handler *s)
 	i = -1;
 	j = 0;
 	exec = s->exec;
+	// Debo ejecutar los anteriores a AND y OR y ante el resultado de estos ejecutar los siguientes
+	// Para ello debo posicionarme donde hay un primer AND u OR y ejecutar los anteriores de izq a Derecha.
 	while (++i < s->len_exec)
 	{
 		if (exec[i].func[0][0])
@@ -132,10 +161,111 @@ int *execute_command(t_handler *s)
 	}
 	return (exec[i].state);
 }
+ */
+
+int execute_cmds(t_block *b, int isnext)
+{
+	int i;
+	int j;
+	t_exec *exec;
+
+	i = -1;
+	j = 0;
+	if (isnext)
+	{
+		exec = b->next_exec;
+		b->len_exec = b->len_exec_next;
+	}
+	else
+	{
+		exec = b->prev_exec;
+		b->len_exec = b->len_exec_prev;
+	}
+	// Debo ejecutar los anteriores a AND y OR y ante el resultado de estos ejecutar los siguientes
+	// Para ello debo posicionarme donde hay un primer AND u OR y ejecutar los anteriores de izq a Derecha.
+	printf("len_exec: %d\n", b->len_exec);
+	while (++i < b->len_exec)
+	{
+		if (exec[i].func[0][0])
+		{
+			if ((j == b->len_exec - 1) && exec[i].op == PIPE)
+			{
+				exec[i].file.input = b->fd[0];
+				exec[i].file.output = 1;
+				if (exec[i].cmd[1].cmd)
+					exec[i].cmd[1].towait = 1;
+			}
+			if (j < (b->len_exec) && j > 0 && (exec[i].op == PIPE || exec[i].op == GREATER || exec[i].op == LESS))
+			{
+				exec[i].file.input = b->fd[0];
+				close(b->fd[1]);
+				pipe(b->fd);
+				exec[i].file.output = b->fd[1];
+			}
+			j++;
+			if (j == 1 && 1 != b->len_exec && (exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == LESS))
+			{
+				exec[i].file.output = (b->fd[1]);
+			}
+			else if (j == b->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
+				exec[i].file.output = 1;
+			exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+			b->status = exec[i].status;
+		}
+	}
+	return (b->status);
+}
+
+int *block_execute(t_handler *s)
+{
+	int i;
+
+	i = -1;
+	// Debo ejecutar los anteriores a AND y OR y ante el resultado de estos ejecutar los siguientes
+	while (++i < s->len_block)
+	{
+		if (s->block[i].len_exec_prev)
+		{
+			printf("block[%d].prev_op: %d\n", i, s->block[i].op);
+			execute_cmds(&(s->block[i]), 0);
+			if (s->block[i].status == 1 && s->block[i].op == AND)
+				break;
+			else if (s->block[i].status == 0 && s->block[i].op == OR)
+			{
+				if (s->block[i].priority)
+					continue;
+				break;
+			}
+		}
+		else
+		{
+			// Devo verificar el estado del blocke anterior y validarlo con el tipo de operador en el que estoy.
+		}
+		if (s->block[i].len_exec_next)
+		{
+			printf("block[%d].next_op: %d\n", i, s->block[i].op);
+			execute_cmds(&(s->block[i]), 1);
+			if (s->block[i].status == 1 && s->block[i + 1].op == AND)
+			{
+				if (s->block[i].priority && s->block[i + 1].op == OR)
+					continue;
+				break;
+			}
+			else if (s->block[i].status == 0 && s->block[i + 1].op == OR)
+			{
+				if (s->block[i].priority && s->block[i + 1].op == OR)
+					continue;
+				break;
+			}
+		}
+	}
+	return (NULL);
+}
 
 t_handler *ft_parser(t_handler *s)
 {
 	(void)s;
+	int i;
 	t_automata a;
 	t_data info;
 	int finalstate;
@@ -157,16 +287,29 @@ t_handler *ft_parser(t_handler *s)
 	s->state[1] = 0;
 	s->state[2] = 0;
 	s->info->i = 0;
-	s->info->oid = 30;
-	s->exec = 0;
-	if (pipe(s->fd) == -1)
-		return s;
-	s->exec = malloc(sizeof(t_exec) * (ft_sarrsize(s->info->tokens) + 1));
-	if (!s->exec)
+
+	i = -1;
+	s->len_block = 1;
+	while (s->info->tokens[++i])
+	{
+		if (idstr(s->operators, s->info->tokens[i]) == 8)
+		{
+			s->len_block++;
+		}
+		else if (idstr(s->operators, s->info->tokens[i]) == 7)
+		{
+			s->len_block++;
+		}
+	}
+	s->block = malloc(sizeof(t_block) * (s->len_block));
+	if (!s->block)
 		return (s);
+	s->block->op = BLOCK_EMPTY;
+	s->info->oid = 30;
+	if (pipe(s->block->fd) == -1)
+		return s;
 	// Proceso los tokens y configuro el entorno para la ejecucion
 	handler_execute(s);
-	int i;
 	i = 0;
 	if (s->w_cmd)
 	{
@@ -177,7 +320,9 @@ t_handler *ft_parser(t_handler *s)
 	if (info.len_tokens <= 1)
 		return s;
 	// Ejecuto los comandos en base a las configuraciones.
-	execute_command(s);
+
+	block_execute(s);
+	// execute_command(s);
 	return (s);
 }
 t_handler *ft_clear(t_handler *s)
@@ -187,12 +332,7 @@ t_handler *ft_clear(t_handler *s)
 	s->state[0] = 0;
 	s->state[1] = 0;
 	s->state[2] = 0;
-	s->len_exec = 0;
 	s->info = 0;
-	s->line = NULL;
-	s->fd[0] = -1;
-	s->fd[1] = -1;
-	s->exec = 0;
 	return (s);
 }
 t_handler *ft_exec(t_handler *s)

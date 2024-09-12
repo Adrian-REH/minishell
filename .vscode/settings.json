@@ -59,6 +59,7 @@
   "files.associations": {
     "inttypes.h": "c",
     "minishell.h": "c",
-    "exception": "c"
+    "exception": "c",
+    "typeinfo": "c"
   }
 }
