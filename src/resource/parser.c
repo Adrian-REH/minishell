@@ -130,8 +130,6 @@ int *execute_command(t_handler *s)
 			exec[i].handler->code = exec[i].status;
 		}
 	}
-	close(s->fd[0]);
-	close(s->fd[1]);
 	return (exec[i].state);
 }
 

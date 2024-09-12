@@ -25,14 +25,7 @@ void ft_conf_less(t_handler *s, int i)
     {
         line = s->info->tokens[i + 1];
         line = ft_strtrim(line, "\"");
-        s->exec[s->info->i].file.input = open(line, O_RDONLY, 0777);
-        if (s->exec[s->info->i].file.input == -1)
-        {
-            ft_putstr_fd(" No such file or directory\n", 2);
-            s->exec[s->info->i].state[1] = 1;
-            s->exec[s->info->i].state[0] = 1;
-            s->exec[s->info->i].status = 1;
-        }
+        s->exec[s->info->i].file.input = open(line, O_RDONLY);
         free(line);
         while (s->exec[--j].op == LESS)
             s->exec[j].file.input = s->exec[s->info->i].file.input;

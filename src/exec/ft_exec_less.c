@@ -26,7 +26,10 @@ static int *ft_exec(t_exec *e)
         dispatch_command(e);
         exit(0);
     }
-    close(e->file.output);
+    if (e->file.output != 1)
+        close(e->file.output);
+    if (e->file.input != 0)
+        close(e->file.input);
     return NULL;
 }
 int *ft_exec_less(t_exec *e)
