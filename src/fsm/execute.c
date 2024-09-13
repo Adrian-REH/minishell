@@ -43,7 +43,7 @@ int execute_cmds(t_block *b, int isnext)
             }
             else if (j == b->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
                 exec[i].file.output = 1;
-            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec));
+            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
             b->status = exec[i].status;
         }
     }
