@@ -28,6 +28,7 @@ void ft_conf_cmd(t_handler *s, int i)
     // if (ft_strchr(s->info->tokens[i], '$') && ft_isalpha(ft_strchr(s->info->tokens[i], '$')[1]))
     //     s->exec[s->info->i].cmd->line = ft_getenv(s->exec[s->info->i].cmd, s->info->tokens[i] + 1);
     exec[k].cmd->cmd = do_exec(exec[k].cmd->line, s->env);
+    exec[k].cmd->cmd = sarr_clean_quote(exec[k].cmd->cmd);
     exec[k].op = UNIQ_COMMAND;
     // pipe(s->exec[s->info->i].cmd->fd_aux);
     s->info->oid = i;
@@ -36,12 +37,10 @@ void ft_conf_cmd(t_handler *s, int i)
     if (s->block[s->info->i].isnext)
     {
         s->block[s->info->i].len_exec_next++;
-        printf("ft_conf_cmd: %d\n", s->block[s->info->i].len_exec_next);
     }
     else
     {
         s->block[s->info->i].len_exec_prev++;
-        printf("ft_conf_cmd: %d\n", s->block[s->info->i].len_exec_prev);
     }
     // s->info->i++;
 }

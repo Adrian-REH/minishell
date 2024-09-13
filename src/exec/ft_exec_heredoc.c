@@ -11,9 +11,9 @@ static int *ft_exec_give_cmd(t_exec *e)
     else if (e->cmd->pid == 0)
     {
         if (e->file.output == -1)
-            (ft_putstr_fd(" No such file or directory", 2), exit(1));
+            (ft_print_error(strerror(errno), 1, NULL));
         if (e->file.input == -1)
-            (ft_putstr_fd(" No such file or directory", 2), exit(1));
+            (ft_print_error(strerror(errno), 1, NULL));
         if (dup2(e->file.input, STDIN_FILENO) == -1)
             (close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
@@ -78,11 +78,9 @@ int *ft_exec_heredoc(t_exec *e)
         waitpid(e->cmd->pid, &e->cmd->status, 0);
         e->state[1] = WEXITSTATUS(e->cmd->status);
     }
-    e->status = WEXITSTATUS(e->cmd->status);
-    if (e->state[1] != 0)
-        e->status = 1;
+    e->status = e->state[1];
+    e->state[0] = e->state[1];
     e->file.input = e->cmd->fd_aux[READ];
     e->file.output = e->cmd->fd_aux[WRITE];
-    e->handler->code = e->state[1];
     return e->state;
 }

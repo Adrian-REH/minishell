@@ -3,7 +3,7 @@
 void ft_conf_append(t_handler *s, int i)
 {
     char *line;
-    int j = s->info->i;
+    int j;
     int k;
     t_exec *exec;
     t_block *b;
@@ -19,6 +19,7 @@ void ft_conf_append(t_handler *s, int i)
         k = b->len_exec_prev;
         exec = b->prev_exec;
     }
+    j = k;
     exec[k].handler = s;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
     exec[k].op = APPEND;
@@ -32,6 +33,7 @@ void ft_conf_append(t_handler *s, int i)
     {
         exec[k].cmd[0].line = s->info->tokens[i - 1];
         exec[k].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
+        exec[k].cmd[0].cmd = sarr_clean_quote(exec[k].cmd[0].cmd);
         pipe(exec[k].cmd[0].fd_aux);
     }
     else
@@ -41,15 +43,16 @@ void ft_conf_append(t_handler *s, int i)
         line = s->info->tokens[i + 1];
         line = ft_strtrim(line, "\"");
         exec[k].file.dir_file = line; // Tengo que liberar la linea
-        while (exec[--j].op == APPEND)
-            exec[j].file.dir_file = exec[k].file.dir_file;
+
         exec[k].state[1] = 0;
     }
     else
         exec[k].state[1] = 1;
     exec[k].cmd[1].cmd = NULL;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
-    if (exec[s->info->i - 1].op != APPEND)
+    while (exec[--j].op)
+        exec[j].file.dir_file = exec[k].file.dir_file;
+    if (exec[k - 1].op != APPEND)
         exec[k].func[0][0] = ft_exec_append;
 
     s->info->oid = i + 1;

@@ -40,17 +40,16 @@ static int *ft_exec_sec_cmd(t_exec *e)
     else if (e->cmd->pid == 0)
     {
         if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (ft_print_error("dup2: ", 1, "input error"));
+            (close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
             close(e->file.input);
         if (e->file.output != 1)
         {
             if (dup2(e->file.output, STDOUT_FILENO) == -1)
-                (ft_print_error("dup2", 1, NULL));
+                (ft_print_error("dup2", 1, "output error"));
             close(e->file.output);
         }
-        dispatch_command(e);
-        exit(0);
+        exit(dispatch_command(e)); // Finalizo con el estado del builtin sino
     }
     if (e->file.input != 0)
         close(e->file.input);
@@ -82,10 +81,7 @@ int *ft_exec_pipe(t_exec *e)
         waitpid(e->cmd->pid, &e->cmd->status, 0);
         e->state[1] = WEXITSTATUS(e->cmd->status);
     }
-    if (e->state[1] != 0)
-        e->status = 1;
-    // e->file.input = e->cmd->fd_aux[READ];
-    // e->file.output = e->cmd->fd_aux[WRITE];
-    e->handler->code = e->status;
+
+    e->status = e->state[1];
     return e->state;
 }

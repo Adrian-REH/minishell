@@ -22,7 +22,7 @@ int execute_cmds(t_block *b, int isnext)
     {
         if (exec[i].func[0][0])
         {
-            if ((j == b->len_exec - 1) && exec[i].op == PIPE)
+            if ((j == b->len_exec - 1) && (exec[i].op == PIPE))
             {
                 exec[i].file.input = b->fd[0];
                 exec[i].file.output = 1;
@@ -43,10 +43,11 @@ int execute_cmds(t_block *b, int isnext)
             }
             else if (j == b->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
                 exec[i].file.output = 1;
-            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec[i]));
+            exec[i].state = exec[i].func[EMPTY][EMPTY](&(exec));
             b->status = exec[i].status;
         }
     }
+
     return (b->status);
 }
 
@@ -104,6 +105,7 @@ int *block_execute(t_handler *s)
                 continue;
         }
     }
+    s->code = s->block[i - 1].status;
     return (NULL);
 }
 

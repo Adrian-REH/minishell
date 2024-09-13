@@ -19,6 +19,7 @@
 #include <dirent.h>
 #include <sys/ioctl.h>
 #include <sys/param.h>
+
 #include "../../lib/libft/libft.h"
 #define READ 0
 #define WRITE 1
@@ -38,6 +39,8 @@ typedef struct s_file
     int output;
     int fd_aux[2];
     char *end_heredoc;
+    char **content;
+    int len_content;
     char *dir_file;
 } t_file;
 
@@ -171,7 +174,7 @@ typedef struct s_handler
     void (*fb[10])(struct s_cmd *cmd);                      // Son funciones de ejecucion, personalizadas
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
-
+char **sarr_clean_quote(char **arr);
 t_exec *add_exec(t_exec *execs, t_exec exec);
 char *ft_getenv(t_cmd *cmd, char *str);
 void *ft_realloc(void *ptr, size_t size);
@@ -208,7 +211,7 @@ t_handler *ft_error(t_handler *s);
 t_handler *ft_clear(t_handler *s);
 t_handler *ft_execute(t_handler *s);
 t_handler *ft_config(t_handler *s);
-
+t_cmd *add_cmd(t_cmd *cmds, t_cmd cmd);
 int ft_isbuiltin(char **builtins, char *token);
 void ft_conf_or(t_handler *s, int i);
 void ft_conf_and(t_handler *s, int i);

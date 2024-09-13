@@ -44,7 +44,7 @@ int *handler_execute(t_handler *a)
         }
 
         exec[i_exec].handler = a;
-        if (a->state[0] == OP_PIPE && (a->state[2] == OP_HEREDOC || a->state[2] == OP_GREATER))
+        if (a->state[0] == OP_PIPE && (a->state[2] == OP_HEREDOC || a->state[2] == OP_APPEND || a->state[2] == OP_GREATER || a->state[2] == OP_LESS))
         {
             a->info->oid = -1;
             exec[i_exec - 1].state[1] = 2;

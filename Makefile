@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Werror -Wall -Wextra -g3  #-fsanitize=thread 
+CFLAGS = -Werror -Wall -Wextra  #-fsanitize=thread 
 
 RM = rm -rf
 OBJ_DIRS = obj/
@@ -29,6 +29,10 @@ lib/ft_idbychar.c \
 lib/ft_find_str.c \
 lib/ft_get_path.c \
 lib/ft_delete_cmd.c \
+lib/ft_realloc.c \
+lib/ft_add_exec.c \
+lib/ft_add_cmd.c \
+lib/ft_clean_quote.c \
 src/minishell.c \
 src/fsm/parser.c \
 src/fsm/config.c \
@@ -51,8 +55,6 @@ src/exec/builtins/ft_exec_unset.c \
 src/exec/builtins/ft_exec_env.c \
 src/exec/builtins/ft_exec_exit.c \
 src/exec/dispatch_command.c\
-src/exec/ft_exec_and.c \
-src/exec/ft_exec_or.c\
 src/exec/ft_exec_cmd.c\
 src/exec/ft_exec_greater.c\
 src/exec/ft_exec_amper.c\

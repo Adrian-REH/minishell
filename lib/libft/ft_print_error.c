@@ -12,12 +12,15 @@
 
 #include "libft.h"
 
-void	ft_print_error(char *title, int code, char *line)
+void ft_print_error(char *title, int code, char *line)
 {
-	char	*str;
-	char	*cmd;
+	char *str;
+	char *cmd;
 
-	cmd = ft_strtrim(line, " ");
+	if (line)
+		cmd = ft_strtrim(line, " ");
+	else
+		cmd = ft_strdup("");
 	str = ft_strjoin(title, cmd);
 	if (!str)
 		exit(1);

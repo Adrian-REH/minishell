@@ -11,63 +11,10 @@ static int *ft_exec(t_exec *e)
     }
     else if (e->cmd->pid == 0)
     {
-        dispatch_command(e);
-        exit(0);
+        // Redirecciona la salida/entrada estandar a un archivo
+        exit(dispatch_command(e));
     }
     return NULL;
-}
-
-void *ft_realloc(void *ptr, size_t size)
-{
-    void *new;
-
-    new = malloc(size);
-    if (!new)
-        return NULL;
-    if (ptr)
-    {
-        ft_memcpy(new, ptr, size);
-        free(ptr);
-    }
-    return new;
-}
-t_exec *add_exec(t_exec *execs, t_exec exec)
-{
-    int i;
-
-    i = 0;
-    if (execs == NULL)
-    {
-        printf("calloc\n");
-        execs = ft_calloc(sizeof(t_exec), 2);
-        execs[0] = exec;
-        execs[1].op = 0;
-        return execs;
-    }
-    while (execs[i].op)
-        i++;
-    printf("realloc: %d\n", i);
-    execs = ft_realloc(execs, sizeof(t_exec) * (i + 2));
-    execs[i++] = exec;
-    return execs;
-}
-t_cmd *add_cmd(t_cmd *cmds, t_cmd cmd)
-{
-    int i;
-
-    i = 0;
-    if (cmds == NULL)
-    {
-        cmds = ft_calloc(sizeof(t_cmd), 2);
-        cmds[0] = cmd;
-        cmds[1].pid = 0;
-        return cmds;
-    }
-    while (cmds[i].pid)
-        i++;
-    cmds = ft_realloc(cmds, sizeof(t_cmd) * (i + 2));
-    cmds[i++] = cmd;
-    return cmds;
 }
 
 int *ft_exec_amper(t_exec *e)
@@ -109,9 +56,6 @@ int *ft_exec_amper(t_exec *e)
         e->status = -1;
     e->file.input = e->cmd->fd_aux[READ];
     e->file.output = e->cmd->fd_aux[WRITE];
-    if (e->state[1] != 0)
-        e->status = e->state[1];
-    if (e->state[0] != 0)
-        e->status = e->state[0];
+    e->status = e->state[1];
     return e->state;
 }

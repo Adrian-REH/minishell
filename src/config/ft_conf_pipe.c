@@ -32,6 +32,7 @@ void ft_conf_pipe(t_handler *s, int i)
         exec[k].cmd[0].status = 0;
         exec[k].cmd[0].line = s->info->tokens[i - 1];
         exec[k].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
+        exec[k].cmd[0].cmd = sarr_clean_quote(exec[k].cmd[0].cmd);
         pipe(exec[k].cmd[0].fd_aux);
     }
     else
@@ -41,6 +42,7 @@ void ft_conf_pipe(t_handler *s, int i)
         exec[k].cmd[1].status = 0;
         exec[k].cmd[1].line = s->info->tokens[i + 1];
         exec[k].cmd[1].cmd = do_exec(s->info->tokens[i + 1], s->env);
+        exec[k].cmd[1].cmd = sarr_clean_quote(exec[k].cmd[1].cmd);
         // pipe(exec[k].cmd[1].fd_aux);
     }
     else
