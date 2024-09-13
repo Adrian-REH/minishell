@@ -15,9 +15,10 @@ static int *ft_exec(t_exec *e)
 	}
 	return NULL;
 }
-int *ft_exec_cmd(t_exec *e)
+int *ft_exec_cmd(t_exec *e, int index)
 {
 	int type;
+	e = &e[index];
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (e->state[0] == 0 && ((type < 4 && type >= 0) || type == NOT_OPERATOR))
 	{

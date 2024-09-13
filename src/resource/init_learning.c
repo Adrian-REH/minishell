@@ -216,10 +216,7 @@ void tactions_handler_init(t_handler *a)
     a->fta[NOT_OPERATOR][7][EMPTY] = ft_conf_or;
     a->fta[NOT_OPERATOR][8][EMPTY] = ft_conf_and;
 }
-/**
- *	Transision de configuracion,
- *		Se encarga de llamar a la funcion correspondiente, acorde al estado actual.
- **/
+
 void tactions_builtins_init(t_handler *a)
 {
     a->fb[0] = ft_exec_echo;  // hijo

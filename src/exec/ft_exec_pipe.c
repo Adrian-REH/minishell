@@ -58,8 +58,10 @@ static int *ft_exec_sec_cmd(t_exec *e)
     return NULL;
 }
 
-int *ft_exec_pipe(t_exec *e)
+int *ft_exec_pipe(t_exec *e, int index)
 {
+
+    e = &e[index];
     char *p_heredoc;
     if (e->state[1] == 1)
     {

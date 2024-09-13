@@ -51,7 +51,8 @@ void ft_conf_less(t_handler *s, int i)
     else
         exec[k].state[1] = 1;
     j = k;
-    while (exec[--j].op == LESS || exec[j].op == HEREDOC)
+    // Transferir los LESS y HEREDOC A la ultima ejecucion
+    while (exec[--j].op == LESS)
     {
         if (exec[j].state[0] == 0)
         {
@@ -60,6 +61,7 @@ void ft_conf_less(t_handler *s, int i)
             exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
             exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
             exec[k].state[0] = 0;
+            exec[j].state[0] = 1;
         }
     }
     s->info->oid = i + 1;

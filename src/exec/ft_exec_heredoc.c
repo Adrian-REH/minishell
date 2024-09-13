@@ -67,8 +67,9 @@ static void ft_heredoc(t_exec *e)
     close(e->cmd->fd_aux[WRITE]);
     e->file.input = e->cmd->fd_aux[READ];
 }
-int *ft_exec_heredoc(t_exec *e)
+int *ft_exec_heredoc(t_exec *e, int index)
 {
+    e = &e[index];
     printf("ft_exec_heredoc\n");
     ft_heredoc(e);
     e->cmd++;

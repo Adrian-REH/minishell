@@ -43,18 +43,27 @@ void ft_conf_append(t_handler *s, int i)
         line = s->info->tokens[i + 1];
         line = ft_strtrim(line, "\"");
         exec[k].file.dir_file = line; // Tengo que liberar la linea
-
         exec[k].state[1] = 0;
     }
     else
         exec[k].state[1] = 1;
+
+    // Transferir los APPEND y GREATER A la ultima ejecucion
+    while (exec[--j].op == APPEND || exec[j].op == GREATER)
+    {
+        if (exec[j].state[0] == 0)
+        {
+            exec[k].cmd[0].line = exec[j].cmd[0].line;
+            exec[k].cmd[0].cmd = exec[j].cmd[0].cmd;
+            exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
+            exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
+            exec[k].state[0] = 0;
+            exec[j].state[0] = 1; // Anulo para que no se ejecute el comando
+        }
+    }
     exec[k].cmd[1].cmd = NULL;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
-    while (exec[--j].op)
-        exec[j].file.dir_file = exec[k].file.dir_file;
-    if (exec[k - 1].op != APPEND)
-        exec[k].func[0][0] = ft_exec_append;
-
+    exec[k].func[0][0] = ft_exec_append;
     s->info->oid = i + 1;
     if (s->block[s->info->i].isnext)
         b->len_exec_next++;

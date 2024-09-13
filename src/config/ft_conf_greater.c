@@ -48,13 +48,23 @@ void ft_conf_greater(t_handler *s, int i)
     }
     else
         exec[k].state[1] = 1;
-    while (exec[--j].op == GREATER || exec[j].op == APPEND)
-        exec[j].file.dir_file = exec[k].file.dir_file;
+    // Transferir los APPEND y GREATER A la ultima ejecucion
+    while (exec[--j].op == APPEND || exec[j].op == GREATER)
+    {
+        if (exec[j].state[0] == 0)
+        {
+            exec[k].cmd[0].line = exec[j].cmd[0].line;
+            exec[k].cmd[0].cmd = exec[j].cmd[0].cmd;
+            exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
+            exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
+            exec[k].state[0] = 0;
+            exec[j].state[0] = 1; // Anulo para que no se ejecute el comando
+        }
+    }
     exec[k].cmd[1].cmd = NULL;
     s->info->oid = i + 1;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades
-    if (exec[k - 1].op != GREATER)
-        exec[k].func[0][0] = ft_exec_greater;
+    exec[k].func[0][0] = ft_exec_greater;
     if (s->block[s->info->i].isnext)
         b->len_exec_next++;
     else

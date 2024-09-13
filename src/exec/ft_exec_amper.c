@@ -17,10 +17,11 @@ static int *ft_exec(t_exec *e)
     return NULL;
 }
 
-int *ft_exec_amper(t_exec *e)
+int *ft_exec_amper(t_exec *e, int index)
 {
     pid_t result;
 
+    e = &e[index];
     if (e->state[0] == 0)
     {
         ft_exec(e);

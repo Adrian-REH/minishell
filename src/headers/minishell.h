@@ -144,11 +144,11 @@ typedef struct s_exec
     int *state;
     int op;
     struct s_exec *blocks;
-    t_file file;                               // fichero Salida para esta ejecucion
-    int status;                                // Estado de las ejecuciones
-    t_cmd *cmd;                                // Aqui se guardan los comandos a ejecutarse en cada funcion
-    struct s_handler *handler;                 // Aqui se guardan los comandos a ejecutarse en cada funcion
-    int *(*func[20][20])(struct s_exec *rule); // Son funciones de ejecucion, personalizadas
+    t_file file;                                          // fichero Salida para esta ejecucion
+    int status;                                           // Estado de las ejecuciones
+    t_cmd *cmd;                                           // Aqui se guardan los comandos a ejecutarse en cada funcion
+    struct s_handler *handler;                            // Aqui se guardan los comandos a ejecutarse en cada funcion
+    int *(*func[20][20])(struct s_exec *rule, int index); // Son funciones de ejecucion, personalizadas
     // struct s_exec *next;
 } t_exec;
 
@@ -193,15 +193,16 @@ int *ft_builtins(t_exec *e);
 int *ft_signals(t_exec *e);
 int *ft_exec_wildcard(t_exec *e);
 
-int *ft_exec_and(t_exec *e);
-int *ft_exec_pipe(t_exec *e);
-int *ft_exec_or(t_exec *e);
-int *ft_exec_heredoc(t_exec *e);
-int *ft_exec_cmd(t_exec *e);
-int *ft_exec_greater(t_exec *e);
-int *ft_exec_amper(t_exec *e);
-int *ft_exec_append(t_exec *e);
-int *ft_exec_less(t_exec *e);
+int *ft_exec_and(t_exec *e, int index);
+int *ft_exec_pipe(t_exec *e, int index);
+int *ft_exec_or(t_exec *e, int index);
+int *ft_exec_heredoc(t_exec *e, int index);
+int *ft_exec_cmd(t_exec *e, int index);
+int *ft_exec_greater(t_exec *e, int index);
+int *ft_exec_amper(t_exec *e, int index);
+int *ft_exec_append(t_exec *e, int index);
+int *ft_exec_less(t_exec *e, int index);
+
 void init_handler(t_handler *s);
 void tactions_builtins_init(t_handler *a);
 void builtings_init(t_handler *a);

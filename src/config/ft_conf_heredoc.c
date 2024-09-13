@@ -39,7 +39,7 @@ void ft_conf_heredoc(t_handler *s, int i)
         exec[k].state[1] = 1;
 
     // Transferir los heredocs
-    while (exec[--j].op == HEREDOC || exec[j].op == LESS)
+    while (exec[--j].op == HEREDOC)
     {
         exec[k].cmd[1].line = exec[j].cmd[1].line;
         exec[k].cmd[1].cmd = exec[j].cmd[1].cmd;
