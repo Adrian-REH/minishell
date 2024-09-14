@@ -27,6 +27,7 @@ void ft_conf_cmd(t_handler *s, int i)
     exec[k].file.output = 1;
     // if (ft_strchr(s->info->tokens[i], '$') && ft_isalpha(ft_strchr(s->info->tokens[i], '$')[1]))
     //     s->exec[s->info->i].cmd->line = ft_getenv(s->exec[s->info->i].cmd, s->info->tokens[i] + 1);
+
     exec[k].cmd->cmd = do_exec(exec[k].cmd->line, s->env);
     exec[k].cmd->cmd = sarr_clean_quote(exec[k].cmd->cmd);
     exec[k].op = UNIQ_COMMAND;

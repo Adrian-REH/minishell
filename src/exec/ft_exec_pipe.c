@@ -73,7 +73,7 @@ int *ft_exec_pipe(t_exec *e, int index)
     if (e->state[0] == 0)
     {
         ft_exec(e);
-        waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
+        waitpid(e->cmd->pid, &e->cmd->status, 0); //NO debo esperar a todos una vez, debo esperar a todos al final.... PIPEX
         e->state[0] = WEXITSTATUS(e->cmd->status);
     }
     e->cmd++;

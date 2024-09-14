@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/09/05 11:16:34 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/14 08:18:34 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ lib/ft_find_str.c \
 lib/ft_get_path.c \
 lib/ft_delete_cmd.c \
 lib/ft_realloc.c \
+lib/ft_strdelchr.c \
 lib/ft_add_exec.c \
 lib/ft_add_cmd.c \
 lib/ft_clean_quote.c \

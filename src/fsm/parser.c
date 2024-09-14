@@ -6,9 +6,9 @@ int evaluate(t_automata *a)
 	a->i = -1;
 	while (++a->i < ft_strlen(a->str))
 	{
-		// printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
+		//printf("---------------------\nlast state: %d |find: %d\n", a->state, idx(a->alphabet, a->str[a->i]));
 		a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
-		// printf("new state: %d\n", a->state);
+		//printf("new state: %d\n", a->state);
 		if (a->fsa[a->state])
 		{
 			a->fsa[a->state](a, a->data);
@@ -63,7 +63,17 @@ void ft_clean_tokens(t_handler *s)
 	while (tokens[++i])
 	{
 		state[2] = idstr(s->operators, tokens[i]);
-		if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && state[2] == 14 && tokens[i])
+		if (state[0] == 6 && state[2] == 14 && (state[1] >= 1 && state[1] < 5))
+		{
+			space_pos = ft_strchr(tokens[i], ' ');
+			if (space_pos)
+			{
+				temp = tokens[i];
+				tokens[i] = ft_substr(tokens[i], 0, ft_strlen(tokens[i]) - ft_strlen(space_pos));
+				free(temp);
+			}
+		}
+		else if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && state[2] == 14 && tokens[i])
 		{
 			space_pos = ft_strchr(tokens[i], ' ');
 			// Reduce the token double quote to the first space, and transfer the rest to the previous token
@@ -79,6 +89,7 @@ void ft_clean_tokens(t_handler *s)
 				temp = ft_substr(temp + 1, 0, ft_strlen(tokens[i]) - ft_strlen(quote_pos) - 1);
 				free(tokens[i]);
 				tokens[i] = temp;
+				tokens[i] = ft_strdelchr(tokens[i], '\"');
 				continue;
 			}
 			// Reeplace multiple spaces with a single space, and transfer arguments to the previous token
@@ -89,6 +100,7 @@ void ft_clean_tokens(t_handler *s)
 				free(temp);
 				temp = tokens[i];
 				tokens[i] = ft_substr(tokens[i], 0, ft_strlen(tokens[i]) - ft_strlen(space_pos));
+				tokens[i] = ft_strdelchr(tokens[i], '\"');
 				free(temp);
 			}
 		}
@@ -117,7 +129,7 @@ t_handler *ft_parser(t_handler *s)
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;
 	ft_clean_tokens(s);
-	// ft_sarrprint(info.tokens);
+	//ft_sarrprint(info.tokens);
 	return (s);
 }
 

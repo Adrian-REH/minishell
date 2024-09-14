@@ -41,18 +41,10 @@ int execute_cmds(t_block *b, int isnext)
                 exec[i].file.output = (b->fd[1]);
             else if (j == b->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
                 exec[i].file.output = 1;
+
             exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
             b->status = exec[i].status;
-            /*       if (b->status != 0)
-                  {
-                      while (i < b->len_exec && exec[i].op != PIPE)
-                      {
-                          i++;
-                          j++;
-                      }
-                      i--;
-                      j = j - 2;
-                  } */
+        
         }
     }
 

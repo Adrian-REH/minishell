@@ -44,15 +44,15 @@ void ft_conf_less(t_handler *s, int i)
     {
         exec[k].cmd[0].status = 0;
         line = s->info->tokens[i + 1];
-        line = ft_strtrim(line, "\"");
-        exec[k].file.dir_file = line; // Tengo que liberar la linea
+        line = ft_strdelchr(line, '\"');
+        exec[k].file.in_dir_file = line; // Tengo que liberar la linea
         exec[k].state[1] = 0;
     }
     else
         exec[k].state[1] = 1;
-    j = k;
+    j = k - 1;
     // Transferir los LESS y HEREDOC A la ultima ejecucion
-    while (exec[--j].op == LESS)
+    while (j >= 0 && exec[j].op != PIPE && exec[j].op != HEREDOC)
     {
         if (exec[j].state[0] == 0)
         {
@@ -63,6 +63,7 @@ void ft_conf_less(t_handler *s, int i)
             exec[k].state[0] = 0;
             exec[j].state[0] = 1;
         }
+        j--;
     }
     s->info->oid = i + 1;
     exec[k].cmd[2].cmd = NULL;

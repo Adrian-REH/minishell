@@ -19,7 +19,7 @@ void ft_conf_greater(t_handler *s, int i)
         k = b->len_exec_prev;
         exec = b->prev_exec;
     }
-    j = k;
+    j = k - 1;
     exec[k].handler = s;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
     exec[k].op = GREATER;
@@ -41,15 +41,15 @@ void ft_conf_greater(t_handler *s, int i)
     if (s->info->oid != (i + 1))
     {
         line = s->info->tokens[i + 1];
-        line = ft_strtrim(line, "\"");
-        exec[k].file.dir_file = line; // Tengo que liberar la linea
+        line = ft_strdelchr(line, '\"');
+        exec[k].file.out_dir_file = line; // Tengo que liberar la linea
         // exec[k].file.output = open(line, O_WRONLY | O_CREAT, 0777);
         exec[k].state[1] = 0;
     }
     else
         exec[k].state[1] = 1;
     // Transferir los APPEND y GREATER A la ultima ejecucion
-    while (exec[--j].op == APPEND || exec[j].op == GREATER)
+    while (j >= 0 && exec[j].op != PIPE && exec[j].op != HEREDOC)
     {
         if (exec[j].state[0] == 0)
         {
@@ -60,7 +60,9 @@ void ft_conf_greater(t_handler *s, int i)
             exec[k].state[0] = 0;
             exec[j].state[0] = 1; // Anulo para que no se ejecute el comando
         }
+        j--;
     }
+
     exec[k].cmd[1].cmd = NULL;
     s->info->oid = i + 1;
     // Aqui debe llamar al resto de funciones para ejecutar el amp, y sus posibilidades

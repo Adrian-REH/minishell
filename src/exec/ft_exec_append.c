@@ -4,11 +4,13 @@ static int *ft_exec(t_exec *e, int index)
 {
     int j;
     t_exec *exec;
+    char *infile;
 
     exec = e;
     e = &exec[index];
     j = index;
-    while (exec[j].op == GREATER || exec[j].op == APPEND)
+    infile = NULL;
+    while (j >= 0 && (exec[j].op == GREATER || exec[j].op == APPEND || exec[j].op == LESS))
         j--;
     e->cmd->pid = fork();
     if (e->cmd->pid < 0)
@@ -18,21 +20,44 @@ static int *ft_exec(t_exec *e, int index)
     }
     else if (e->cmd->pid == 0)
     {
-        while (exec[++j].op == GREATER || exec[j].op == APPEND)
+        while (++j < index && (exec[j].op == GREATER || exec[j].op == APPEND || exec[j].op == LESS))
         {
-            e->file.output = open(exec[j].file.dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (e->file.output == -1)
-                (ft_print_error(strerror(errno), 1, NULL));
-            close(e->file.output);
+            if (exec[j].op == LESS)
+            {
+                e->file.input = open(exec[j].file.in_dir_file, O_RDONLY, 0644);
+                if (e->file.input == -1)
+                    (ft_print_error(strerror(errno), 1, NULL));
+                close(e->file.input);
+                infile = exec[j].file.in_dir_file;
+            }
+            else
+            {
+                e->file.output = open(exec[j].file.out_dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                if (e->file.output == -1)
+                    (ft_print_error(strerror(errno), 1, NULL));
+                close(e->file.output);
+            }
         }
-        e->file.output = open(e->file.dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        e->file.output = open(e->file.out_dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
         if (e->file.output == -1)
             (ft_print_error(strerror(errno), 1, NULL));
         if (dup2(e->file.output, STDOUT_FILENO) == -1)
             (close(e->file.output), ft_print_error("dup2", 1, NULL));
         close(e->file.output);
-        if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (close(e->file.input), ft_print_error("dup2", 1, NULL));
+        if (infile)
+        {
+            e->file.input = open(infile, O_RDONLY, 0644);
+            if (e->file.input == -1)
+                (ft_print_error(strerror(errno), 1, NULL));
+            if (dup2(e->file.input, STDIN_FILENO) == -1)
+                (close(e->file.input), ft_print_error("dup2", 1, NULL));
+        }else
+        {
+            if (dup2(e->file.input, STDIN_FILENO) == -1)
+                (close(e->file.input), ft_print_error("dup2", 1, NULL));
+        }
+        if (e->file.input != 0)
+            close(e->file.input);
         dispatch_command(e);
         exit(0);
     }

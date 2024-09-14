@@ -41,7 +41,8 @@ typedef struct s_file
     char *end_heredoc;
     char **content;
     int len_content;
-    char *dir_file;
+    char *in_dir_file;
+    char *out_dir_file;
 } t_file;
 
 typedef enum e_operators
@@ -174,6 +175,8 @@ typedef struct s_handler
     void (*fb[10])(struct s_cmd *cmd);                      // Son funciones de ejecucion, personalizadas
     void (*fta[20][20][20])(struct s_handler *rule, int i); // Debe ser funciones especificas, Parser, Handler-error, Executer, etc..
 } t_handler;
+
+char *ft_strdelchr(char *str, char c);
 char **sarr_clean_quote(char **arr);
 t_exec *add_exec(t_exec *execs, t_exec exec);
 char *ft_getenv(t_cmd *cmd, char *str);

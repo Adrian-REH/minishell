@@ -6,10 +6,11 @@ int dispatch_command(t_exec *e)
 
 	e->cmd->status = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
+
 	if (type == NOT_OPERATOR)
 	{
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-			ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
+				(ft_print_error(strerror(errno), errno, NULL));
 	}
 	else if (e->handler->fb[type])
 	{
@@ -24,6 +25,7 @@ int dispatch_command_built(t_exec *e)
 
 	e->state = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
+
 	if (type == NOT_OPERATOR)
 	{
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
