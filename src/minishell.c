@@ -36,7 +36,7 @@ int main(int argc, char **argv, char **argenv)
     sigaction(SIGINT, &sa, NULL);
 
 
-
+	handler.env = toarr(argenv);
     // struct t_rule (*seg[1])(struct t_rule pedidos) = {ft_parser};
     handler.seg[0] = ft_parser;
     handler.seg[1] = ft_config;
