@@ -6,15 +6,15 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 20:59:06 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:31:44 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t ft_lenword(const char *s, int c)
+static size_t	ft_lenword(const char *s, int c)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])
@@ -26,9 +26,9 @@ static size_t ft_lenword(const char *s, int c)
 	return (ft_strlen(s));
 }
 
-static int ft_countword(const char *s, int c)
+static int	ft_countword(const char *s, int c)
 {
-	size_t count;
+	size_t	count;
 
 	count = 0;
 	while (*s)
@@ -40,9 +40,9 @@ static int ft_countword(const char *s, int c)
 	return (count);
 }
 
-static void ft_freedom(char **dst)
+static void	ft_freedom(char **dst)
 {
-	size_t n_word;
+	size_t	n_word;
 
 	n_word = 0;
 	while (dst[n_word])
@@ -50,12 +50,12 @@ static void ft_freedom(char **dst)
 	free(dst);
 }
 
-static char **ft_(char **dst, const char *s, char c)
+static char	**ft_(char **dst, const char *s, char c)
 {
-	size_t i;
-	size_t size_s;
-	size_t l_word;
-	size_t n_word;
+	size_t	i;
+	size_t	size_s;
+	size_t	l_word;
+	size_t	n_word;
 
 	n_word = 0;
 	i = 0;
@@ -78,9 +78,9 @@ static char **ft_(char **dst, const char *s, char c)
 	return (dst);
 }
 
-char **ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
-	char **dst;
+	char	**dst;
 
 	if (!s)
 		return (0);

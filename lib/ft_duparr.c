@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_idbystr.c                                       :+:      :+:    :+:   */
+/*   ft_duparr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:11:43 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:28:06 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:10:57 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:34:25 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/headers/minishell.h"
 
-int	idstr(char *alphabet[], char *str)
+char	**duparr(char **argenv)
 {
-	int	i;
+	char	**arr;
+	int		i;
 
 	i = -1;
-	if (strcmp(str, " ") == 0)
-		return (0);
-	while (alphabet[++i])
-		if (strcmp(alphabet[i], str) == 0)
-			return (i);
-	return (NOT_OPERATOR);
+	arr = malloc(sizeof(char *) * (ft_sarrsize(argenv) + 1));
+	while (argenv[++i])
+		arr[i] = ft_strdup(argenv[i]);
+	return (arr);
 }

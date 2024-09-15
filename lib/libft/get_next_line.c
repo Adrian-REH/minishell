@@ -6,20 +6,20 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 06:12:12 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/20 11:52:12 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:31:52 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void ft_read_line(char **file, char **line)
+static void	ft_read_line(char **file, char **line)
 {
-	int l_word;
+	int	l_word;
 
 	l_word = 0;
 	while ((*file)[l_word])
 		if ((*file)[(l_word)++] == '\n')
-			break;
+			break ;
 	if (l_word > 0)
 	{
 		*line = ft_substr_gnl(*file, 0, l_word);
@@ -30,10 +30,10 @@ static void ft_read_line(char **file, char **line)
 		*line = 0;
 }
 
-static void ft_delete_first_line(char **file)
+static void	ft_delete_first_line(char **file)
 {
-	char *value;
-	char *temp;
+	char	*value;
+	char	*temp;
 
 	temp = 0;
 	value = ft_strchr_gnl(*file, '\n');
@@ -41,7 +41,7 @@ static void ft_delete_first_line(char **file)
 	{
 		free(*file);
 		*file = 0;
-		return;
+		return ;
 	}
 	else if (value[1])
 		temp = ft_strdup_gnl(++value);
@@ -49,18 +49,18 @@ static void ft_delete_first_line(char **file)
 	*file = temp;
 }
 
-static void ft_free_strjoin(char **file, char **buffer)
+static void	ft_free_strjoin(char **file, char **buffer)
 {
-	char *dst;
-	size_t size;
-	char *temp;
-	size_t i;
+	char	*dst;
+	size_t	size;
+	char	*temp;
+	size_t	i;
 
 	size = ft_strlen_gnl(*file) + ft_strlen_gnl(*buffer) + 1;
 	dst = malloc(size);
 	i = 0;
 	if (!dst)
-		return;
+		return ;
 	while ((i + 1) < size && size && (*file)[i])
 	{
 		dst[i] = ((*file)[i]);
@@ -71,21 +71,21 @@ static void ft_free_strjoin(char **file, char **buffer)
 	ft_strlcat_gnl(dst, *buffer, size);
 	temp = dst;
 	if (!temp)
-		return;
+		return ;
 	free(*file);
 	*file = temp;
 }
 
-static void ft_read_file(int fd, char **file)
+static void	ft_read_file(int fd, char **file)
 {
-	int by_re;
-	char *buffer;
+	int		by_re;
+	char	*buffer;
 
 	if (!file)
-		return;
+		return ;
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return;
+		return ;
 	by_re = 1;
 	while ((by_re > 0))
 	{
@@ -94,20 +94,20 @@ static void ft_read_file(int fd, char **file)
 		{
 			free(*file);
 			*file = 0;
-			break;
+			break ;
 		}
 		buffer[by_re] = 0;
 		ft_free_strjoin(file, &buffer);
 		if (ft_strchr_gnl(*file, '\n'))
-			break;
+			break ;
 	}
 	free(buffer);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *file;
-	char *line;
+	static char	*file;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
