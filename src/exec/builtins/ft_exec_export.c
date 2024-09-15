@@ -19,7 +19,7 @@ void ft_exec_export(struct s_cmd *cmd)
     i = -1;
     while (line[++i])
     {
-        if (ft_isalpha(line[i]) && line[i + 1] == '-' && (!line[i + 2] || line[i + 2] == '='))
+        if ((ft_isalpha(line[i]) && line[i + 1] == '-' ) && (!line[i + 2] || line[i + 2] == '='))
         {
             ft_putstr_fd(" not a valid identifier\n", 2);
             cmd->status = 1;

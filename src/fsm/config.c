@@ -18,7 +18,6 @@ int *handler_execute(t_handler *a)
     a->block[a->info->i].status = 0;
     while (a->info->tokens[++i])
     {
-
         a->state[2] = idstr(a->operators, a->info->tokens[i]);
         if (a->state[2] == 9 || a->state[2] == 10)
         {
@@ -42,7 +41,6 @@ int *handler_execute(t_handler *a)
             i_exec = a->block[a->info->i].len_exec_prev;
             exec = a->block[a->info->i].prev_exec;
         }
-
         exec[i_exec].handler = a;
         if ((a->state[0] == OP_PIPE || a->state[1] == OP_PIPE) && (a->state[2] == OP_HEREDOC || a->state[2] == OP_APPEND || a->state[2] == OP_GREATER || a->state[2] == OP_LESS))
         {

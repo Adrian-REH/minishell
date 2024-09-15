@@ -24,7 +24,7 @@ char **do_exec(char *line, char **env)
     else
     {
         cmd = get_path(command[0], env);
-        if (strcmp(cmd, command[0]) != 0)
+        if (cmd != NULL && strcmp(cmd, command[0]) != 0)
             command[0] = (free(command[0]), cmd);
         return (command);
     }

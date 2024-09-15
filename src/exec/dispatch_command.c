@@ -25,7 +25,6 @@ int dispatch_command_built(t_exec *e)
 
 	e->state = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
-
 	if (type == NOT_OPERATOR)
 	{
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
@@ -33,5 +32,5 @@ int dispatch_command_built(t_exec *e)
 	}
 	else
 		e->handler->fb[type](e->cmd);
-	return 0;
+	return e->cmd->status;
 }

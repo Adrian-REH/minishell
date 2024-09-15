@@ -106,7 +106,7 @@ void ft_exec_cd(t_cmd *cmd)
 		chdir(getenv("OLDPWD"));
 		// chdir(ft_getenv(cmd,"OLDPWD"));
 	}
-	else if (ft_strchr(temp, '$'))
+	else if (ft_strchr(temp, '$') && ft_strchr(temp, ' ') == 0)
 	{
 		temp = ft_getenv(cmd, temp + 1);
 		if (temp)

@@ -41,14 +41,11 @@ int execute_cmds(t_block *b, int isnext)
                 exec[i].file.output = (b->fd[1]);
             else if (j == b->len_exec && (exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
                 exec[i].file.output = 1;
-
             exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
             b->status = exec[i].status;
-        
         }
     }
-
-    return (b->status);
+    return (0);
 }
 
 int status_block(int sts, int op, int next_op)
@@ -77,6 +74,19 @@ int status_block(int sts, int op, int next_op)
     status[BLOCK_OR][1][BLOCK_EMPTY] = 1;
     return status[op][sts][next_op];
 }
+int ft_waiting_pid(t_exec *exec, int len)
+{
+    int i;
+    int status;
+
+    i = -1;
+    while (++i < len)
+    {
+        waitpid(exec[i].cmd->pid, &status, 0);
+        exec[i].status = WEXITSTATUS(status);
+    }
+    return (exec[i].status);
+}
 
 int *block_execute(t_handler *s)
 {
@@ -93,12 +103,14 @@ int *block_execute(t_handler *s)
             else if (i != 0 && status_block(s->block[i - 1].status, s->block[i - 1].op, s->block[i].op))
                 continue;
             execute_cmds(&(s->block[i]), 0);
+            //s->block[i].status = ft_waiting_pid(s->block[i].prev_exec, s->block[i].len_exec_prev);
         }
         if (s->block[i].len_exec_next)
         {
             if (status_block(s->block[i].status, s->block[i].op, s->block[i].op))
                 continue;
             execute_cmds(&(s->block[i]), 1);
+            //s->block[i].status = ft_waiting_pid(s->block[i].prev_exec, s->block[i].len_exec_prev);
             if (i == s->len_block - 1 && status_block(s->block[i].status, s->block[i].op, BLOCK_EMPTY))
                 continue;
             else if (i != s->len_block - 1 && status_block(s->block[i].status, s->block[i].op, s->block[i].op))

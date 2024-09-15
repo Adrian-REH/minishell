@@ -8,14 +8,14 @@ char **ft_sarrdel(char **arr, int idx)
 
 	i = -1;
 	j = 0;
-	new = ft_calloc(sizeof(void *), ft_sarrsize(arr));
+	new = ft_calloc(sizeof(void *), ft_sarrsize(arr) + 1);
 	while (arr[++i])
 	{
 		if (i == idx)
 			continue;
 		new[j++] = arr[i];
 	}
-	free(arr);
+	new[j] = NULL;
 	return new;
 }
 
@@ -35,7 +35,6 @@ void ft_exec_unset(struct s_cmd *cmd)
 		memmove(line, line + len, strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
-
 	str = ft_split(line, ' ');
 	i = -1;
 	while (cmd->handler->env[++i])
