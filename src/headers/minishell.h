@@ -182,6 +182,9 @@ t_exec *add_exec(t_exec *execs, t_exec exec);
 char *ft_getenv(t_cmd *cmd, char *str);
 void *ft_realloc(void *ptr, size_t size);
 int dispatch_command(t_exec *e);
+
+
+
 void ft_exec_echo(t_cmd *cmd);
 void ft_exec_echon(t_cmd *cmd);
 void ft_exec_cd(t_cmd *cmd);
@@ -190,6 +193,11 @@ void ft_exec_export(t_cmd *cmd);
 void ft_exec_unset(t_cmd *cmd);
 void ft_exec_env(t_cmd *cmd);
 void ft_exec_exit(t_cmd *cmd);
+
+
+
+
+
 int dispatch_command_built(t_exec *e);
 int *ft_pipe(t_exec *e);
 int *ft_builtins(t_exec *e);

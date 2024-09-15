@@ -21,6 +21,7 @@ void ft_conf_pipe(t_handler *s, int i)
     exec[k].handler = s;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
     exec[k].op = PIPE;
+    exec[k].cmd->handler = s;
     exec[k].state = ft_calloc(sizeof(int), 2);
     exec[k].state[0] = 0;
     exec[k].state[1] = 0;

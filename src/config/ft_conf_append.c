@@ -22,6 +22,7 @@ void ft_conf_append(t_handler *s, int i)
     j = k - 1;
     exec[k].handler = s;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
+    exec[k].cmd->handler = s;
     exec[k].op = APPEND;
     exec[k].state = ft_calloc(sizeof(int), 2);
     exec[k].state[0] = 0;

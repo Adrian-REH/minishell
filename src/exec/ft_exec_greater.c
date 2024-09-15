@@ -68,8 +68,8 @@ int *ft_exec_greater(t_exec *e, int index)
     if (e->state[0] == 0)
     {
         ft_exec(exec, index);
-        waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-        e->state[0] = WEXITSTATUS(e->cmd->status);
+        //waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
+        //e->state[0] = WEXITSTATUS(e->cmd->status);
     }
     e->status = e->state[0];
     e->state[1] = e->state[0];

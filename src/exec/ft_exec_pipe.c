@@ -19,8 +19,7 @@ static int *ft_exec(t_exec *e)
         if (dup2(e->cmd->fd_aux[WRITE], STDOUT_FILENO) == -1)
             (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]), ft_print_error("dup2", 1, NULL));
         (close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]));
-        dispatch_command(e);
-        exit(0);
+        exit(dispatch_command(e));
     }
     if (e->file.input != 0)
         close(e->file.input);
@@ -40,16 +39,14 @@ static int *ft_exec_sec_cmd(t_exec *e)
     else if (e->cmd->pid == 0)
     {
         if (dup2(e->file.input, STDIN_FILENO) == -1)
-            (close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
+            (ft_print_error("dup2: ", 1, "input error"));
         if (e->file.input != 0)
             close(e->file.input);
+        if (dup2(e->file.output, STDOUT_FILENO) == -1)
+            (ft_print_error("dup2", 1, NULL));
         if (e->file.output != 1)
-        {
-            if (dup2(e->file.output, STDOUT_FILENO) == -1)
-                (ft_print_error("dup2", 1, "output error"));
             close(e->file.output);
-        }
-        exit(dispatch_command(e)); // Finalizo con el estado del builtin sino
+        exit(dispatch_command(e));
     }
     if (e->file.input != 0)
         close(e->file.input);
@@ -71,19 +68,10 @@ int *ft_exec_pipe(t_exec *e, int index)
         e->cmd[1].cmd = do_exec(p_heredoc, e->handler->env);
     }
     if (e->state[0] == 0)
-    {
         ft_exec(e);
-        waitpid(e->cmd->pid, &e->cmd->status, 0); //NO debo esperar a todos una vez, debo esperar a todos al final.... PIPEX
-        e->state[0] = WEXITSTATUS(e->cmd->status);
-    }
     e->cmd++;
     if (e->state[1] == 0)
-    {
         ft_exec_sec_cmd(e);
-        waitpid(e->cmd->pid, &e->cmd->status, 0);
-        e->state[1] = WEXITSTATUS(e->cmd->status);
-    }
-
     e->status = e->state[1];
     return e->state;
 }

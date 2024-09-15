@@ -13,6 +13,15 @@ char **toarr(char **argenv)
     return arr;
 }
 
+void sigint_handler(int signum)
+{
+    if (signum == SIGINT) {
+        printf("\n"); // Hacemos un salto de línea para que no quede el prompt cortado
+        rl_replace_line("", 0);  // Reemplaza la línea actual por una vacía
+        rl_on_new_line();  // Le decimos a readline que comenzamos una nueva línea
+        rl_redisplay();  // Vuelve a mostrar el prompt
+    }
+}
 int main(int argc, char **argv, char **argenv)
 {
     (void)argv;
@@ -20,8 +29,14 @@ int main(int argc, char **argv, char **argenv)
     (void)argc;
     char *comand;
     t_handler handler;
+    struct sigaction sa;
+    sa.sa_handler = sigint_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGINT, &sa, NULL);
 
-    handler.env = toarr(argenv);
+
+
     // struct t_rule (*seg[1])(struct t_rule pedidos) = {ft_parser};
     handler.seg[0] = ft_parser;
     handler.seg[1] = ft_config;
@@ -35,11 +50,12 @@ int main(int argc, char **argv, char **argenv)
     while (1)
     {
         comand = readline("minishell> ");
+        if (comand == NULL)//SI ace CTRL+D se queda aqui, por ende puedo enviar o redirigir a liberar todo
+            break;
         handler.line = comand;
         if (comand && *comand)
             add_history(comand);
-        /*        if (strcmp(comand, "exit") == 0)
-                   break; */
+
         handler.seg[0](&handler);
         handler.seg[1](&handler);
         handler.seg[2](&handler);

@@ -57,8 +57,7 @@ static int *ft_exec(t_exec *e, int index)
                 (ft_print_error(strerror(errno), errno, NULL));
             close(e->file.output);
         }
-        dispatch_command(e);
-        exit(0);
+        exit(dispatch_command(e));
     }
     if (e->file.output != 1)
         close(e->file.output);
@@ -75,8 +74,8 @@ int *ft_exec_less(t_exec *e, int index)
     if (e->state[0] == 0)
     {
         ft_exec(exec, index);
-        waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-        e->state[0] = WEXITSTATUS(e->cmd->status);
+        //waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
+        //e->state[0] = WEXITSTATUS(e->cmd->status);
     }
     e->status = e->state[0];
     e->state[1] = e->state[0];

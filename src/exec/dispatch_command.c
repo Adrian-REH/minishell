@@ -9,6 +9,7 @@ int dispatch_command(t_exec *e)
 
 	if (type == NOT_OPERATOR)
 	{
+		ft_putstr_fd("minishell: \n", STDERR_FILENO);
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
 				(ft_print_error(strerror(errno), errno, NULL));
 	}

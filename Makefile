@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/09/14 08:18:34 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/15 04:34:29 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Werror -Wall -Wextra  #-fsanitize=thread 
+CFLAGS = -Werror -Wall -Wextra  -g3 #-fsanitize=thread 
 
 RM = rm -rf
 OBJ_DIRS = obj/

@@ -24,8 +24,8 @@ int *ft_exec_cmd(t_exec *e, int index)
 	{
 
 		ft_exec(e);
-		waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		e->state[0] = WEXITSTATUS(e->cmd->status);
+		//waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
+		//e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 	else if ((type >= 4) && e->handler->fb[type])
 	{

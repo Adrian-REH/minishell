@@ -22,6 +22,7 @@ void ft_conf_heredoc(t_handler *s, int i)
 
     j = k;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
+    exec[k].cmd->handler = s;
     exec[k].op = HEREDOC;
     exec[k].state = ft_calloc(sizeof(int), 2);
     exec[k].state[0] = 0;

@@ -23,6 +23,7 @@ void ft_conf_less(t_handler *s, int i)
     j = k;
     exec[k].handler = s;
     exec[k].cmd = ft_calloc(sizeof(t_cmd), 3);
+    exec[k].cmd->handler = s;
     exec[k].op = LESS;
     exec[k].state = ft_calloc(sizeof(int), 2);
     exec[k].state[0] = 0;
@@ -36,7 +37,7 @@ void ft_conf_less(t_handler *s, int i)
         exec[k].cmd[0].line = s->info->tokens[i - 1];
         exec[k].cmd[0].cmd = do_exec(s->info->tokens[i - 1], s->env);
         exec[k].cmd[0].cmd = sarr_clean_quote(exec[k].cmd[0].cmd);
-        pipe(exec[k].cmd[0].fd_aux);
+        //pipe(exec[k].cmd[0].fd_aux);
     }
     else
         exec[k].state[0] = 1;
