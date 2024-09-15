@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/09/15 04:34:29 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/15 08:14:26 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ lib/ft_realloc.c \
 lib/ft_strdelchr.c \
 lib/ft_add_exec.c \
 lib/ft_add_cmd.c \
+lib/ft_duparr.c \
 lib/ft_clean_quote.c \
 src/minishell.c \
 src/fsm/parser.c \
