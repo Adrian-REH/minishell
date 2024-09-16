@@ -1,14 +1,6 @@
 # .github/workflows/norminette.yml
 name: tests
-on: 
-   push:
-     branches:
-       -main
-       -refactor
-   pull_request:
-     branches:
-       -main
-       -refactor
+on: [pull, pull_request]
 
 jobs:
   norminette_v3_job:
