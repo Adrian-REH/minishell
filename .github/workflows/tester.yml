@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Clone minishell tester and run tests
         run: |
-          cd minishell
+          ls
           git clone https://github.com/LucasKuhn/minishell_tester.git
           cd minishell_tester
           make re -C ../ && cp ../minishell . && ./tester
