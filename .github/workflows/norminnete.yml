@@ -4,13 +4,6 @@ on: [push, pull_request]
 
 jobs:
 
-  norminette_v2_job:
-    runs-on: ubuntu-latest
-    name: norminette v2
-    steps:
-    - uses: actions/checkout@v2
-    - uses: alexandregv/norminette-action@v2
-
   norminette_v3_job:
     runs-on: ubuntu-latest
     name: norminette v3
