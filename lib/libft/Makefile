@@ -71,7 +71,7 @@ BONUS_FILES = \
 	
 
 CORE_OBJS = $(patsubst %.c, $(OBJ_DIRS)%.o, $(CORE_FILES))
-UTILS_OBJS = $(patsubst %.c, $(OBJ_DIRS)/%.o, $(UTILS_FILES))
+UTILS_OBJS = $(patsubst %.c, $(OBJ_DIRS)%.o, $(UTILS_FILES))
 BONUS_OBJS = $(patsubst %.c, $(OBJ_DIRS)%.o, $(BONUS_FILES))
 OBJS_CORE_UTILS = $(CORE_OBJS) $(UTILS_OBJS)
 #Genero archivos que digan que se ejecuto los default y/o bonus
@@ -83,18 +83,22 @@ obj/%.o: %.c | $(OBJ_DIRS)
 $(OBJ_DIRS):
 	mkdir -p obj/
 		
-$(NAME): $(DEFAULT_PART)
+$(NAME):  $(DEFAULT_PART)
+
 $(DEFAULT_PART): $(OBJS_CORE_UTILS)
 	$(PACK) $(NAME) $(OBJS_CORE_UTILS)
 	@touch $(DEFAULT_PART)
+
 $(BONUS_PART): $(BONUS_OBJS)
 	$(PACK) $(NAME) $(BONUS_OBJS)
 	@touch $(BONUS_PART)
-all: $(DEFAULT_PART)
+
+all:  $(OBJ_DIRS) $(DEFAULT_PART)
 bonus: $(BONUS_PART)
 #Limpio los archivos .c del bonus y obligatorios y los.bonus y .default
 clean:
 	$(FRM) $(OBJS_CORE_UTILS) $(BONUS_OBJS)
+	$(FRM) $(OBJ_DIRS)
 	$(FRM) $(DEFAULT_PART) $(BONUS_PART)
 fclean: clean
 	$(FRM) $(NAME)
