@@ -12,38 +12,75 @@
 
 #include "../headers/minishell.h"
 
-int dispatch_command(t_exec *e)
+int	dispatch_command(t_exec *e)
 {
-	int type;
+	int	type;
 
 	e->cmd->status = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
-
 	if (type == NOT_OPERATOR)
 	{
-		ft_putstr_fd("minishell: \n", STDERR_FILENO);
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-				(ft_print_error(strerror(errno), errno, NULL));
+			(ft_print_error(strerror(errno), errno, NULL));
 	}
 	else if (e->handler->fb[type])
-	{
 		e->handler->fb[type](e->cmd);
-	}
-	return e->cmd->status;
+	return (e->cmd->status);
 }
 
-int dispatch_command_built(t_exec *e)
+void	ft_exec_file(t_exec *e)
 {
-	int type;
+	int		fd;
+	int		fd2;
+	char	*line;
+
+	fd = open(e->cmd->cmd[0], O_RDONLY);
+	if (fd == -1)
+		ft_print_error(strerror(errno), errno, NULL);
+	fd2 = open("temp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	line = get_next_line(fd);
+	write(fd2, "#!/bin/bash\n", ft_strlen("#!/bin/bash"));
+	while (line)
+	{
+		write(fd2, line, ft_strlen(line));
+		line = get_next_line(fd);
+	}
+	close(fd2);
+	close(fd);
+	if (execve("temp", (char *[]){"temp", NULL}, e->handler->env) == -1)
+		(unlink("temp"), ft_print_error(" command not found", errno, NULL));
+}
+
+int	dispatch_command_built(t_exec *e)
+{
+	int			type;
+	struct stat	path_stat;
 
 	e->state = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (type == NOT_OPERATOR)
 	{
+		if (ft_strchr(e->cmd->cmd[0], '$') && (ft_isalpha(e->cmd->cmd[0][1])))
+		{
+			e->cmd->cmd[0] = ft_getenv(e->cmd, ft_strchr(e->cmd->cmd[0], '$') + 1);
+			if (!e->cmd->cmd[0])
+				exit(0);
+		}
+		if (stat(e->cmd->cmd[0], &path_stat) == 0)
+		{
+			if (S_ISDIR(path_stat.st_mode) && ft_strchr(e->cmd->cmd[0], '/'))
+				ft_print_error(" Is a directory", 126, NULL);
+			if (S_ISREG(path_stat.st_mode))
+			{
+				if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
+					if (errno == ENOEXEC)
+						ft_exec_file(e);
+			}
+		}
 		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-			ft_print_error("command not found: ", 127, e->cmd->cmd[0]);
+			ft_print_error(" command not found", 127, NULL);
 	}
 	else
 		e->handler->fb[type](e->cmd);
-	return e->cmd->status;
+	return (e->cmd->status);
 }

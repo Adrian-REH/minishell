@@ -21,7 +21,7 @@ void sigint_handler(int signum)
 		rl_redisplay();
 	}
 }
-int main(int argc, char **argv, char **argenv)
+int	main(int argc, char **argv, char **argenv)
 {
 	(void)argv;
 	(void)argenv;
@@ -50,7 +50,6 @@ int main(int argc, char **argv, char **argenv)
 		handler.line = comand;
 		if (comand && *comand)
 			add_history(comand);
-
 		handler.seg[0](&handler);
 		handler.seg[1](&handler);
 		handler.seg[2](&handler);

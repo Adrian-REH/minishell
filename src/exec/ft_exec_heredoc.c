@@ -11,14 +11,14 @@
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-static int *ft_exec_give_cmd(t_exec *e)
+
+static int	*ft_exec_give_cmd(t_exec *e)
 {
-	//	return (ft_print_error("pipe", 1, ""), NULL);
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
 	{
 		ft_print_error("fork", 1, "");
-		return NULL;
+		return (NULL);
 	}
 	else if (e->cmd->pid == 0)
 	{
@@ -43,13 +43,13 @@ static int *ft_exec_give_cmd(t_exec *e)
 		close(e->file.input);
 	if (e->file.output != 1)
 		close(e->file.output);
-
-	return NULL;
+	return (NULL);
 }
-static void ft_heredoc(t_exec *e)
+
+static void	ft_heredoc(t_exec *e)
 {
-	char *p_heredoc;
-	int status;
+	char	*p_heredoc;
+	int		status;
 
 	status = 0;
 	e->cmd->pid = fork();
@@ -58,14 +58,10 @@ static void ft_heredoc(t_exec *e)
 	else if (e->cmd->pid == 0)
 	{
 		close(e->cmd->fd_aux[READ]);
-		// printf("file.input: %d\n", e->file.input);
-		// printf("file.output: %d\n", e->file.output);
 		while (1)
 		{
 			ft_putstr_fd("heredoc>", STDOUT_FILENO);
 			p_heredoc = get_next_line(0);
-			// ft_putstr_fd(p_heredoc, STDOUT_FILENO);
-			// ft_putstr_fd(e->file.end_heredoc, STDOUT_FILENO);
 			if (ft_strcmp(e->file.end_heredoc, p_heredoc) == 0)
 			{
 				(free(p_heredoc), close(e->cmd->fd_aux[WRITE]), exit(0));
@@ -79,10 +75,10 @@ static void ft_heredoc(t_exec *e)
 	close(e->cmd->fd_aux[WRITE]);
 	e->file.input = e->cmd->fd_aux[READ];
 }
+
 int *ft_exec_heredoc(t_exec *e, int index)
 {
 	e = &e[index];
-	printf("ft_exec_heredoc\n");
 	ft_heredoc(e);
 	e->cmd++;
 	if (e->state[1] == 0)

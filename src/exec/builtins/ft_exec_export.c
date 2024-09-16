@@ -12,22 +12,20 @@
 
 #include "../../headers/minishell.h"
 
-void ft_exec_export(struct s_cmd *cmd)
+void	ft_exec_export(struct s_cmd *cmd)
 {
-	int i;
-	char **str;
-	char *line;
-	size_t len;
+	int		i;
+	char	**str;
+	char	*line;
+	size_t	len;
 
 	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
 	if (line)
 	{
-		len = ft_strlen("export"); // Longitud de la subcadena
-		memmove(line, line + len, strlen(line + len) + 1);
+		len = ft_strlen("export");
+		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
-	// free(line - len);
 	line = ft_strtrim(line, " ");
-
 	i = -1;
 	while (line[++i])
 	{
@@ -35,7 +33,7 @@ void ft_exec_export(struct s_cmd *cmd)
 		{
 			ft_putstr_fd(" not a valid identifier\n", 2);
 			cmd->status = 1;
-			return;
+			return ;
 		}
 	}
 	str = ft_split(line, '=');
@@ -43,14 +41,13 @@ void ft_exec_export(struct s_cmd *cmd)
 	{
 		ft_putstr_fd(" not a valid identifier\n", 2);
 		cmd->status = 1;
-		return;
+		return ;
 	}
-
 	if (ft_isdigit(str[0][0]))
 	{
 		ft_putstr_fd(" not a valid identifier\n", 2);
 		cmd->status = 1;
-		return;
+		return ;
 	}
 	i = -1;
 	while (cmd->handler->env[++i])
@@ -64,6 +61,5 @@ void ft_exec_export(struct s_cmd *cmd)
 	if (i == ft_sarrsize(cmd->handler->env))
 		cmd->handler->env = ft_sarradd(cmd->handler->env, line);
 	cmd->status = 0;
-	return;
-	// exit(0);
+	return ;
 }

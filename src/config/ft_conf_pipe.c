@@ -12,12 +12,12 @@
 
 #include "../headers/minishell.h"
 
-static void	init_conf(t_exec *exec, t_handler *s)
+static void	ft_setup_exec(t_exec *exec, t_handler *s)
 {
 	exec->handler = s;
 	exec->cmd = ft_calloc(sizeof(t_cmd), 3);
-	exec->cmd->handler = s;
 	exec->op = PIPE;
+	exec->cmd->handler = s;
 	exec->state = ft_calloc(sizeof(int), 2);
 	exec->state[0] = 0;
 	exec->state[1] = 0;
@@ -28,12 +28,15 @@ static void	init_conf(t_exec *exec, t_handler *s)
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
-	if (s->info->tokens[i + k] && s->info->oid != (i + k))
+	if (s->info->oid != (i + k))
 	{
+		if (k == 1 && !strcmp(s->info->tokens[i + k], " "))
+			return (1);
 		cmd->line = s->info->tokens[i + k];
+		cmd->pid = 0;
+		cmd->status = 0;
 		cmd->cmd = do_exec(s->info->tokens[i + k], s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
-		cmd->towait = 0;
 	}
 	else
 		return (1);
@@ -51,10 +54,10 @@ void	ft_conf_pipe(t_handler *s, int i)
 		exec = ((k = b->len_exec_next), b->next_exec);
 	else
 		exec = ((k = b->len_exec_prev), b->prev_exec);
-	init_conf(exec + k, s);
+	ft_setup_exec(exec + k, s);
 	exec[k].state[0] = init_cmd(exec[k].cmd, s, i, -1);
 	pipe(exec[k].cmd[0].fd_aux);
-	exec[k].state[0] = init_cmd(exec[k].cmd + 1, s, i, 1);
+	exec[k].state[1] = init_cmd(exec[k].cmd + 1, s, i, 1);
 	exec[k].cmd[2].cmd = NULL;
 	exec[k].func[EMPTY][EMPTY] = ft_exec_pipe;
 	s->info->oid = i + 1;

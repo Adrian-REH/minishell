@@ -12,35 +12,37 @@
 
 #include "../../headers/minishell.h"
 
-void ft_exec_exit(struct s_cmd *cmd)
+void	ft_exec_exit(struct s_cmd *cmd)
 {
-	char **str;
-	char *line;
-	size_t len;
+	char	**str;
+	char	*line;
+	size_t	len;
+	int		i;
+	int		sig;
+
 	cmd->status = 0;
 	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
 	if (line)
 	{
-		len = ft_strlen("exit"); // Longitud de la subcadena
+		len = ft_strlen("exit");
 		memmove(line, line + len, strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
-
 	str = ft_split(line, ' ');
 	if (ft_sarrsize(str) > 1)
 	{
 		ft_putstr_fd(" too many arguments\n", 2);
 		cmd->status = 1;
-		return;
+		return ;
 	}
 	if (ft_isdigit(*line) == 0 && *line != '\"' && *line != '-' && *line != '+')
 	{
 		ft_putstr_fd(" numeric argument required\n", 2);
 		cmd->status = 2;
-		return;
+		return ;
 	}
-	int i = -1;
-	int sig = 0;
+	i = -1;
+	sig = 0;
 	while (line[++i])
 	{
 		if (line[i] == '-' || line[i] == '+')
@@ -48,12 +50,12 @@ void ft_exec_exit(struct s_cmd *cmd)
 			sig = -1;
 			if (line[i] == '+')
 				sig = 1;
-			continue;
+			continue ;
 		}
 		if (line[i] == ' ')
-			break;
+			break ;
 		if (line[i] == '\"')
-			continue;
+			continue ;
 		if (sig == -1)
 			cmd->status = cmd->status * 10 - (line[i] - '0');
 		else
@@ -61,5 +63,4 @@ void ft_exec_exit(struct s_cmd *cmd)
 	}
 	cmd->status = cmd->status % 256;
 	exit(cmd->status);
-	printf("%s\n", cmd->line);
 }

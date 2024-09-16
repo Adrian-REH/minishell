@@ -12,11 +12,11 @@
 
 #include "../headers/minishell.h"
 
-static int *ft_exec(t_exec *e, int index)
+static int	*ft_exec(t_exec *e, int index)
 {
-	int j;
-	t_exec *exec;
-	char *infile;
+	int		j;
+	t_exec	*exec;
+	char	*infile;
 
 	exec = e;
 	e = &exec[index];
@@ -28,7 +28,7 @@ static int *ft_exec(t_exec *e, int index)
 	if (e->cmd->pid < 0)
 	{
 		ft_print_error("fork", 1, "");
-		return NULL;
+		return (NULL);
 	}
 	else if (e->cmd->pid == 0)
 	{
@@ -63,7 +63,8 @@ static int *ft_exec(t_exec *e, int index)
 				(ft_print_error(strerror(errno), 1, NULL));
 			if (dup2(e->file.input, STDIN_FILENO) == -1)
 				(close(e->file.input), ft_print_error("dup2", 1, NULL));
-		}else
+		}
+		else
 		{
 			if (dup2(e->file.input, STDIN_FILENO) == -1)
 				(close(e->file.input), ft_print_error("dup2", 1, NULL));
@@ -73,20 +74,18 @@ static int *ft_exec(t_exec *e, int index)
 		dispatch_command(e);
 		exit(0);
 	}
-	return NULL;
+	return (NULL);
 }
-int *ft_exec_append(t_exec *e, int index)
+
+int	*ft_exec_append(t_exec *e, int index)
 {
-	t_exec *exec;
+	t_exec	*exec;
+
 	exec = e;
 	e = &e[index];
 	if (e->state[0] == 0)
-	{
 		ft_exec(exec, index);
-		//waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		//e->state[0] = WEXITSTATUS(e->cmd->status);
-	}
 	e->status = e->state[0];
 	e->state[1] = e->state[0];
-	return e->state;
+	return (e->state);
 }

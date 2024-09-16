@@ -12,13 +12,13 @@
 
 #include "../headers/minishell.h"
 
-static int *ft_exec(t_exec *e)
+static int	*ft_exec(t_exec *e)
 {
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
 	{
 		ft_print_error("fork", 1, "");
-		return NULL;
+		return (NULL);
 	}
 	else if (e->cmd->pid == 0)
 	{
@@ -37,16 +37,16 @@ static int *ft_exec(t_exec *e)
 		close(e->file.input);
 	close(e->cmd->fd_aux[WRITE]);
 	e->file.input = e->cmd->fd_aux[READ];
-	return NULL;
+	return (NULL);
 }
-static int *ft_exec_sec_cmd(t_exec *e)
+
+static int	*ft_exec_sec_cmd(t_exec *e)
 {
-	//	return (ft_print_error("pipe", 1, ""), NULL);
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
 	{
 		ft_print_error("fork", 1, "");
-		return NULL;
+		return (NULL);
 	}
 	else if (e->cmd->pid == 0)
 	{
@@ -64,14 +64,14 @@ static int *ft_exec_sec_cmd(t_exec *e)
 		close(e->file.input);
 	if (e->file.output != 1)
 		close(e->file.output);
-	return NULL;
+	return (NULL);
 }
 
 int *ft_exec_pipe(t_exec *e, int index)
 {
+	char	*p_heredoc;
 
 	e = &e[index];
-	char *p_heredoc;
 	if (e->state[1] == 1)
 	{
 		ft_putstr_fd(">", STDOUT_FILENO);
@@ -85,5 +85,5 @@ int *ft_exec_pipe(t_exec *e, int index)
 	if (e->state[1] == 0)
 		ft_exec_sec_cmd(e);
 	e->status = e->state[1];
-	return e->state;
+	return (e->state);
 }

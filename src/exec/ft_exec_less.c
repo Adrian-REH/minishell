@@ -12,11 +12,11 @@
 
 #include "../headers/minishell.h"
 
-static int *ft_exec(t_exec *e, int index)
+static int	*ft_exec(t_exec *e, int index)
 {
-	int j;
-	char *outfile;
-	t_exec *exec;
+	int		j;
+	char	*outfile;
+	t_exec	*exec;
 
 	exec = e;
 	e = &exec[index];
@@ -28,7 +28,7 @@ static int *ft_exec(t_exec *e, int index)
 	if (e->cmd->pid < 0)
 	{
 		ft_print_error("fork", 1, "");
-		return NULL;
+		return (NULL);
 	}
 	else if (e->cmd->pid == 0)
 	{
@@ -75,21 +75,20 @@ static int *ft_exec(t_exec *e, int index)
 		close(e->file.output);
 	if (e->file.input != 0)
 		close(e->file.input);
-	return NULL;
+	return (NULL);
 }
-int *ft_exec_less(t_exec *e, int index)
+
+int	*ft_exec_less(t_exec *e, int index)
 {
-	t_exec *exec;
+	t_exec	*exec;
 
 	exec = e;
 	e = &e[index];
 	if (e->state[0] == 0)
 	{
 		ft_exec(exec, index);
-		//waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-		//e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 	e->status = e->state[0];
 	e->state[1] = e->state[0];
-	return e->state;
+	return (e->state);
 }

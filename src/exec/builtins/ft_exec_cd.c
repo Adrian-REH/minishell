@@ -12,10 +12,10 @@
 
 #include "../../headers/minishell.h"
 
-char *local_path(int i)
+char	*local_path(int i)
 {
-	char *s;
-	char *res;
+	char	*s;
+	char	*res;
 
 	s = malloc(sizeof(char) * (MAXPATHLEN + 1));
 	if (!s)
@@ -35,9 +35,9 @@ char *local_path(int i)
 	return (res);
 }
 
-char *ft_getenv(t_cmd *cmd, char *str)
+char	*ft_getenv(t_cmd *cmd, char *str)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (cmd->handler->env[++i])
@@ -45,12 +45,13 @@ char *ft_getenv(t_cmd *cmd, char *str)
 		if (!ft_strncmp(cmd->handler->env[i], str, ft_strlen(str)))
 			return (cmd->handler->env[i] + ft_strlen(str) + 1);
 	}
-	return NULL;
+	return (NULL);
 }
-void change_value_pwd(char *s, t_cmd *cmd, int control)
+
+void	change_value_pwd(char *s, t_cmd *cmd, int control)
 {
-	int i;
-	char *temp;
+	int		i;
+	char	*temp;
 
 	i = -1;
 	s = local_path(0);
@@ -64,7 +65,6 @@ void change_value_pwd(char *s, t_cmd *cmd, int control)
 		}
 		if (control == 1 && cmd->handler->env[i] && !ft_strncmp(cmd->handler->env[i], "PWD", 3))
 		{
-			// printf("PWD:%s\n", cmd->handler->env[i]);
 			temp = ft_strjoin("PWD=", s);
 			free(cmd->handler->env[i]);
 			cmd->handler->env[i] = temp;
@@ -72,20 +72,20 @@ void change_value_pwd(char *s, t_cmd *cmd, int control)
 	}
 	free(s);
 }
-void ft_exec_cd(t_cmd *cmd)
-{
-	char *temp;
 
-	char *line;
-	char **str;
-	size_t len;
+void	ft_exec_cd(t_cmd *cmd)
+{
+	char	*temp;
+	char	*line;
+	char	**str;
+	size_t	len;
 
 	cmd->status = 0;
 	line = ft_strnstr(cmd->line, "cd", ft_strlen(cmd->line));
 	if (line)
 	{
-		len = ft_strlen("cd"); // Longitud de la subcadena
-		memmove(line, line + len, strlen(line + len) + 1);
+		len = ft_strlen("cd");
+		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
 	str = ft_split(line, ' ');
@@ -93,21 +93,20 @@ void ft_exec_cd(t_cmd *cmd)
 	{
 		ft_putstr_fd(" too many arguments\n", 2);
 		cmd->status = 1;
-		return;
+		return ;
 	}
 	change_value_pwd(NULL, cmd, 0);
 	if (str[0] == 0)
 	{
-		// chdir(ft_getenv(cmd,"HOME"));
 		chdir(getenv("HOME"));
-		return;
+		return ;
 	}
 	temp = str[0];
-	if (ft_isdigit(temp[0])) // verificar tambien si es un directorio accesible
+	if (ft_isdigit(temp[0]))
 	{
 		ft_putstr_fd(" No such file or directory\n", 2);
 		cmd->status = 1;
-		return;
+		return ;
 	}
 	if (temp[0] == '~')
 	{
@@ -116,7 +115,6 @@ void ft_exec_cd(t_cmd *cmd)
 	else if (!ft_strncmp(temp, "-", 2))
 	{
 		chdir(getenv("OLDPWD"));
-		// chdir(ft_getenv(cmd,"OLDPWD"));
 	}
 	else if (ft_strchr(temp, '$') && ft_strchr(temp, ' ') == 0)
 	{
@@ -131,7 +129,7 @@ void ft_exec_cd(t_cmd *cmd)
 			else
 			{
 				change_value_pwd(NULL, cmd, 1);
-				return;
+				return ;
 			}
 		}
 	}
@@ -141,7 +139,7 @@ void ft_exec_cd(t_cmd *cmd)
 	{
 		change_value_pwd(NULL, cmd, 1);
 		free(temp);
-		return;
+		return ;
 	}
 	free(temp);
 	cmd->status = 0;

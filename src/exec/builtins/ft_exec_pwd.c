@@ -12,9 +12,9 @@
 
 #include "../../headers/minishell.h"
 
-void ft_exec_pwd(t_cmd *cmd)
+void	ft_exec_pwd(t_cmd *cmd)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (cmd->handler->env[++i])

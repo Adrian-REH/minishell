@@ -12,31 +12,31 @@
 
 #include "../../headers/minishell.h"
 
-size_t ft_strlenchr(char *str, char c)
+size_t	ft_strlenchr(char *str, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != c)
 		i++;
-	return i;
+	return (i);
 }
 
-void ft_process_quote(struct s_cmd *cmd)
+void	ft_process_quote(struct s_cmd *cmd)
 {
-	char *result;
-	int i;
-	int j;
-	int flag;
-	char *line;
-	size_t len;
+	char	*result;
+	int		i;
+	int		j;
+	int		flag;
+	char	*line;
+	size_t	len;
+
 	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
 	if (line)
 	{
-		len = ft_strlen("echo"); // Longitud de la subcadena
+		len = ft_strlen("echo");
 		memmove(line, line + len, strlen(line + len) + 1);
 	}
-	// free(line - len);
 	result = ft_strtrim(line, " ");
 	i = -1;
 	flag = 2;
@@ -47,20 +47,20 @@ void ft_process_quote(struct s_cmd *cmd)
 			if (flag == 1 && ft_strchr(result + i, '\"'))
 				printf("\'");
 			flag = 0;
-			continue;
+			continue ;
 		}
 		if (result[i] == '\"')
 		{
 			if (!flag && ft_strchr(result + i, '\''))
 				printf("\"");
 			flag = 1;
-			continue;
+			continue ;
 		}
 		if (result[i] == '$' && result[i + 1] == '?' && flag)
 		{
 			printf("%d", cmd->handler->code);
 			i++;
-			continue;
+			continue ;
 		}
 		else if (result[i] == '$' && ft_isalpha(result[i + 1]) && flag)
 		{
@@ -75,7 +75,7 @@ void ft_process_quote(struct s_cmd *cmd)
 				if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
 				{
 					printf("%s", cmd->handler->env[j] + ft_strlen(line));
-					break;
+					break ;
 				}
 			}
 			i += ft_strlen(line) - 1;
@@ -84,15 +84,16 @@ void ft_process_quote(struct s_cmd *cmd)
 			printf("%c", result[i]);
 	}
 }
-void ft_exec_echo(struct s_cmd *cmd)
+
+void	ft_exec_echo(struct s_cmd *cmd)
 {
 	ft_process_quote(cmd);
 	printf("\n");
 	exit(0);
 }
-void ft_exec_echon(struct s_cmd *cmd)
-{
 
+void	ft_exec_echon(struct s_cmd *cmd)
+{
 	ft_process_quote(cmd);
 	exit(0);
 }

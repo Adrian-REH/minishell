@@ -28,9 +28,11 @@ static void	init_conf(t_exec *exec, t_handler *s)
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
-	if (s->info->tokens[i + k] && s->info->oid != (i + k))
+	if (s->info->oid != (i + k))
 	{
+		cmd->status = 0;
 		cmd->line = s->info->tokens[i + k];
+		cmd->pid = 0;
 		cmd->cmd = do_exec(s->info->tokens[i + k], s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
 		cmd->towait = 0;
@@ -44,11 +46,12 @@ static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 {
 	char	*line;
 
-	if (s->info->tokens[i + k] && s->info->oid != (i + k))
+	if (s->info->oid != (i + k))
 	{
+		exec->cmd->status = 0;
 		line = s->info->tokens[i + k];
 		line = ft_strdelchr(line, '\"');
-		exec->file.out_dir_file = line;
+		exec->file.in_dir_file = line;
 	}
 	else
 		return (1);

@@ -20,6 +20,8 @@ static void	init_conf(t_exec *exec, t_handler *s, int i)
 	exec->cmd = malloc(sizeof(t_cmd));
 	exec->cmd->handler = s;
 	exec->cmd->line = s->info->tokens[i];
+	exec->cmd->pid = 0;
+	exec->cmd->status = 0;
 	exec->file.input = 0;
 	exec->file.output = 1;
 	exec->op = UNIQ_COMMAND;
