@@ -13,6 +13,7 @@
 NAME = libft.a
 CC = gcc
 PACK = ar rcs
+OBJ_DIRS = obj/
 CFLAGS = -Wall -Wextra -Werror -g
 FRM = rm -rf
 CORE_FILES = \
@@ -69,16 +70,19 @@ BONUS_FILES = \
 	ft_lstmap_bonus.c\
 	
 
-CORE_OBJS = $(patsubst %.c, obj/%.o, $(CORE_FILES))
-UTILS_OBJS = $(patsubst %.c, obj/%.o, $(UTILS_FILES))
-BONUS_OBJS = $(patsubst %.c, obj/%.o, $(BONUS_FILES))
+CORE_OBJS = $(patsubst %.c, $(OBJ_DIRS)%.o, $(CORE_FILES))
+UTILS_OBJS = $(patsubst %.c, $(OBJ_DIRS)/%.o, $(UTILS_FILES))
+BONUS_OBJS = $(patsubst %.c, $(OBJ_DIRS)%.o, $(BONUS_FILES))
 OBJS_CORE_UTILS = $(CORE_OBJS) $(UTILS_OBJS)
 #Genero archivos que digan que se ejecuto los default y/o bonus
 DEFAULT_PART = .default
 BONUS_PART = .bonus
-obj/%.o: %.c
+obj/%.o: %.c | $(OBJ_DIRS)
 	$(CC) $(CFLAGS) -c $< -o $@
-	
+
+$(OBJ_DIRS):
+	mkdir -p obj/
+		
 $(NAME): $(DEFAULT_PART)
 $(DEFAULT_PART): $(OBJS_CORE_UTILS)
 	$(PACK) $(NAME) $(OBJS_CORE_UTILS)
