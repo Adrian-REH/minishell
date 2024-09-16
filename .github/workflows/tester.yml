@@ -1,0 +1,34 @@
+# .github/workflows/norminette.yml
+name: tests
+on: 
+   push:
+     branches:
+       -main
+       -refactor
+   pull_request:
+     branches:
+       -main
+       -refactor
+
+jobs:
+  norminette_v3_job:
+    runs-on: ubuntu-latest
+    name: norminette v3
+    steps:
+      - uses: actions/checkout@v2
+      - uses: alexandregv/norminette-action@v3
+
+  minishell_tester_job:
+    runs-on: ubuntu-latest
+    name: Minishell Tester
+    steps:
+      # Clonar el código principal
+      - uses: actions/checkout@v2
+
+      # Clonar y ejecutar el repositorio de tests
+      - name: Clone minishell tester and run tests
+        run: |
+          cd minishell
+          git clone https://github.com/LucasKuhn/minishell_tester.git
+          cd minishell_tester
+          make re -C ../ && cp ../minishell . && ./h tester
