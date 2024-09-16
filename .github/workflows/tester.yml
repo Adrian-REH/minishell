@@ -13,6 +13,7 @@ jobs:
   minishell_tester_job:
     runs-on: ubuntu-latest
     name: Minishell Tester
+    timeout-minutes: 2
     steps:
       # Clonar el código principal
       - uses: actions/checkout@v2
