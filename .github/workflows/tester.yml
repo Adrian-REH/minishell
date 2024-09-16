@@ -1,4 +1,4 @@
-# .github/workflows/norminette.yml
+# .github/workflows/tester.yml
 name: tests
 on: [pull, pull_request]
 
