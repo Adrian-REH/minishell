@@ -1,6 +1,6 @@
 # .github/workflows/tester.yml
-name: tests
-on: [pull, pull_request]
+name: tester
+on: [push, pull_request]
 
 jobs:
   norminette_v3_job:
@@ -16,8 +16,6 @@ jobs:
     steps:
       # Clonar el código principal
       - uses: actions/checkout@v2
-
-      # Clonar y ejecutar el repositorio de tests
       - name: Clone minishell tester and run tests
         run: |
           cd minishell
