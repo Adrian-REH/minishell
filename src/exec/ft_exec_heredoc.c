@@ -36,13 +36,8 @@ static int	*ft_exec_give_cmd(t_exec *e)
 				(ft_print_error("dup2", 1, NULL));
 			close(e->file.output);
 		}
-		dispatch_command(e);
-		exit(0);
+		exit(dispatch_command(e));
 	}
-	if (e->file.input != 0)
-		close(e->file.input);
-	if (e->file.output != 1)
-		close(e->file.output);
 	return (NULL);
 }
 
@@ -71,12 +66,11 @@ static void	ft_heredoc(t_exec *e)
 	}
 	else
 		waitpid(e->cmd->pid, &status, 0);
-	e->cmd->status = WEXITSTATUS(status);
-	close(e->cmd->fd_aux[WRITE]);
-	e->file.input = e->cmd->fd_aux[READ];
+	e->cmd->status = (close(e->cmd->fd_aux[WRITE]), WEXITSTATUS(status));
+	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
 }
 
-int *ft_exec_heredoc(t_exec *e, int index)
+int	*ft_exec_heredoc(t_exec *e, int index)
 {
 	e = &e[index];
 	ft_heredoc(e);
@@ -84,12 +78,14 @@ int *ft_exec_heredoc(t_exec *e, int index)
 	if (e->state[1] == 0)
 	{
 		ft_exec_give_cmd(e);
-		waitpid(e->cmd->pid, &e->cmd->status, 0);
-		e->state[1] = WEXITSTATUS(e->cmd->status);
+		if (e->file.input != 0)
+			close(e->file.input);
+		if (e->file.output != 1)
+			close(e->file.output);
 	}
 	e->status = e->state[1];
 	e->state[0] = e->state[1];
 	e->file.input = e->cmd->fd_aux[READ];
 	e->file.output = e->cmd->fd_aux[WRITE];
-	return e->state;
+	return (e->state);
 }
