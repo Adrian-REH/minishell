@@ -41,3 +41,17 @@ void ft_execute_exception(t_cmd *cmd)
 {
     (void)cmd;
 }
+
+void ft_exeption_fd(int inp, int out, int fd[2])
+{
+	if (inp != 0 && inp != 0)
+		close(inp);
+	if (out != 0 && out != 1)
+		close(out);
+	if (fd[0] != 0 && fd[1] != 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+	}
+	ft_print_error(strerror(errno), 1, NULL);
+}

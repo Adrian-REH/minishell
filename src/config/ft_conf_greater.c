@@ -51,7 +51,7 @@ static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 	{
 		line = s->info->tokens[i + k];
 		line = ft_strdelchr(line, '\"');
-		exec->file.out_dir_file = line;
+		exec->file.odfile = line;
 	}
 	else
 		return (1);

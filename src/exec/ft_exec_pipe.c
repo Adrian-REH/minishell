@@ -23,13 +23,13 @@ static int	*ft_exec(t_exec *e)
 	else if (e->cmd->pid == 0)
 	{
 		if (dup2(e->file.input, STDIN_FILENO) == -1)
-			(close(e->cmd->fd_aux[1]), close(e->cmd->fd_aux[0]), ft_print_error("dup2", 1, ""));
+			ft_exeption_fd(e->file.input, 0, e->cmd->fd_aux);
 		if (e->file.input != 0)
 			close(e->file.input);
 		if (e->file.output != 1)
 			close(e->file.output);
 		if (dup2(e->cmd->fd_aux[WRITE], STDOUT_FILENO) == -1)
-			(close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]), ft_print_error("dup2", 1, NULL));
+			(ft_exeption_fd(0, 0, e->cmd->fd_aux));
 		(close(e->cmd->fd_aux[WRITE]), close(e->cmd->fd_aux[READ]));
 		exit(dispatch_command(e));
 	}
@@ -67,7 +67,7 @@ static int	*ft_exec_sec_cmd(t_exec *e)
 	return (NULL);
 }
 
-int *ft_exec_pipe(t_exec *e, int index)
+int	*ft_exec_pipe(t_exec *e, int index)
 {
 	char	*p_heredoc;
 

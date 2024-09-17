@@ -53,7 +53,7 @@ typedef struct s_file
 	char	**content;
 	int		len_content;
 	char	*in_dir_file;
-	char	*out_dir_file;
+	char	*odfile;
 }			t_file;
 
 typedef enum e_operators
@@ -256,5 +256,7 @@ char		**ft_sarradd(char **arr, char *string);
 int			ft_sarrprint(char **arr);
 int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
+/*-----------EXCEPTIONS-------------------*/
+void		ft_exeption_fd(int inp, int out, int fd[2]);
 
 #endif

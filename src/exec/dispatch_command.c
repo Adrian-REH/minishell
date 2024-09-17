@@ -12,22 +12,6 @@
 
 #include "../headers/minishell.h"
 
-int	dispatch_command(t_exec *e)
-{
-	int	type;
-
-	e->cmd->status = 0;
-	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
-	if (type == NOT_OPERATOR)
-	{
-		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-			(ft_print_error(strerror(errno), errno, NULL));
-	}
-	else if (e->handler->fb[type])
-		e->handler->fb[type](e->cmd);
-	return (e->cmd->status);
-}
-
 void	ft_exec_file(t_exec *e)
 {
 	int		fd;
@@ -51,35 +35,52 @@ void	ft_exec_file(t_exec *e)
 		(unlink("temp"), ft_print_error(" command not found", errno, NULL));
 }
 
+static void	execute_command(t_exec *e)
+{
+	struct stat	path_stat;
+
+	if (ft_strchr(e->cmd->cmd[0], '$') && (ft_isalpha(e->cmd->cmd[0][1])))
+	{
+		e->cmd->cmd[0] = ft_getenv(e->cmd, ft_strchr(e->cmd->cmd[0], '$') + 1);
+		if (!e->cmd->cmd[0])
+			exit(0);
+	}
+	if (stat(e->cmd->cmd[0], &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode) && ft_strchr(e->cmd->cmd[0], '/'))
+			ft_print_error(" Is a directory", 126, NULL);
+		if (S_ISREG(path_stat.st_mode))
+		{
+			if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
+				if (errno == ENOEXEC)
+					ft_exec_file(e);
+		}
+	}
+	if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
+		ft_print_error(" command not found", 127, NULL);
+}
+
+int	dispatch_command(t_exec *e)
+{
+	int	type;
+
+	e->cmd->status = 0;
+	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
+	if (type == NOT_OPERATOR)
+		execute_command(e);
+	else if (e->handler->fb[type])
+		e->handler->fb[type](e->cmd);
+	return (e->cmd->status);
+}
+
 int	dispatch_command_built(t_exec *e)
 {
 	int			type;
-	struct stat	path_stat;
 
 	e->state = 0;
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (type == NOT_OPERATOR)
-	{
-		if (ft_strchr(e->cmd->cmd[0], '$') && (ft_isalpha(e->cmd->cmd[0][1])))
-		{
-			e->cmd->cmd[0] = ft_getenv(e->cmd, ft_strchr(e->cmd->cmd[0], '$') + 1);
-			if (!e->cmd->cmd[0])
-				exit(0);
-		}
-		if (stat(e->cmd->cmd[0], &path_stat) == 0)
-		{
-			if (S_ISDIR(path_stat.st_mode) && ft_strchr(e->cmd->cmd[0], '/'))
-				ft_print_error(" Is a directory", 126, NULL);
-			if (S_ISREG(path_stat.st_mode))
-			{
-				if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-					if (errno == ENOEXEC)
-						ft_exec_file(e);
-			}
-		}
-		if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-			ft_print_error(" command not found", 127, NULL);
-	}
+		execute_command(e);
 	else
 		e->handler->fb[type](e->cmd);
 	return (e->cmd->status);
