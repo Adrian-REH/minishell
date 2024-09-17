@@ -22,6 +22,8 @@ SRCS = 	 lib/ft_sarrprint.c \
 src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/get_token.c \
+lib/ft_getenv.c \
 lib/ft_isbuiltin.c \
 lib/ft_sarrfree.c \
 lib/ft_idbystr.c \
@@ -39,6 +41,8 @@ src/minishell.c \
 src/fsm/parser.c \
 src/fsm/config.c \
 src/fsm/execute.c \
+src/fsm/clear.c \
+src/fsm/subprocess.c \
 src/resource/init_learning.c \
 src/config/ft_conf_and.c \
 src/config/ft_conf_pipe.c \

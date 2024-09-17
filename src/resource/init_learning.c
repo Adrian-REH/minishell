@@ -12,25 +12,10 @@
 
 #include "../headers/minishell.h"
 
-void get_token(t_automata *a, void *data)
-{
-	char *cmdline;
-	char *aux;
-	t_data *info;
-
-	info = (t_data *)data;
-	cmdline = ft_substr(a->str, a->j, a->i - a->j);
-	aux = cmdline;
-	cmdline = ft_strtrim(cmdline, " ");
-	free(aux);
-	a->j = a->i;
-	info->tokens = ft_sarradd(info->tokens, cmdline);
-	free(cmdline);
-}
 /**
  * 	Alphabet definitions
  **/
-void alphabet_init(t_automata *a)
+void	alphabet_init(t_automata *a)
 {
 	a->alphabet = ft_sarradd(NULL, " ");
 	a->alphabet = ft_sarradd(a->alphabet, "|");
@@ -46,7 +31,7 @@ void alphabet_init(t_automata *a)
 /**
  * 	Operators definitions
  **/
-void operators_init(t_handler *a)
+void	operators_init(t_handler *a)
 {
 	a->operators = ft_sarradd(NULL, " ");
 	a->operators = ft_sarradd(a->operators, ">");
@@ -64,9 +49,8 @@ void operators_init(t_handler *a)
 /**
  * 	Builtins definitions
  **/
-void builtings_init(t_handler *a)
+void	builtings_init(t_handler *a)
 {
-	// a->operators = ft_sarradd(NULL, " ");
 	a->builtins = ft_sarradd(a->builtins, "echo");
 	a->builtins = ft_sarradd(a->builtins, "echo -n");
 	a->builtins = ft_sarradd(a->builtins, "pwd");
@@ -77,37 +61,67 @@ void builtings_init(t_handler *a)
 	a->builtins = ft_sarradd(a->builtins, "exit");
 }
 
-int get_state(int i, int j)
+/**
+ * @brief Get the state object
+ * 
+ * @param i Estado anterior, valores posibles:
+ * 0  Empty input
+ * 1  Open double quotes
+ * 2  Open single quotes
+ * 3  Pipe open
+ * 4  Or open
+ * 5  Less open
+ * 6  Heredoc open
+ * 7  Greater open
+ * 8  Append open
+ * 9  & Found
+ * 10 And open
+ * 11 Invalid input
+ * 12 Spaces without words
+ * 13 Spaces between words
+ * 14 Not operators
+ * 15 Open parenthesis
+ * 16 Close parenthesis
+ * @param j Estado actual
+ * 0 \S
+ * 1 |
+ * 2 <
+ * 3 >
+ * 4 &
+ * 5 "
+ * 6 '
+ * 7 (
+ * 8 )
+ * @return int 
+ * 
+ * 
+ */
+int	get_state(int i, int j)
 {
-	const int states[][13] = {
-		//\S,  |,  <,  >,  &,  ",  ', (, )
-		{0, 11, 11, 11, 11, 1, 2, 15, 16, 14, 14, 14},                                  // 0  Empty input
-		{1, 1, 1, 1, 1, 13, 1, 1, 1, 1, 1, 1, 1},                                                                     // 1  Open double quotes
-		{2, 2, 2, 2, 2, 2, 13, 2, 2, 2, 2, 2, 2},                                                                     // 2  Open single quotes
-		{12, 4, 5, 7, 11, 1, 2, 14, 15, 14, 14, 14, 14},           // 3  Pipe open
-		{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 14, 0, 14},                    // 4  Or open
-		{12, 11, 6, 11, 11, 1, 2, 14, 15, 14, 14, 14, 14},          // 5  Less open
-		{12, 14, 14, 14, 14, 1, 2, 14, 14, 14, 0, 0, 14},                     // 6  Heredoc open
-		{12, 11, 11, 8, 11, 1, 2, 14, 15, 14, 0, 0, 14},                                          // 7  Greater open
-		{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 0, 0, 14},                                         // 8  Append open
-		{12, 11, 11, 11, 10, 1, 2, 11, 15, 14, 0, 0, 11},                                                   // 9  & Found
-		{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 0, 0, 14},                                         // 10 And open
-		{11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},                                                         // 11 Invalid input
-		{12, 1, 5, 7, 1, 1, 2, 15, 16, 14, 14, 14, 14},                       // 12 Spaces without words
-		{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},                       // 13 Spaces between words
-		{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},                       // 14 Not operators
-		{13, 4, 5, 11, 11, 1, 2, 14, 14, 14, 14, 14, 14}, // 15 Open parenthesis
-		{13, 4, 5, 11, 11, 1, 2, 14, 14, 14, 14, 14, 14}, // 16 Close parenthesis
+	const int	states[][13] = {
+	{0, 11, 11, 11, 11, 1, 2, 15, 16, 14, 14, 14},
+	{1, 1, 1, 1, 1, 13, 1, 1, 1, 1, 1, 1, 1},
+	{2, 2, 2, 2, 2, 2, 13, 2, 2, 2, 2, 2, 2},
+	{12, 4, 5, 7, 11, 1, 2, 14, 15, 14, 14, 14, 14},
+	{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 14, 0, 14},
+	{12, 11, 6, 11, 11, 1, 2, 14, 15, 14, 14, 14, 14},
+	{12, 14, 14, 14, 14, 1, 2, 14, 14, 14, 0, 0, 14},
+	{12, 11, 11, 8, 11, 1, 2, 14, 15, 14, 0, 0, 14},
+	{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 0, 0, 14},
+	{12, 11, 11, 11, 10, 1, 2, 11, 15, 14, 0, 0, 11},
+	{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 0, 0, 14},
+	{11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},
+	{12, 1, 5, 7, 1, 1, 2, 15, 16, 14, 14, 14, 14},
+	{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},
+	{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},
+	{13, 4, 5, 11, 11, 1, 2, 14, 14, 14, 14, 14, 14},
+	{13, 4, 5, 11, 11, 1, 2, 14, 14, 14, 14, 14, 14},
 	};
 
 	return (states[i][j]);
 }
 
-/**
- * 	Error strings to print when automata finish on a
- * 		non ending state.
- **/
-void errors_init(t_automata *a)
+void	errors_init(t_automata *a)
 {
 	a->errors = NULL;
 	a->errors = ft_sarradd(NULL, "Empty string.");
@@ -125,19 +139,7 @@ void errors_init(t_automata *a)
 	a->errorlen = ft_sarrsize(a->errors);
 }
 
-/**
- *	Simple actions, they trigger when entering a state.
- **/
-void sactions_init(t_automata *a)
-{
-	(void)a;
-}
-
-/**
- *	Transition actions, they trigger when going
- * 		from one state to another.
- **/
-void tactions_init(t_automata *a)
+void	tactions_init(t_automata *a)
 {
 	a->fta[NOT_OPERATOR][PIPE] = get_token;
 	a->fta[NOT_OPERATOR][LESS] = get_token;
@@ -181,11 +183,7 @@ void tactions_init(t_automata *a)
 	a->fta[NOT_OPERATOR][CLOSE_PAREN] = get_token;
 }
 
-/**
- *	Transision de configuracion,
- *		Se encarga de llamar a la funcion correspondiente, acorde al estado actual.
- **/
-void tactions_handler_init(t_handler *a)
+void	tactions_handler_init(t_handler *a)
 {
 	a->fta[EMPTY][UNIQ_COMMAND][EMPTY] = ft_conf_cmd;
 	a->fta[EMPTY][NOT_OPERATOR][8] = ft_conf_cmd;
@@ -198,10 +196,6 @@ void tactions_handler_init(t_handler *a)
 	a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_pipe;
 	a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_or;
 	a->fta[NOT_OPERATOR][8][NOT_OPERATOR] = ft_conf_and;
-	a->fta[NOT_OPERATOR][2][EMPTY] = ft_conf_exception;
-	a->fta[NOT_OPERATOR][2][EMPTY] = ft_conf_exception;
-	a->fta[NOT_OPERATOR][3][EMPTY] = ft_conf_exception;
-	a->fta[NOT_OPERATOR][4][EMPTY] = ft_conf_exception;
 	a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_amper;
 	a->fta[NOT_OPERATOR][6][EMPTY] = ft_conf_pipe;
 	a->fta[NOT_OPERATOR][7][EMPTY] = ft_conf_or;
@@ -210,7 +204,7 @@ void tactions_handler_init(t_handler *a)
 	a->fta[6][2][NOT_OPERATOR] = ft_conf_less;
 }
 
-void tactions_builtins_init(t_handler *a)
+void	tactions_builtins_init(t_handler *a)
 {
 	a->fb[0] = ft_exec_echo;
 	a->fb[1] = ft_exec_echon;

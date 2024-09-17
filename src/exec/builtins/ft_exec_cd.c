@@ -35,19 +35,6 @@ char	*local_path(int i)
 	return (res);
 }
 
-char	*ft_getenv(t_cmd *cmd, char *str)
-{
-	int	i;
-
-	i = -1;
-	while (cmd->handler->env[++i])
-	{
-		if (!ft_strncmp(cmd->handler->env[i], str, ft_strlen(str)))
-			return (cmd->handler->env[i] + ft_strlen(str) + 1);
-	}
-	return (NULL);
-}
-
 void	change_value_pwd(char *s, t_cmd *cmd, int control)
 {
 	int		i;
@@ -89,6 +76,12 @@ void	ft_exec_cd(t_cmd *cmd)
 	}
 	line = ft_strtrim(line, " ");
 	str = ft_split(line, ' ');
+	if (!str)
+	{
+		ft_putstr_fd("Error malloc\n", 2);
+		cmd->status = 1;
+		return ;
+	}
 	if (ft_sarrsize(str) > 1)
 	{
 		ft_putstr_fd(" too many arguments\n", 2);
@@ -141,6 +134,7 @@ void	ft_exec_cd(t_cmd *cmd)
 		free(temp);
 		return ;
 	}
+	ft_free_p2(str);
 	free(temp);
 	cmd->status = 0;
 }

@@ -12,6 +12,7 @@
 
 #include "../../headers/minishell.h"
 
+//gestionar los exit sin argumentos
 void	ft_exec_exit(struct s_cmd *cmd)
 {
 	char	**str;

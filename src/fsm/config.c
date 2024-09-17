@@ -12,14 +12,15 @@
 
 #include "../headers/minishell.h"
 
-int *handler_execute(t_handler *a)
+int	*handler_execute(t_handler *a)
 {
-	int i = -1;
-	int j = 0;
-	t_exec *exec;
-	int i_exec;
+	int		i;
+	int		j;
+	t_exec	*exec;
+	int		i_exec;
 
-	// a->exec[0].file.input = 0;
+	i = -1;
+	j = 0;
 	a->block[a->info->i].op = BLOCK_EMPTY;
 	a->block[a->info->i].isnext = 0;
 	a->block[a->info->i].len_exec_prev = 0;
@@ -36,13 +37,11 @@ int *handler_execute(t_handler *a)
 			a->block[a->info->i].priority = 1;
 			a->state[2] = 0;
 		}
-
 		if (a->state[1] == NOT_OPERATOR)
 		{
 			if (do_exec(a->info->tokens[i - 1], a->env) && a->state[2] == EMPTY)
 				a->state[1] = UNIQ_COMMAND;
 		}
-
 		if (a->block[a->info->i].isnext)
 		{
 			a->block[a->info->i].next_exec = ft_realloc(a->block[a->info->i].next_exec, sizeof(t_exec) * (a->block[a->info->i].len_exec_next + 1));
@@ -76,8 +75,13 @@ int *handler_execute(t_handler *a)
 	return (a->state);
 }
 
-void init_handler(t_handler *s)
+void	init_handler(t_handler *s)
 {
+	s->seg[0] = ft_parser;
+	s->seg[1] = ft_config;
+	s->seg[2] = ft_execute;
+	s->seg[3] = ft_clear;
+	s->seg[4] = ft_subprocess;
 	operators_init(s);
 	builtings_init(s);
 	tactions_handler_init(s);
@@ -85,9 +89,10 @@ void init_handler(t_handler *s)
 	s->code = 0;
 }
 
-t_handler *ft_config(t_handler *s)
+t_handler	*ft_config(t_handler *s)
 {
-	int i;
+	int	i;
+
 	s->state[0] = 0;
 	s->state[1] = 0;
 	s->state[2] = 0;
@@ -111,9 +116,7 @@ t_handler *ft_config(t_handler *s)
 	s->block->op = BLOCK_EMPTY;
 	s->info->oid = 30;
 	if (pipe(s->block->fd) == -1)
-		return s;
-	// Proceso los tokens y configuro el entorno para la ejecucion
-
+		return (s);
 	handler_execute(s);
 	i = 0;
 	if (s->w_cmd)
@@ -123,7 +126,6 @@ t_handler *ft_config(t_handler *s)
 		s->n_pids = i;
 	}
 	if (s->info->len_tokens <= 1)
-		return s;
-
-	return s;
+		return (s);
+	return (s);
 }
