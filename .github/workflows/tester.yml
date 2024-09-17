@@ -1,6 +1,12 @@
 # .github/workflows/tester.yml
 name: tester
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - refactor
+  pull_request:
+    branches:
+      - main
 
 jobs:
   norminette_v3_job:
@@ -15,7 +21,6 @@ jobs:
     name: Minishell Tester
     timeout-minutes: 2
     steps:
-      # Clonar el código principal
       - uses: actions/checkout@v2
       - name: Clone minishell tester and run tests
         run: |
