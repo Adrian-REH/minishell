@@ -27,5 +27,5 @@ jobs:
           ls
           git clone https://github.com/LucasKuhn/minishell_tester.git
           cd minishell_tester
-          sed -i '17d' redirects
+          sed -i '19d' redirects
           make re -C ../ && cp ../minishell . && ./tester
