@@ -44,13 +44,15 @@ void	change_value_pwd(char *s, t_cmd *cmd, int control)
 	s = local_path(0);
 	while (cmd->handler->env[++i])
 	{
-		if (control == 0 && cmd->handler->env[i] && !ft_strncmp(cmd->handler->env[i], "OLDPWD", 6))
+		if (control == 0 && cmd->handler->env[i] && \
+		!ft_strncmp(cmd->handler->env[i], "OLDPWD", 6))
 		{
 			temp = ft_strjoin("OLDPWD=", s);
 			free(cmd->handler->env[i]);
 			cmd->handler->env[i] = temp;
 		}
-		if (control == 1 && cmd->handler->env[i] && !ft_strncmp(cmd->handler->env[i], "PWD", 3))
+		if (control == 1 && cmd->handler->env[i] && \
+		!ft_strncmp(cmd->handler->env[i], "PWD", 3))
 		{
 			temp = ft_strjoin("PWD=", s);
 			free(cmd->handler->env[i]);
@@ -60,14 +62,42 @@ void	change_value_pwd(char *s, t_cmd *cmd, int control)
 	free(s);
 }
 
-void	ft_exec_cd(t_cmd *cmd)
+static int	handle_directory_change(char *temp, t_cmd *cmd, int status)
 {
-	char	*temp;
+	if (temp == 0)
+		status = (chdir(getenv("HOME")), 0);
+	else if (ft_isdigit(temp[0]))
+		status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
+	else if (temp[0] == '~')
+		temp = ft_strjoin(getenv("HOME"), temp + 1);
+	else if (!ft_strncmp(temp, "-", 2))
+		chdir(getenv("OLDPWD"));
+	else if (ft_strchr(temp, '$') && ft_strchr(temp, ' ') == 0)
+	{
+		temp = ft_getenv(cmd, temp + 1);
+		if (temp)
+		{
+			if (chdir(temp) == -1)
+				status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+			else
+				status = (change_value_pwd(NULL, cmd, 1), 0);
+		}
+	}
+	else if (chdir(temp) == -1)
+		status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+	else
+		status = (change_value_pwd(NULL, cmd, 1), 0);
+	return (status);
+}
+
+int	ft_exec_cd(t_cmd *cmd)
+{
 	char	*line;
 	char	**str;
 	size_t	len;
+	int		status;
 
-	cmd->status = 0;
+	status = 0;
 	line = ft_strnstr(cmd->line, "cd", ft_strlen(cmd->line));
 	if (line)
 	{
@@ -75,66 +105,15 @@ void	ft_exec_cd(t_cmd *cmd)
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
+	if (!line)
+		return (ft_putstr_fd("Error malloc\n", 2), 1);
 	str = ft_split(line, ' ');
 	if (!str)
-	{
-		ft_putstr_fd("Error malloc\n", 2);
-		cmd->status = 1;
-		return ;
-	}
+		return (ft_putstr_fd("Error malloc\n", 2), free(line), 1);
 	if (ft_sarrsize(str) > 1)
-	{
-		ft_putstr_fd(" too many arguments\n", 2);
-		cmd->status = 1;
-		return ;
-	}
+		return (ft_putstr_fd(" too many arguments\n", 2), (cmd->status = 1), 1);
 	change_value_pwd(NULL, cmd, 0);
-	if (str[0] == 0)
-	{
-		chdir(getenv("HOME"));
-		return ;
-	}
-	temp = str[0];
-	if (ft_isdigit(temp[0]))
-	{
-		ft_putstr_fd(" No such file or directory\n", 2);
-		cmd->status = 1;
-		return ;
-	}
-	if (temp[0] == '~')
-	{
-		temp = ft_strjoin(getenv("HOME"), temp + 1);
-	}
-	else if (!ft_strncmp(temp, "-", 2))
-	{
-		chdir(getenv("OLDPWD"));
-	}
-	else if (ft_strchr(temp, '$') && ft_strchr(temp, ' ') == 0)
-	{
-		temp = ft_getenv(cmd, temp + 1);
-		if (temp)
-		{
-			if (chdir(temp) == -1)
-			{
-				printf("No such file or directory");
-				cmd->status = 1;
-			}
-			else
-			{
-				change_value_pwd(NULL, cmd, 1);
-				return ;
-			}
-		}
-	}
-	else if (chdir(temp) == -1)
-		printf("No such file or directory");
-	else
-	{
-		change_value_pwd(NULL, cmd, 1);
-		free(temp);
-		return ;
-	}
-	ft_free_p2(str);
-	free(temp);
-	cmd->status = 0;
+	status = handle_directory_change(str[0], cmd, status);
+	cmd->status = status;
+	return (ft_free_p2(str), status);
 }

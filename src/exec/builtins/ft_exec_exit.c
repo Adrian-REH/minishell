@@ -12,38 +12,14 @@
 
 #include "../../headers/minishell.h"
 
-//gestionar los exit sin argumentos
-void	ft_exec_exit(struct s_cmd *cmd)
+static int	handler_exit_result(char *line, t_cmd *cmd)
 {
-	char	**str;
-	char	*line;
-	size_t	len;
-	int		i;
-	int		sig;
+	int	i;
+	int	sig;
 
-	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
-	if (line)
-	{
-		len = ft_strlen("exit");
-		memmove(line, line + len, strlen(line + len) + 1);
-	}
-	line = ft_strtrim(line, " ");
-	str = ft_split(line, ' ');
-	if (ft_sarrsize(str) > 1)
-	{
-		ft_putstr_fd(" too many arguments\n", 2);
-		cmd->status = 1;
-		return ;
-	}
 	if (ft_isdigit(*line) == 0 && *line != '\"' && *line != '-' && *line != '+')
-	{
-		ft_putstr_fd(" numeric argument required\n", 2);
-		cmd->status = 2;
-		return ;
-	}
-	i = -1;
-	sig = 0;
+		return (ft_putstr_fd(" numeric argument required\n", 2), 2);
+	sig = ((i = -1), 0);
 	while (line[++i])
 	{
 		if (line[i] == '-' || line[i] == '+')
@@ -62,6 +38,37 @@ void	ft_exec_exit(struct s_cmd *cmd)
 		else
 			cmd->status = cmd->status * 10 + (line[i] - '0');
 	}
-	cmd->status = cmd->status % 256;
-	exit(cmd->status);
+	return (0);
+}
+
+/*
+LLama a la funcion handler_exit_result para verificar liberar memoria
+*/
+int	ft_exec_exit(struct s_cmd *cmd)
+{
+	char	**str;
+	char	*line;
+	size_t	len;
+
+	cmd->status = 0;
+	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
+	if (line)
+	{
+		len = ft_strlen("exit");
+		memmove(line, line + len, strlen(line + len) + 1);
+	}
+	line = ft_strtrim(line, " ");
+	if (!line)
+		cmd->status = (ft_putstr_fd("Error malloc\n", 2), 1);
+	str = ft_split(line, ' ');
+	if (!str)
+		return ((cmd->status = 1), ft_putstr_fd("Error malloc\n", 2), 0);
+	if (str[0] == 0)
+		exit(cmd->status);
+	if (ft_sarrsize(str) > 1)
+		return ((cmd->status = 1), ft_putstr_fd(" too many arguments\n", 2), 0);
+	len = handler_exit_result(line, cmd);
+	if (len != 0)
+		return ((cmd->status = len), len);
+	return (exit(cmd->status % 256), 0);
 }

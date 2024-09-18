@@ -12,7 +12,7 @@
 
 #include "../../headers/minishell.h"
 
-void	ft_exec_pwd(t_cmd *cmd)
+int	ft_exec_pwd(t_cmd *cmd)
 {
 	int	i;
 
@@ -22,4 +22,5 @@ void	ft_exec_pwd(t_cmd *cmd)
 		if (!ft_strncmp(cmd->handler->env[i], "PWD", 3))
 			printf("%s\n", cmd->handler->env[i] + 4);
 	}
+	return (0);
 }

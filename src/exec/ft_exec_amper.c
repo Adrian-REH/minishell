@@ -17,48 +17,44 @@ static int	*ft_exec(t_exec *e)
 {
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
-	{
-		ft_print_error("fork", 1, "");
-		return (NULL);
-	}
+		return (ft_print_error("fork", 1, ""), NULL);
 	else if (e->cmd->pid == 0)
 		exit(dispatch_command(e));
 	return (NULL);
 }
 
-int	*ft_exec_amper(t_exec *e, int index)
+static void	ft_wait(t_exec *e)
 {
 	pid_t	result;
 
+	if (e->cmd->towait)
+		waitpid(e->cmd->pid, &e->cmd->status, 0);
+	else
+	{
+		result = waitpid(e->cmd->pid, &e->cmd->status, WNOHANG);
+		if (result == 0)
+		{
+			e->handler->n_pids++;
+			e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
+			printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
+		}
+	}
+}
+
+int	*ft_exec_amper(t_exec *e, int index)
+{
 	e = &e[index];
 	if (e->state[0] == 0)
 	{
 		ft_exec(e);
-		result = waitpid(e->cmd->pid, &e->cmd->status, WNOHANG);
-		e->state[0] = WEXITSTATUS(e->cmd[0].pid);
-		if (result == 0)
-		{
-			e->handler->n_pids++;
-			printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
-			e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
-		}
+		ft_wait(e);
+		e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 	e->cmd++;
 	if (e->state[1] == 0 && e->cmd->cmd)
 	{
 		ft_exec(e);
-		if (e->cmd->towait)
-			waitpid(e->cmd->pid, &e->cmd->status, 0);
-		else
-		{
-			result = waitpid(e->cmd->pid, &e->cmd->status, WNOHANG);
-			if (result == 0)
-			{
-				e->handler->n_pids++;
-				e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
-				printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
-			}
-		}
+		ft_wait(e);
 		e->state[1] = WEXITSTATUS(e->cmd->status);
 	}
 	if (e->state[1] != 0 || e->state[1] != 0)

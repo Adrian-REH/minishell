@@ -69,7 +69,8 @@ int	dispatch_command(t_exec *e)
 	if (type == NOT_OPERATOR)
 		execute_command(e);
 	else if (e->handler->fb[type])
-		e->handler->fb[type](e->cmd);
+		e->cmd->status = e->handler->fb[type](e->cmd);
+	fprintf(stderr, "e->cmd->status: %d\n", e->cmd->status);
 	return (e->cmd->status);
 }
 
@@ -82,6 +83,6 @@ int	dispatch_command_built(t_exec *e)
 	if (type == NOT_OPERATOR)
 		execute_command(e);
 	else
-		e->handler->fb[type](e->cmd);
+		e->cmd->status = e->handler->fb[type](e->cmd);
 	return (e->cmd->status);
 }

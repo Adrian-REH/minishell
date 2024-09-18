@@ -181,19 +181,19 @@ typedef struct s_handler
 	int					code;
 	char				**env;
 	struct s_handler	*(*seg[5])(struct s_handler *rule);
-	void				(*fb[10])(struct s_cmd *cmd);
+	int					(*fb[10])(struct s_cmd *cmd);
 	void				(*fta[20][20][20])(struct s_handler *rule, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
 int			dispatch_command_built(t_exec *e);
-void		ft_exec_echo(t_cmd *cmd);
-void		ft_exec_echon(t_cmd *cmd);
-void		ft_exec_cd(t_cmd *cmd);
-void		ft_exec_pwd(t_cmd *cmd);
-void		ft_exec_export(t_cmd *cmd);
-void		ft_exec_unset(t_cmd *cmd);
-void		ft_exec_env(t_cmd *cmd);
-void		ft_exec_exit(t_cmd *cmd);
+int			ft_exec_echo(t_cmd *cmd);
+int			ft_exec_echon(t_cmd *cmd);
+int			ft_exec_cd(t_cmd *cmd);
+int			ft_exec_pwd(t_cmd *cmd);
+int			ft_exec_export(t_cmd *cmd);
+int			ft_exec_unset(t_cmd *cmd);
+int			ft_exec_env(t_cmd *cmd);
+int			ft_exec_exit(t_cmd *cmd);
 int			*ft_exec_wildcard(t_exec *e);//terminar
 int			*ft_exec_pipe(t_exec *e, int index);
 int			*ft_exec_heredoc(t_exec *e, int index);

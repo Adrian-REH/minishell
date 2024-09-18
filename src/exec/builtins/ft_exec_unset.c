@@ -31,7 +31,7 @@ char	**ft_sarrdel(char **arr, int idx)
 	return (new);
 }
 
-void	ft_exec_unset(struct s_cmd *cmd)
+int	ft_exec_unset(struct s_cmd *cmd)
 {
 	int		i;
 	int		j;
@@ -57,5 +57,5 @@ void	ft_exec_unset(struct s_cmd *cmd)
 				cmd->handler->env = ft_sarrdel(cmd->handler->env, i);
 		}
 	}
-	cmd->status = 0;
+	return ((cmd->status = 0), 0);
 }

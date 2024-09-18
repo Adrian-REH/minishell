@@ -12,13 +12,41 @@
 
 #include "../../headers/minishell.h"
 
-void	ft_exec_export(struct s_cmd *cmd)
+static void	ft_handler_env(t_cmd *cmd, char **str, char *line)
 {
-	int		i;
-	char	**str;
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if ((ft_isalpha(line[i]) && line[i + 1] == '-' ) && \
+		(!line[i + 2] || line[i + 2] == '='))
+		{
+			ft_putstr_fd(" not a valid identifier\n", 2);
+			cmd->status = 1;
+		}
+	}
+	str = ((i = -1), ft_split(line, '='));
+	if (!str || !str[0])
+		cmd->status = (ft_putstr_fd(" not a valid identifier\n", 2), 1);
+	else if (ft_isdigit(str[0][0]))
+		cmd->status = (ft_putstr_fd(" not a valid identifier\n", 2), 1);
+	if (cmd->status)
+		return (ft_free_p2(str));
+	while (cmd->handler->env[++i])
+		if (ft_strncmp(cmd->handler->env[i], str[0], ft_strlen(str[0])) == 0)
+			cmd->handler->env[i] = (free(cmd->handler->env[i]), line);
+	if (i == ft_sarrsize(cmd->handler->env))
+		cmd->handler->env = ft_sarradd(cmd->handler->env, line);
+	ft_free_p2(str);
+}
+
+int	ft_exec_export(struct s_cmd *cmd)
+{
 	char	*line;
 	size_t	len;
 
+	cmd->status = 0;
 	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
 	if (line)
 	{
@@ -26,40 +54,6 @@ void	ft_exec_export(struct s_cmd *cmd)
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
-	i = -1;
-	while (line[++i])
-	{
-		if ((ft_isalpha(line[i]) && line[i + 1] == '-' ) && (!line[i + 2] || line[i + 2] == '='))
-		{
-			ft_putstr_fd(" not a valid identifier\n", 2);
-			cmd->status = 1;
-			return ;
-		}
-	}
-	str = ft_split(line, '=');
-	if (!str || !str[0])
-	{
-		ft_putstr_fd(" not a valid identifier\n", 2);
-		cmd->status = 1;
-		return ;
-	}
-	if (ft_isdigit(str[0][0]))
-	{
-		ft_putstr_fd(" not a valid identifier\n", 2);
-		cmd->status = 1;
-		return ;
-	}
-	i = -1;
-	while (cmd->handler->env[++i])
-	{
-		if (ft_strncmp(cmd->handler->env[i], str[0], ft_strlen(str[0])) == 0)
-		{
-			free(cmd->handler->env[i]);
-			cmd->handler->env[i] = line;
-		}
-	}
-	if (i == ft_sarrsize(cmd->handler->env))
-		cmd->handler->env = ft_sarradd(cmd->handler->env, line);
-	cmd->status = 0;
-	return ;
+	ft_handler_env(cmd, NULL, line);
+	return (cmd->status);
 }

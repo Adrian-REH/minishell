@@ -22,21 +22,13 @@ size_t	ft_strlenchr(char *str, char c)
 	return (i);
 }
 
-void	ft_process_quote(struct s_cmd *cmd)
+void	ft_process_quote(struct s_cmd *cmd, char *line)
 {
 	char	*result;
 	int		i;
 	int		j;
 	int		flag;
-	char	*line;
-	size_t	len;
 
-	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
-	if (line)
-	{
-		len = ft_strlen("echo");
-		memmove(line, line + len, strlen(line + len) + 1);
-	}
 	result = ft_strtrim(line, " ");
 	i = -1;
 	flag = 2;
@@ -85,15 +77,39 @@ void	ft_process_quote(struct s_cmd *cmd)
 	}
 }
 
-void	ft_exec_echo(struct s_cmd *cmd)
+int	ft_exec_echo(struct s_cmd *cmd)
 {
-	ft_process_quote(cmd);
+	char	*line;
+	int		len;
+
+	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
+	if (line)
+	{
+		len = ft_strlen("echo");
+		memmove(line, line + len, strlen(line + len) + 1);
+	}
+	ft_process_quote(cmd, line);
 	printf("\n");
 	exit(0);
 }
 
-void	ft_exec_echon(struct s_cmd *cmd)
+int	ft_exec_echon(struct s_cmd *cmd)
 {
-	ft_process_quote(cmd);
+	char	*line;
+	int		len;
+
+
+	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
+	if (line)
+	{
+		len = ft_strlen("echo");
+		memmove(line, line + len, strlen(line + len) + 1);
+	}
+	len = 0;
+	line = ft_strnstr(cmd->line, "-n", ft_strlen(cmd->line)) + 1;
+	while (line[len] == 'n')
+		len++;
+	memmove(line, line + len, strlen(line + len) + 1);
+	ft_process_quote(cmd, line);
 	exit(0);
 }
