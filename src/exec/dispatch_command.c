@@ -52,6 +52,8 @@ static void	execute_command(t_exec *e)
 		if (S_ISREG(path_stat.st_mode))
 		{
 			if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
+				if (access(e->cmd->cmd[0], X_OK) == -1)
+					ft_print_error(" Permission denied", 126, NULL);
 				if (errno == ENOEXEC)
 					ft_exec_file(e);
 		}
