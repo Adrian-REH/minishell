@@ -32,7 +32,7 @@ void	ft_exec_file(t_exec *e)
 	close(fd2);
 	close(fd);
 	if (execve("temp", (char *[]){"temp", NULL}, e->handler->env) == -1)
-		(unlink("temp"), ft_print_error(" command not found", errno, NULL));
+		(unlink("temp"), ft_print_error(" command not found", 127, NULL));
 }
 
 static void	execute_command(t_exec *e)
