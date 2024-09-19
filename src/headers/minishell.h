@@ -35,27 +35,6 @@
 # define READ 0
 # define WRITE 1
 
-typedef struct s_data
-{
-	char	**tokens;
-	int		is_op;
-	int		len_tokens;
-	int		i;
-	int		oid;
-}			t_data;
-
-typedef struct s_file
-{
-	int		input;
-	int		output;
-	int		fd_aux[2];
-	char	*end_heredoc;
-	char	**content;
-	int		len_content;
-	char	*in_dir_file;
-	char	*odfile;
-}			t_file;
-
 typedef enum e_operators
 {
 	OP_EMPTY,
@@ -67,6 +46,8 @@ typedef enum e_operators
 	OP_PIPE,
 	OP_OR,
 	OP_AND,
+	OP_PAREN_O,
+	OP_PAREN_C,
 	OP_INVALID,
 }	t_operators;
 
@@ -99,37 +80,58 @@ typedef enum e_states
 	UNIQ_COMMAND,
 }	t_states;
 
+typedef struct s_data
+{
+	char				**tokens;
+	int					is_op;
+	int					len_tokens;
+	int					i;
+	int					oid;
+}						t_data;
+
+typedef struct s_file
+{
+	int					input;
+	int					output;
+	int					fd_aux[2];
+	char				*end_heredoc;
+	char				**content;
+	int					len_content;
+	char				*in_dir_file;
+	char				*odfile;
+}						t_file;
+
 typedef struct s_block
 {
-	struct s_exec	*prev_exec;
-	struct s_exec	*next_exec;
-	int				len_exec_prev;
-	int				len_exec_next;
-	int				len_exec;
-	int				op;
-	int				priority;
-	int				type;
-	int				fd[2];
-	t_file			file;
-	int				status;
-	int				isnext;
-}					t_block;
+	struct s_exec		*prev_exec;
+	struct s_exec		*next_exec;
+	int					len_exec_prev;
+	int					len_exec_next;
+	int					len_exec;
+	int					op;
+	int					priority;
+	int					type;
+	int					fd[2];
+	t_file				file;
+	int					status;
+	int					isnext;
+}						t_block;
 
 typedef struct s_automata
 {
-	void	*data;
-	char	**alphabet;
-	char	**errors;
-	char	*str;
-	int		state;
-	int		ostate;
-	int		errorlen;
-	int		i;
-	int		j;
-	int		(*get_state)(int state, int abc_idx);
-	void	(*fsa[20])(struct s_automata *a, void *data);
-	void	(*fta[20][20])(struct s_automata *a, void *data);
-}			t_automata;
+	void				*data;
+	char				**alphabet;
+	char				**errors;
+	char				*str;
+	int					state;
+	int					ostate;
+	int					errorlen;
+	int					i;
+	int					j;
+	int					(*get_state)(int state, int abc_idx);
+	void				(*fsa[20])(struct s_automata *a, void *data);
+	void				(*fta[20][20])(void *, void *);
+}						t_automata;
 
 typedef struct s_cmd
 {
@@ -142,11 +144,6 @@ typedef struct s_cmd
 	struct s_handler	*handler;
 }						t_cmd;
 
-/*
-Aqui les dare las propiedades para ejecutarse,
-si necesita redirijir o si tienen que tener
-alta prioridad porque estan en parentesis
-*/
 typedef struct s_exec
 {
 	int					priority;
@@ -158,15 +155,9 @@ typedef struct s_exec
 	int					status;
 	t_cmd				*cmd;
 	struct s_handler	*handler;
-	int					*(*func[20][20])(struct s_exec *rule, int index);
+	int					*(*func[20][20])(void *, int index);
 }						t_exec;
 
-/*
-hanndler sabe que funcion debe llamar para
-configurar s_exec, por tanto hay que 
-inicializar las fucniones respectoa  los estados
-luego debo programar la matriz de estados.
-*/
 typedef struct s_handler
 {
 	char				**operators;
@@ -182,7 +173,7 @@ typedef struct s_handler
 	char				**env;
 	struct s_handler	*(*seg[5])(struct s_handler *rule);
 	int					(*fb[10])(struct s_cmd *cmd);
-	void				(*fta[20][20][20])(struct s_handler *rule, int i);
+	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
 int			dispatch_command_built(t_exec *e);
@@ -211,6 +202,7 @@ t_handler	*ft_execute(t_handler *s);
 t_handler	*ft_config(t_handler *s);
 t_handler	*ft_subprocess(t_handler *handler);
 /*------------LEARNING--------------*/
+int			st_blk(int sts, int op, int next_op);
 void		init_handler(t_handler *s);
 void		tactions_builtins_init(t_handler *a);
 void		builtings_init(t_handler *a);
@@ -232,6 +224,11 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+int			handler_keep_content(char **tkn, int i);
+int			keep_content_byspace(char **tkn, int i, char *space_pos);
+int			keep_content_byquote(char **tkn, int i);
+char		**ft_sarraddbyindex(char **arr, char *string, int i);
+void		count_blocks(t_handler *s);
 t_cmd		*add_cmd(t_cmd *cmds, t_cmd cmd);
 t_cmd		*delete_cmd(t_cmd *cmds, int i);
 t_exec		*add_exec(t_exec *execs, t_exec exec);

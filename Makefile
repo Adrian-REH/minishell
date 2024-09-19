@@ -37,6 +37,10 @@ lib/ft_add_exec.c \
 lib/ft_add_cmd.c \
 lib/ft_duparr.c \
 lib/ft_clean_quote.c \
+lib/ft_keep_content_byquote.c \
+lib/ft_keep_content_byspace.c \
+lib/ft_handler_keep_content.c \
+lib/ft_count_blocks.c \
 src/minishell.c \
 src/fsm/parser.c \
 src/fsm/config.c \
@@ -44,6 +48,8 @@ src/fsm/execute.c \
 src/fsm/clear.c \
 src/fsm/subprocess.c \
 src/resource/init_learning.c \
+src/resource/config_learning.c \
+src/resource/exec_learning.c \
 src/config/ft_conf_and.c \
 src/config/ft_conf_pipe.c \
 src/config/ft_conf_or.c \

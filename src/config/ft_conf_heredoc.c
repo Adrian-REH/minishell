@@ -73,7 +73,7 @@ void	ft_conf_heredoc(t_handler *s, int i)
 	ft_move_conf(exec, k);
 	exec[k].file.end_heredoc = ft_strjoin(s->info->tokens[i + 1], "\n");
 	pipe(exec[k].cmd[0].fd_aux);
-	exec[k].func[0][0] = ft_exec_heredoc;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_heredoc;
 	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;

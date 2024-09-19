@@ -28,7 +28,7 @@ static void	init_conf(t_exec *exec, t_handler *s)
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
-	if (s->info->oid != (i + k))
+	if (s->info->oid != (i + k) && ft_strcmp(s->info->tokens[i + k], "|"))
 	{
 		cmd->line = s->info->tokens[i + k];
 		cmd->cmd = do_exec(s->info->tokens[i + k], s->env);
@@ -94,7 +94,7 @@ void	ft_conf_greater(t_handler *s, int i)
 	exec[k].state[1] = init_file(&(exec[k]), s, i, 1);
 	ft_move_conf(exec, k);
 	s->info->oid = i + 1;
-	exec[k].func[0][0] = ft_exec_greater;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_greater;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;
 	else

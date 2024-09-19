@@ -56,7 +56,7 @@ void	ft_conf_amper(t_handler *s, int i)
 	exec[k].state[0] = init_cmd(exec[k].cmd, s, i, -1);
 	exec[k].state[1] = init_cmd(exec[k].cmd + 1, s, i, 1);
 	exec[k].cmd[2].cmd = NULL;
-	exec[k].func[0][0] = ft_exec_amper;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_amper;
 	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;

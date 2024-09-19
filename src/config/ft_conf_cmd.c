@@ -42,7 +42,7 @@ void	ft_conf_cmd(t_handler *s, int i)
 		exec = ((k = b->len_exec_prev), b->prev_exec);
 	init_conf(exec + k, s, i);
 	s->info->oid = i;
-	exec[k].func[0][0] = ft_exec_cmd;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_cmd;
 	if (s->block[s->info->i].isnext)
 		s->block[s->info->i].len_exec_next++;
 	else

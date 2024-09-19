@@ -23,6 +23,20 @@ void	sigint_handler(int signum)
 	}
 }
 
+void	init_handler(t_handler *s)
+{
+	s->seg[0] = ft_parser;
+	s->seg[1] = ft_config;
+	s->seg[2] = ft_execute;
+	s->seg[3] = ft_clear;
+	s->seg[4] = ft_subprocess;
+	operators_init(s);
+	builtings_init(s);
+	tactions_handler_init(s);
+	tactions_builtins_init(s);
+	s->code = 0;
+}
+
 int	main(int argc, char **argv, char **argenv)
 {
 	char				*comand;

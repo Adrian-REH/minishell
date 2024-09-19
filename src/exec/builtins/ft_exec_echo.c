@@ -12,21 +12,52 @@
 
 #include "../../headers/minishell.h"
 
-size_t	ft_strlenchr(char *str, char c)
+int	toggle_quote_flag(int *flag, char *result, int i)
 {
-	int	i;
+	if (result[i] == '\'')
+	{
+		if (*flag == 1 && ft_strchr(result + i, '\"'))
+			printf("\'");
+		*flag = 0;
+		return (1);
+	}
+	if (result[i] == '\"')
+	{
+		if (!*flag && ft_strchr(result + i, '\''))
+			printf("\"");
+		*flag = 1;
+		return (1);
+	}
+	return (0);
+}
 
-	i = 0;
-	while (str[i] && str[i] != c)
-		i++;
-	return (i);
+char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
+{
+	char	*tmp;
+	int		j;
+
+	line = ft_strchr(result + i, ' ') - 1;
+	tmp = ft_substr(result, i + 1, line - result - i);
+	line = ft_strtrim(tmp, "\"");
+	free(tmp);
+	if (ft_strchr(line, '=') == 0)
+		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
+	j = -1;
+	while (cmd->handler->env[++j])
+	{
+		if (!ft_strncmp(cmd->handler->env[j], tmp, ft_strlen(line)))
+		{
+			printf("%s", cmd->handler->env[j] + ft_strlen(line));
+			break ;
+		}
+	}
+	return (line);
 }
 
 void	ft_process_quote(struct s_cmd *cmd, char *line)
 {
 	char	*result;
 	int		i;
-	int		j;
 	int		flag;
 
 	result = ft_strtrim(line, " ");
@@ -34,42 +65,16 @@ void	ft_process_quote(struct s_cmd *cmd, char *line)
 	flag = 2;
 	while (result[++i])
 	{
-		if (result[i] == '\'')
-		{
-			if (flag == 1 && ft_strchr(result + i, '\"'))
-				printf("\'");
-			flag = 0;
+		if (toggle_quote_flag(&flag, result, i))
 			continue ;
-		}
-		if (result[i] == '\"')
-		{
-			if (!flag && ft_strchr(result + i, '\''))
-				printf("\"");
-			flag = 1;
-			continue ;
-		}
 		if (result[i] == '$' && result[i + 1] == '?' && flag)
 		{
-			printf("%d", cmd->handler->code);
-			i++;
+			(printf("%d", cmd->handler->code), i++);
 			continue ;
 		}
 		else if (result[i] == '$' && ft_isalpha(result[i + 1]) && flag)
 		{
-			line = ft_strchr(result + i, ' ') - 1;
-			line = ft_substr(result, i + 1, line - result - i);
-			line = ft_strtrim(line, "\"");
-			j = -1;
-			while (cmd->handler->env[++j])
-			{
-				if (ft_strchr(line, '=') == 0)
-					line = ft_strjoin(line, "=");
-				if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
-				{
-					printf("%s", cmd->handler->env[j] + ft_strlen(line));
-					break ;
-				}
-			}
+			line = extract_and_print_env(line, result, cmd, i);
 			i += ft_strlen(line) - 1;
 		}
 		else
@@ -97,7 +102,6 @@ int	ft_exec_echon(struct s_cmd *cmd)
 {
 	char	*line;
 	int		len;
-
 
 	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
 	if (line)

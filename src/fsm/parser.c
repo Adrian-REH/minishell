@@ -20,13 +20,9 @@ static int	evaluate(t_automata *a)
 	{
 		a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
 		if (a->fsa[a->state])
-		{
 			a->fsa[a->state](a, a->data);
-		}
 		if (a->fta[a->ostate][a->state])
-		{
 			a->fta[a->ostate][a->state](a, a->data);
-		}
 		a->ostate = a->state;
 	}
 	return (a->state);
@@ -41,65 +37,46 @@ void	automata_init(t_automata *a, void *data)
 	a->get_state = get_state;
 }
 
-void	ft_clean_tokens(t_handler *s)
+char	**split_token(char **tkn, char *space_pos, int i)
+{
+	char	*temp;
+
+	temp = tkn[i];
+	tkn[i] = ft_substr(tkn[i], 0, ft_strlen(tkn[i]) - ft_strlen(space_pos));
+	if (!tkn[i])
+		return (NULL);
+	space_pos = ft_strtrim(space_pos, " ");
+	tkn = ft_sarraddbyindex(tkn, space_pos, i + 1);
+	free(temp);
+	return (tkn);
+}
+
+int	normalize_tokens(t_handler *s)
 {
 	int		i;
 	char	*space_pos;
-	char	*quote_pos;
-	char	*temp;
 	char	**tokens;
 	int		state[3];
 
 	tokens = s->info->tokens;
-	state[0] = 0;
-	state[1] = 0;
-	state[2] = 0;
-	i = -1;
+	state[0] = ((state[2] = 0), 0);
+	i = ((state[1] = 0), -1);
 	while (tokens[++i])
 	{
 		state[2] = idstr(s->operators, tokens[i]);
-		if (state[0] == 6 && state[2] == 14 && (state[1] >= 1 && state[1] < 5))
-		{
-			space_pos = ft_strchr(tokens[i], ' ');
-			if (space_pos)
-			{
-				temp = tokens[i];
-				tokens[i] = ft_substr(tokens[i], 0, ft_strlen(tokens[i]) - ft_strlen(space_pos));
-				free(temp);
-			}
-		}
-		else if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && state[2] == 14 && tokens[i])
-		{
-			space_pos = ft_strchr(tokens[i], ' ');
-			if (tokens[i][0] == '\"' && space_pos)
-			{
-				temp = tokens[i - 2];
-				quote_pos = ft_strchr(tokens[i] + 1, '\"');
-				if (!quote_pos)
-					continue;
-				tokens[i - 2] = ft_strjoin(temp, quote_pos + 1);
-				free(temp);
-				temp = tokens[i];
-				temp = ft_substr(temp + 1, 0, ft_strlen(tokens[i]) - ft_strlen(quote_pos) - 1);
-				free(tokens[i]);
-				tokens[i] = temp;
-				tokens[i] = ft_strdelchr(tokens[i], '\"');
-				continue;
-			}
-			if (space_pos)
-			{
-				temp = tokens[i - 2];
-				tokens[i - 2] = ft_strjoin(temp, space_pos);
-				free(temp);
-				temp = tokens[i];
-				tokens[i] = ft_substr(tokens[i], 0, ft_strlen(tokens[i]) - ft_strlen(space_pos));
-				tokens[i] = ft_strdelchr(tokens[i], '\"');
-				free(temp);
-			}
-		}
-		state[0] = state[1];
-		state[1] = state[2];
+		space_pos = ft_strchr(tokens[i], ' ');
+		if (state[0] == 6 && (state[1] >= 1 && state[1] < 5) \
+		&& state[2] == 14 && space_pos)
+			tokens = split_token(tokens, space_pos, i++);
+		else if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && \
+		state[2] == 14 && tokens[i])
+			if (handler_keep_content(tokens, i))
+				continue ;
+		state[1] = ((state[0] = state[1]), state[2]);
 	}
+	s->info->len_tokens = ft_sarrsize(tokens);
+	s->info->tokens = tokens;
+	return (1);
 }
 
 t_handler	*ft_parser(t_handler *s)
@@ -118,6 +95,6 @@ t_handler	*ft_parser(t_handler *s)
 	info.tokens = ft_sarradd(info.tokens, " ");
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;
-	ft_clean_tokens(s);
+	normalize_tokens(s);
 	return (s);
 }

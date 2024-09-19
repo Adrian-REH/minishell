@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.c                                           :+:      :+:    :+:   */
+/*   ft_add_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:24:07 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:16 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:28:21 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-t_handler	*ft_clear(t_handler *s)
+void	count_blocks(t_handler *s)
 {
-	s->info->tokens = 0;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	s->info = 0;
-	return (s);
+	int	i;
+
+	i = -1;
+	while (s->info->tokens[++i])
+	{
+		if (idstr(s->operators, s->info->tokens[i]) == 8)
+		{
+			s->len_block++;
+		}
+		else if (idstr(s->operators, s->info->tokens[i]) == 7)
+		{
+			s->len_block++;
+		}
+	}
 }

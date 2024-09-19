@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.c                                           :+:      :+:    :+:   */
+/*   ft_delete_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:24:07 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:25 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:32:34 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-t_handler	*ft_clear(t_handler *s)
+int	handler_keep_content(char **tkn, int i)
 {
-	s->info->tokens = 0;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	s->info = 0;
-	return (s);
+	char	*space_pos;
+
+	space_pos = ft_strchr(tkn[i], ' ');
+	if (tkn[i][0] == '\"' && space_pos)
+	{
+		if (keep_content_byquote(tkn, i) == -1)
+			return (-1);
+		else
+			return (1);
+	}
+	if (space_pos)
+	{
+		if (keep_content_byspace(tkn, i, space_pos) == -1)
+			return (-1);
+		else
+			return (1);
+	}
+	return (0);
 }

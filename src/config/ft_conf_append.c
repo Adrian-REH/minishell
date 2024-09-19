@@ -93,7 +93,7 @@ void	ft_conf_append(t_handler *s, int i)
 	exec[k].state[1] = init_file(&(exec[k]), s, i, 1);
 	exec[k].cmd[2].cmd = NULL;
 	ft_move_conf(exec, k);
-	exec[k].func[0][0] = ft_exec_append;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_append;
 	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;

@@ -22,5 +22,4 @@ jobs:
          git clone https://github.com/LucasKuhn/minishell_tester.git 
          cd minishell_tester
          sed -i '19d' redirects
-         cp ../minishell .  && cp -r ../test . && rm -rf tester && cp -r ../tester .
-         ./tester
+         cp ../minishell . && ./tester

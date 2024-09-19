@@ -95,7 +95,7 @@ void	ft_conf_less(t_handler *s, int i)
 	ft_move_conf(exec, k);
 	s->info->oid = i + 1;
 	exec[k].cmd[2].cmd = NULL;
-	exec[k].func[0][0] = ft_exec_less;
+	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_less;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;
 	else

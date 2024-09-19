@@ -18,6 +18,8 @@ void	ft_exec_file(t_exec *e)
 	int		fd2;
 	char	*line;
 
+	if (ft_strchr(e->cmd->cmd[0], '/') && (access(e->cmd->cmd[0], X_OK) == -1))
+		ft_print_error(" Permission denied", 126, NULL);
 	fd = open(e->cmd->cmd[0], O_RDONLY);
 	if (fd == -1)
 		ft_print_error(strerror(errno), errno, NULL);
@@ -32,7 +34,7 @@ void	ft_exec_file(t_exec *e)
 	close(fd2);
 	close(fd);
 	if (execve("temp", (char *[]){"temp", NULL}, e->handler->env) == -1)
-		(unlink("temp"), ft_print_error(" command not found", 127, NULL));
+		(unlink("temp"), ft_print_error(" command not found", 2, NULL));
 }
 
 static void	execute_command(t_exec *e)
@@ -52,12 +54,7 @@ static void	execute_command(t_exec *e)
 		if (S_ISREG(path_stat.st_mode))
 		{
 			if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
-				{
-					if (ft_strchr(e->cmd->cmd[0], '/') && (access(e->cmd->cmd[0], X_OK) == -1))
-						ft_print_error(" Permission denied", 126, NULL);
-					else
-						ft_exec_file(e);
-				}
+				ft_exec_file(e);
 		}
 	}
 	if (execve(e->cmd->cmd[0], e->cmd->cmd, e->handler->env) == -1)
@@ -74,7 +71,6 @@ int	dispatch_command(t_exec *e)
 		execute_command(e);
 	else if (e->handler->fb[type])
 		e->cmd->status = e->handler->fb[type](e->cmd);
-	fprintf(stderr, "e->cmd->status: %d\n", e->cmd->status);
 	return (e->cmd->status);
 }
 

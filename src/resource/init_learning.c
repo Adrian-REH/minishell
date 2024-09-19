@@ -29,39 +29,6 @@ void	alphabet_init(t_automata *a)
 }
 
 /**
- * 	Operators definitions
- **/
-void	operators_init(t_handler *a)
-{
-	a->operators = ft_sarradd(NULL, " ");
-	a->operators = ft_sarradd(a->operators, ">");
-	a->operators = ft_sarradd(a->operators, "<");
-	a->operators = ft_sarradd(a->operators, "<<");
-	a->operators = ft_sarradd(a->operators, ">>");
-	a->operators = ft_sarradd(a->operators, "&");
-	a->operators = ft_sarradd(a->operators, "|");
-	a->operators = ft_sarradd(a->operators, "||");
-	a->operators = ft_sarradd(a->operators, "&&");
-	a->operators = ft_sarradd(a->operators, "(");
-	a->operators = ft_sarradd(a->operators, ")");
-}
-
-/**
- * 	Builtins definitions
- **/
-void	builtings_init(t_handler *a)
-{
-	a->builtins = ft_sarradd(a->builtins, "echo");
-	a->builtins = ft_sarradd(a->builtins, "echo -n");
-	a->builtins = ft_sarradd(a->builtins, "pwd");
-	a->builtins = ft_sarradd(a->builtins, "env");
-	a->builtins = ft_sarradd(a->builtins, "cd");
-	a->builtins = ft_sarradd(a->builtins, "export");
-	a->builtins = ft_sarradd(a->builtins, "unset");
-	a->builtins = ft_sarradd(a->builtins, "exit");
-}
-
-/**
  * @brief Get the state object
  * 
  * @param i Estado anterior, valores posibles:
@@ -139,79 +106,51 @@ void	errors_init(t_automata *a)
 	a->errorlen = ft_sarrsize(a->errors);
 }
 
+void	tactions2_init(t_automata *a)
+{
+	a->fta[AND][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[LESS][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[LESS][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[HEREDOC][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[HEREDOC][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[GREATER][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[GREATER][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[APPEND][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[APPEND][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[OPEN_PAREN][SPACES_BTW] = (void (*)(void *, void *))get_token;
+	a->fta[OPEN_PAREN][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[OPEN_PAREN][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][OPEN_PAREN] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_NW][OPEN_PAREN] = (void (*)(void *, void *))get_token;
+	a->fta[NOT_OPERATOR][OPEN_PAREN] = (void (*)(void *, void *))get_token;
+	a->fta[CLOSE_PAREN][SPACES_BTW] = (void (*)(void *, void *))get_token;
+	a->fta[CLOSE_PAREN][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[CLOSE_PAREN][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][CLOSE_PAREN] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_NW][CLOSE_PAREN] = (void (*)(void *, void *))get_token;
+	a->fta[NOT_OPERATOR][CLOSE_PAREN] = (void (*)(void *, void *))get_token;
+}
+
 void	tactions_init(t_automata *a)
 {
-	a->fta[NOT_OPERATOR][PIPE] = get_token;
-	a->fta[NOT_OPERATOR][LESS] = get_token;
-	a->fta[NOT_OPERATOR][GREATER] = get_token;
-	a->fta[NOT_OPERATOR][AMPER] = get_token;
-	a->fta[SPACES_BTW][PIPE] = get_token;
-	a->fta[SPACES_BTW][LESS] = get_token;
-	a->fta[SPACES_BTW][GREATER] = get_token;
-	a->fta[SPACES_BTW][AMPER] = get_token;
-	a->fta[LESS][DQUOTES] = get_token;
-	a->fta[GREATER][DQUOTES] = get_token;
-	a->fta[HEREDOC][DQUOTES] = get_token;
-	a->fta[APPEND][DQUOTES] = get_token;
-	a->fta[AMPER][SPACES_NW] = get_token;
-	a->fta[AMPER][NOT_OPERATOR] = get_token;
-	a->fta[PIPE][SPACES_NW] = get_token;
-	a->fta[PIPE][NOT_OPERATOR] = get_token;
-	a->fta[OR][SPACES_NW] = get_token;
-	a->fta[OR][NOT_OPERATOR] = get_token;
-	a->fta[AND][SPACES_NW] = get_token;
-	a->fta[AND][NOT_OPERATOR] = get_token;
-	a->fta[LESS][SPACES_NW] = get_token;
-	a->fta[LESS][NOT_OPERATOR] = get_token;
-	a->fta[HEREDOC][SPACES_NW] = get_token;
-	a->fta[HEREDOC][NOT_OPERATOR] = get_token;
-	a->fta[GREATER][SPACES_NW] = get_token;
-	a->fta[GREATER][NOT_OPERATOR] = get_token;
-	a->fta[APPEND][SPACES_NW] = get_token;
-	a->fta[APPEND][NOT_OPERATOR] = get_token;
-	a->fta[OPEN_PAREN][SPACES_BTW] = get_token;
-	a->fta[OPEN_PAREN][SPACES_NW] = get_token;
-	a->fta[OPEN_PAREN][NOT_OPERATOR] = get_token;
-	a->fta[SPACES_BTW][OPEN_PAREN] = get_token;
-	a->fta[SPACES_NW][OPEN_PAREN] = get_token;
-	a->fta[NOT_OPERATOR][OPEN_PAREN] = get_token;
-	a->fta[CLOSE_PAREN][SPACES_BTW] = get_token;
-	a->fta[CLOSE_PAREN][SPACES_NW] = get_token;
-	a->fta[CLOSE_PAREN][NOT_OPERATOR] = get_token;
-	a->fta[SPACES_BTW][CLOSE_PAREN] = get_token;
-	a->fta[SPACES_NW][CLOSE_PAREN] = get_token;
-	a->fta[NOT_OPERATOR][CLOSE_PAREN] = get_token;
-}
-
-void	tactions_handler_init(t_handler *a)
-{
-	a->fta[EMPTY][UNIQ_COMMAND][EMPTY] = ft_conf_cmd;
-	a->fta[EMPTY][NOT_OPERATOR][8] = ft_conf_cmd;
-	a->fta[EMPTY][NOT_OPERATOR][7] = ft_conf_cmd;
-	a->fta[NOT_OPERATOR][1][NOT_OPERATOR] = ft_conf_greater;
-	a->fta[NOT_OPERATOR][2][NOT_OPERATOR] = ft_conf_less;
-	a->fta[NOT_OPERATOR][3][NOT_OPERATOR] = ft_conf_heredoc;
-	a->fta[NOT_OPERATOR][4][NOT_OPERATOR] = ft_conf_append;
-	a->fta[NOT_OPERATOR][5][NOT_OPERATOR] = ft_conf_amper;
-	a->fta[NOT_OPERATOR][6][NOT_OPERATOR] = ft_conf_pipe;
-	a->fta[NOT_OPERATOR][7][NOT_OPERATOR] = ft_conf_or;
-	a->fta[NOT_OPERATOR][8][NOT_OPERATOR] = ft_conf_and;
-	a->fta[NOT_OPERATOR][5][EMPTY] = ft_conf_amper;
-	a->fta[NOT_OPERATOR][6][EMPTY] = ft_conf_pipe;
-	a->fta[NOT_OPERATOR][7][EMPTY] = ft_conf_or;
-	a->fta[NOT_OPERATOR][8][EMPTY] = ft_conf_and;
-	a->fta[6][1][NOT_OPERATOR] = ft_conf_greater;
-	a->fta[6][2][NOT_OPERATOR] = ft_conf_less;
-}
-
-void	tactions_builtins_init(t_handler *a)
-{
-	a->fb[0] = ft_exec_echo;
-	a->fb[1] = ft_exec_echon;
-	a->fb[2] = ft_exec_pwd;
-	a->fb[3] = ft_exec_env;
-	a->fb[4] = ft_exec_cd;
-	a->fb[5] = ft_exec_export;
-	a->fb[6] = ft_exec_unset;
-	a->fb[7] = ft_exec_exit;
+	a->fta[NOT_OPERATOR][PIPE] = (void (*)(void *, void *))get_token;
+	a->fta[NOT_OPERATOR][LESS] = (void (*)(void *, void *))get_token;
+	a->fta[NOT_OPERATOR][GREATER] = (void (*)(void *, void *))get_token;
+	a->fta[NOT_OPERATOR][AMPER] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][PIPE] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][LESS] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][GREATER] = (void (*)(void *, void *))get_token;
+	a->fta[SPACES_BTW][AMPER] = (void (*)(void *, void *))get_token;
+	a->fta[LESS][DQUOTES] = (void (*)(void *, void *))get_token;
+	a->fta[GREATER][DQUOTES] = (void (*)(void *, void *))get_token;
+	a->fta[HEREDOC][DQUOTES] = (void (*)(void *, void *))get_token;
+	a->fta[APPEND][DQUOTES] = (void (*)(void *, void *))get_token;
+	a->fta[AMPER][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[AMPER][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[PIPE][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[PIPE][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[OR][SPACES_NW] = (void (*)(void *, void *))get_token;
+	a->fta[OR][NOT_OPERATOR] = (void (*)(void *, void *))get_token;
+	a->fta[AND][SPACES_NW] = (void (*)(void *, void *))get_token;
+	tactions2_init(a);
 }

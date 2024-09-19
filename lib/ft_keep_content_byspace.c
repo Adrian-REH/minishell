@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.c                                           :+:      :+:    :+:   */
+/*   ft_delete_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:24:07 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:25 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:32:34 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-t_handler	*ft_clear(t_handler *s)
+int	keep_content_byspace(char **tkn, int i, char *space_pos)
 {
-	s->info->tokens = 0;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	s->info = 0;
-	return (s);
+	char	*temp;
+
+	temp = tkn[i - 2];
+	tkn[i - 2] = ft_strjoin(temp, space_pos);
+	if (!tkn[i - 2])
+		return (-1);
+	free(temp);
+	temp = tkn[i];
+	tkn[i] = ft_substr(tkn[i], 0, ft_strlen(tkn[i]) - ft_strlen(space_pos));
+	if (!tkn[i])
+		return (-1);
+	tkn[i] = ft_strdelchr(tkn[i], '\"');
+	free(temp);
+	return (1);
 }

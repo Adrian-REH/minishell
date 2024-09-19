@@ -59,7 +59,7 @@ void	ft_conf_pipe(t_handler *s, int i)
 	pipe(exec[k].cmd[0].fd_aux);
 	exec[k].state[1] = init_cmd(exec[k].cmd + 1, s, i, 1);
 	exec[k].cmd[2].cmd = NULL;
-	exec[k].func[EMPTY][EMPTY] = ft_exec_pipe;
+	exec[k].func[EMPTY][EMPTY] = (int *(*)(void *, int))ft_exec_pipe;
 	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;
