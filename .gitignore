@@ -1,3 +1,7 @@
 .ccls-cache
 .replit
 replit.nix
+*.o
+minishell
+.default
+libft.a
