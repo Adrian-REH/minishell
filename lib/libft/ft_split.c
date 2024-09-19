@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 20:59:06 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:31:44 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	ft_freedom(char **dst)
 	n_word = 0;
 	while (dst[n_word])
 		free(dst[n_word++]);
-	free (dst);
+	free(dst);
 }
 
 static char	**ft_(char **dst, const char *s, char c)
@@ -92,15 +92,3 @@ char	**ft_split(char const *s, char c)
 		return (0);
 	return (dst);
 }
-
-/* 
- int	main()
-{
-	char const	s[] = "hello! adrian    ramon";
-	char **marr = ft_split(s, ' ');
-	int	i;
-	i = 0;
-	printf("%s.\n", marr[0]);
-	printf("%s.\n", marr[1]);
-	return (0);
-}   */

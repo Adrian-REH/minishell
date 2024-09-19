@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 06:12:12 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/20 11:52:12 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:31:52 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	ft_delete_first_line(char **file)
 	*file = temp;
 }
 
-static	void	ft_free_strjoin(char **file, char **buffer)
+static void	ft_free_strjoin(char **file, char **buffer)
 {
 	char	*dst;
 	size_t	size;
@@ -125,37 +125,3 @@ char	*get_next_line(int fd)
 	ft_delete_first_line(&file);
 	return (line);
 }
-
-/* 
-#include <fcntl.h>
-
-void test_inf(int fd, char *(*f)(int))
-{
-	int i = 0;
-	char *line;
-
-	printf("RESPONSE\n");
-	while (1)
-	{
-		line = f(fd);
-		if (!line)
-			break ;
-		printf("[%d]: %s\n", i, line);
-		i++;
-		free(line);
-	}
-
-}
- int main()
-{
-
-	int fd = open("files/multiple_nlx5", O_RDONLY);
-	test_inf(fd, get_next_line);
-	close(fd);
-
-	//system("leaks a.out");
-	fd = open("files/multiple_nlx5", O_RDONLY);
-	test_inf(fd, gnl);
-	close(fd);
-	//system("leaks a.out");
-} */

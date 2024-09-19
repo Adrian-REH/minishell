@@ -1,45 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   do_exec.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 08:24:10 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-char **do_exec(char *line, char **env)
+char	**do_exec(char *line, char **env)
 {
-    char *cmd;
-    char **command;
+	char	*cmd;
+	char	**command;
 
-    command = ft_split(line, ' ');
-    if (!command)
-        return (perror("Memory error: "), NULL);
-    if (*command == 0)
-        return (ft_free_p2(command), NULL);
-    if ((access(command[0], F_OK | X_OK) == 0) && ft_strnstr(command[0], "./", 2))
-    {
-        return (command);
-        // Tengo que retornarla la matriz de comandos, ya que si tengo acceso
-        /*
-        if (execve(command[0], command, env) == -1)
-            return (ft_free_p2(command), -1);
-    */
-    }
-    else if (access(command[0], F_OK | X_OK) != 0 && ft_strchr(command[0], '/'))
-        return (ft_free_p2(command), -1);
-    else
-    {
-        cmd = get_path(command[0], env);
-        free(command[0]);
-        command[0] = cmd;
-        return (command);
-        /*
-        if (cmd == NULL || execve(cmd, command, env) == -1)
-            return (ft_free_p2(command), -1);
-        */
-    }
-
-    return (NULL);
-}
-static int do_access(char *dir)
-{
-
-    access(dir, F_OK | X_OK);        // Para saber si el directorio existe
-    access("text.txt", R_OK | W_OK); // para saber si se puede leer y escribir en el archivo
-    return (0);
+	command = ft_split(line, ' ');
+	if (!command)
+		return (perror("Memory error: "), NULL);
+	if (*command == 0)
+		return (ft_free_p2(command), NULL);
+	if ((access(command[0], 0 | 1) == 0) && ft_strnstr(command[0], "./", 2))
+		return (command);
+	else if (access(command[0], 0 | 1) != 0 && ft_strchr(command[0], '/'))
+		return (command);
+	else
+	{
+		cmd = get_path(command[0], env);
+		if (cmd != NULL && strcmp(cmd, command[0]) != 0)
+			command[0] = (free(command[0]), cmd);
+		return (command);
+	}
+	return (command);
 }

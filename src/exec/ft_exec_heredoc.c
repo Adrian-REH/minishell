@@ -1,36 +1,91 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exec_heredoc.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:21:53 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../headers/minishell.h"
-int *ft_exec_heredoc(t_exec *e)
+
+static int	*ft_exec_give_cmd(t_exec *e)
 {
-    char *p_heredoc;
-    int status;
+	e->cmd->pid = fork();
+	if (e->cmd->pid < 0)
+	{
+		ft_print_error("fork", 1, "");
+		return (NULL);
+	}
+	else if (e->cmd->pid == 0)
+	{
+		if (e->file.output == -1)
+			(ft_print_error(strerror(errno), 1, NULL));
+		if (e->file.input == -1)
+			(ft_print_error(strerror(errno), 1, NULL));
+		if (dup2(e->file.input, STDIN_FILENO) == -1)
+			(close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
+		if (e->file.input != 0)
+			close(e->file.input);
+		if (e->file.output != 1)
+		{
+			if (dup2(e->file.output, STDOUT_FILENO) == -1)
+				(ft_print_error("dup2", 1, NULL));
+			close(e->file.output);
+		}
+		exit(dispatch_command(e));
+	}
+	return (NULL);
+}
 
-    status = 0;
-    e->cmd->pid = fork();
-    if (e->cmd->pid == -1)
-        ft_print_error("fork", 1, "");
-    else if (e->cmd->pid == 0)
-    {
-        close(e->file.fd_aux[READ]);
-        while (1)
-        {
-            ft_putstr_fd("heredoc>", STDOUT_FILENO);
-            p_heredoc = get_next_line(0);
-            ft_putstr_fd(p_heredoc, STDOUT_FILENO);
-            ft_putstr_fd(e->file.end_heredoc, STDOUT_FILENO);
+static void	ft_heredoc(t_exec *e)
+{
+	char	*p_heredoc;
+	int		status;
 
-            if (ft_strcmp(e->file.end_heredoc, p_heredoc) == 0)
-            {
-                (free(p_heredoc), close(e->file.fd_aux[WRITE]), exit(0));
-            }
-            (ft_putstr_fd(p_heredoc, e->file.fd_aux[WRITE]), free(p_heredoc));
-        }
-    }
-    else
-        waitpid(e->cmd->pid, &status, 0);
-    e->cmd->status = WEXITSTATUS(status);
+	status = 0;
+	e->cmd->pid = fork();
+	if (e->cmd->pid == -1)
+		ft_print_error("fork", 1, "");
+	else if (e->cmd->pid == 0)
+	{
+		close(e->cmd->fd_aux[READ]);
+		while (1)
+		{
+			ft_putstr_fd("heredoc>", STDOUT_FILENO);
+			p_heredoc = get_next_line(0);
+			if (ft_strcmp(e->file.end_heredoc, p_heredoc) == 0)
+			{
+				(free(p_heredoc), close(e->cmd->fd_aux[WRITE]), exit(0));
+			}
+			(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
+		}
+	}
+	else
+		waitpid(e->cmd->pid, &status, 0);
+	e->cmd->status = (close(e->cmd->fd_aux[WRITE]), WEXITSTATUS(status));
+	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
+}
 
-    // Busca la siguiente cosa que hacer
-    e->state[0] = e->state[1];
-    e->state[1] = e->cmd->status;
-    return e->state;
+int	*ft_exec_heredoc(t_exec *e, int index)
+{
+	e = &e[index];
+	ft_heredoc(e);
+	e->cmd++;
+	if (e->state[1] == 0)
+	{
+		ft_exec_give_cmd(e);
+		if (e->file.input != 0)
+			close(e->file.input);
+		if (e->file.output != 1)
+			close(e->file.output);
+	}
+	e->status = e->state[1];
+	e->state[0] = e->state[1];
+	e->file.input = e->cmd->fd_aux[READ];
+	e->file.output = e->cmd->fd_aux[WRITE];
+	return (e->state);
 }

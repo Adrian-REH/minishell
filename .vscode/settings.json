@@ -58,6 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "inttypes.h": "c",
-    "minishell.h": "c"
+    "minishell.h": "c",
+    "exception": "c",
+    "typeinfo": "c"
   }
 }
