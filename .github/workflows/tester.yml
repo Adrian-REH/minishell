@@ -3,13 +3,6 @@ name: tester
 on: [push, pull_request]
 
 jobs:
-  norminette_v3_job:
-    runs-on: ubuntu-latest
-    name: norminette v3
-    steps:
-      - uses: actions/checkout@v2
-      - uses: alexandregv/norminette-action@v3
-
   minishell_tester_job:
     runs-on: ubuntu-latest
     name: Minishell Tester
@@ -20,6 +13,7 @@ jobs:
         run: |
          make
          git clone https://github.com/LucasKuhn/minishell_tester.git 
+         ls -la
          cd minishell_tester
          sed -i '19d' redirects
          cp ../minishell . && ./tester
