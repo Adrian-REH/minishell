@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 05:47:19 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/21 14:41:22 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	normalize_tokens(t_handler *s)
 	{
 		state[2] = idstr(s->operators, tokens[i]);
 		space_pos = ft_strchr(tokens[i], ' ');
-		if ((state[1] >= 1 && state[1] < 5) \
+		if ((state[0] == 6 || state[0] == 0) && (state[1] >= 1 && state[1] < 5) \
 		&& state[2] == 14 && space_pos)
 			tokens = split_token(tokens, space_pos, i++);
 		else if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && \
@@ -95,7 +95,7 @@ int	move_tokens(t_handler *s)
 	while (tokens[++i])
 	{
 		state[2] = idstr(s->operators, tokens[i]);
-		if ((state[0] == 0 || state[0] == 6 ) && (state[1] >= 1 && state[1] < 5) && state[2] == 14)
+		if ((state[0] == 0 || state[0] == 6) && (state[1] >= 1 && state[1] < 5) && state[2] == 14)
 			j = i - 1;
 		else if ((state[0] >= 1 && state[0] < 5) && state[1] == 14  && state[2] == 14 && j != -1)
 		{
@@ -123,6 +123,68 @@ int	move_tokens(t_handler *s)
 	return (1);
 }
 
+int	joins_tokens(t_handler *s)
+{
+	int		i;
+	int		y;
+	char	*temp;
+	char	**tokens;
+	int		state[3];
+
+	tokens = s->info->tokens;
+	state[0] = ((state[2] = 0), 0);
+	i = ((state[1] = 0), -1);
+	y = -1;
+	while (tokens[++i])
+	{
+		state[2] = idstr(s->operators, tokens[i]);
+		if (state[0] == 14 && (state[1] >= 1 && state[1] < 5) && state[2] == 14 && y == -1)
+			y = i - 1;
+		else if ((state[0] >= 1 && state[0] < 5) && state[1] == 14  && state[2] == 14 && y != -1)
+		{
+			temp = tokens[y - 1];
+			tokens[y - 1] = ft_strjoin(tokens[y - 1], " ");
+			free(temp);
+			temp = tokens[y - 1];
+			tokens[y - 1] = ft_strjoin(tokens[y - 1], tokens[i]);
+			free(temp);
+			tokens = ft_sarrdelbyindex(tokens, i);
+			i--;
+		}
+		if (state[1] == 6)
+			y = -1;
+		state[1] = ((state[0] = state[1]), state[2]);
+	}
+	s->info->len_tokens = ft_sarrsize(tokens);
+	s->info->tokens = tokens;
+	return (1);
+}
+
+int	split_tokens(t_handler *s)
+{
+	int		i;
+	char	*space_pos;
+	char	**tokens;
+	int		state[3];
+
+	tokens = s->info->tokens;
+	state[0] = ((state[2] = 0), 0);
+	i = ((state[1] = 0), -1);
+	while (tokens[++i])
+	{
+		state[2] = idstr(s->operators, tokens[i]);
+		space_pos = ft_strchr(tokens[i], ' ');
+		if ((state[1] >= 1 && state[1] < 5) \
+		&& state[2] == 14 && space_pos)
+			tokens = split_token(tokens, space_pos, i++);
+		state[1] = ((state[0] = state[1]), state[2]);
+	}
+	s->info->len_tokens = ft_sarrsize(tokens);
+	s->info->tokens = tokens;
+
+	return (1);
+}
+
 t_handler	*ft_parser(t_handler *s)
 {
 	t_automata	a;
@@ -139,8 +201,11 @@ t_handler	*ft_parser(t_handler *s)
 	info.tokens = ft_sarradd(info.tokens, " ");
 	info.len_tokens = ft_sarrsize(info.tokens);
 	s->info = &info;
-	normalize_tokens(s);
+	//normalize_tokens(s);
+	//ft_sarrprint(s->info->tokens);
+	split_tokens(s);
 	move_tokens(s);
+	joins_tokens(s);
 	//ft_sarrprint(s->info->tokens);
 	return (s);
 }
