@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_learning.c                                    :+:      :+:    :+:   */
+/*   config_learning.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:24:55 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/20 22:35:04 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	tactions_handler_init2(t_handler *a)
+{
+	a->fta[NOT_OPERATOR][5][EMPTY] = (void (*)(void *, int))ft_conf_amper;
+	a->fta[NOT_OPERATOR][6][EMPTY] = (void (*)(void *, int))ft_conf_pipe;
+	a->fta[NOT_OPERATOR][7][EMPTY] = (void (*)(void *, int))ft_conf_or;
+	a->fta[NOT_OPERATOR][8][EMPTY] = (void (*)(void *, int))ft_conf_and;
+	a->fta[6][1][NOT_OPERATOR] = (void (*)(void *, int))ft_conf_greater;
+	a->fta[6][2][NOT_OPERATOR] = (void (*)(void *, int))ft_conf_less;
+	a->fta[EMPTY][3][NOT_OPERATOR] = (void (*)(void *, int))ft_conf_heredoc;
+}
 
 void	tactions_handler_init(t_handler *a)
 {
@@ -33,12 +44,7 @@ void	tactions_handler_init(t_handler *a)
 	(void (*)(void *, int))ft_conf_or;
 	a->fta[NOT_OPERATOR][8][NOT_OPERATOR] = \
 	(void (*)(void *, int))ft_conf_and;
-	a->fta[NOT_OPERATOR][5][EMPTY] = (void (*)(void *, int))ft_conf_amper;
-	a->fta[NOT_OPERATOR][6][EMPTY] = (void (*)(void *, int))ft_conf_pipe;
-	a->fta[NOT_OPERATOR][7][EMPTY] = (void (*)(void *, int))ft_conf_or;
-	a->fta[NOT_OPERATOR][8][EMPTY] = (void (*)(void *, int))ft_conf_and;
-	a->fta[6][1][NOT_OPERATOR] = (void (*)(void *, int))ft_conf_greater;
-	a->fta[6][2][NOT_OPERATOR] = (void (*)(void *, int))ft_conf_less;
+	tactions_handler_init2(a);
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:14:52 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:23:07 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/20 23:14:35 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,8 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		**ft_sarrdelbyindex(char **arr, int i);
+char		**ft_sarrdel(char **arr, char *string);
 int			handler_keep_content(char **tkn, int i);
 int			keep_content_byspace(char **tkn, int i, char *space_pos);
 int			keep_content_byquote(char **tkn, int i);

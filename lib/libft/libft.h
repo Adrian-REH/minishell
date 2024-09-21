@@ -6,14 +6,14 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 21:21:28 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/27 16:41:09 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/21 13:39:26 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# define BUFFER_SIZE 1000
+# define BUFFER_SIZE 4096
 
 # include <unistd.h>
 # include <stdio.h>
