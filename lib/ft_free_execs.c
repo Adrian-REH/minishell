@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   ft_free_execs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:33:30 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 01:53:16 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-void *ft_free_info(t_data *info)
+void	*ft_free_execs(t_exec *execs, int len)
 {
-	ft_free_p2(info->tokens);
+	int	i;
+
+	i = -1;
+	while (++i < len)
+	{
+		ft_free_cmds(execs[i].cmd, 3);
+		free(execs[i].cmd);
+		ft_free_file(&execs[i].file);
+		if (execs[i].state)
+			free(execs[i].state);
+	}
 	return (NULL);
-}
-
-t_handler	*ft_clear(t_handler *s)
-{
-	s->len_block = 0;
-	ft_free_blocks(s->block, s->len_block);
-	free(s->block);
-	s->block = NULL;
-	s->info = NULL;
-	//ft_free_info(s->info);
-	//s->info = NULL;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	return (s);
 }

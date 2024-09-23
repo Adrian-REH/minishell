@@ -1,34 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   is_open_fd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:33:30 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/23 01:50:23 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/23 01:50:33 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-void *ft_free_info(t_data *info)
+int	is_fd_open(int fd)
 {
-	ft_free_p2(info->tokens);
-	return (NULL);
-}
+	struct stat statbuf;
 
-t_handler	*ft_clear(t_handler *s)
-{
-	s->len_block = 0;
-	ft_free_blocks(s->block, s->len_block);
-	free(s->block);
-	s->block = NULL;
-	s->info = NULL;
-	//ft_free_info(s->info);
-	//s->info = NULL;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	return (s);
+	return ((fstat(fd, &statbuf) != -1 || errno != EBADF) && fd > 2);
 }

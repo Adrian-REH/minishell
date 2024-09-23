@@ -6,24 +6,11 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 17:52:46 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/22 12:28:21 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-void	ft_concat_fds(int input, int output)
-{
-	char *line;
-
-	line = get_next_line(input);
-	while(line)
-	{
-		ft_putstr_fd(line, output);
-		free(line);
-		line = get_next_line(input);
-	}
-}
 
 static int	*ft_exec_give_cmd(t_exec *e)
 {
@@ -71,7 +58,6 @@ static void	ft_heredoc(t_exec *e)
 	}
 	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
 }
-
 
 static void	get_execute_fds(t_exec *e, int i)
 {

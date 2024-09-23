@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   ft_free_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:33:30 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/23 01:44:59 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/23 01:45:26 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-void *ft_free_info(t_data *info)
+void	*ft_free_file(t_file *file)
 {
-	ft_free_p2(info->tokens);
+	if (is_fd_open(file->input))
+		close(file->input);
+	if (is_fd_open(file->output))
+		close(file->output);
+	if (is_fd_open(file->fd_aux[0]))
+		close(file->fd_aux[0]);
+	if (is_fd_open(file->fd_aux[1]))
+		close(file->fd_aux[1]);
+	if (file->content)
+		ft_free_p2(file->content);
+	free(file->idfile);
+	free(file->odfile);
+	free(file->end_heredoc);
 	return (NULL);
-}
-
-t_handler	*ft_clear(t_handler *s)
-{
-	s->len_block = 0;
-	ft_free_blocks(s->block, s->len_block);
-	free(s->block);
-	s->block = NULL;
-	s->info = NULL;
-	//ft_free_info(s->info);
-	//s->info = NULL;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	return (s);
 }

@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:25:51 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/22 23:11:56 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 		exec->cmd->status = 0;
 		line = s->info->tokens[i + k];
 		line = ft_strdelchr(line, '\"');
-		exec->file.in_dir_file = line;
+		exec->file.idfile = line;
 	}
 	else
 		return (1);

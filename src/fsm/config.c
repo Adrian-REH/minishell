@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:24:07 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 00:15:08 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,9 @@ int	*handler_execute(t_handler *a)
 int	init_config(t_handler *s)
 {
 	count_blocks(s);
-	s->block = malloc(sizeof(t_block) * (s->len_block));
+	s->block = ft_calloc(sizeof(t_block), (s->len_block));
 	if (!s->block)
 		return (-1);
-	s->block->op = BLOCK_EMPTY;
 	s->info->oid = 30;
 	if (pipe(s->block->fd) == -1)
 		return (-1);

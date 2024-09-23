@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 17:51:16 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 02:30:26 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,23 +174,23 @@ int	split_tokens(t_handler *s)
 
 t_handler	*ft_parser(t_handler *s)
 {
+	int			finalstate;
 	t_automata	a;
 	t_data		info;
-	int			finalstate;
 
 	ft_bzero(&a, sizeof(t_automata));
 	ft_bzero(&info, sizeof(t_data));
-	automata_init(&a, &info);
-	a.str = s->line;
-	finalstate = evaluate(&a);
-	if (finalstate > a.errorlen)
-		get_token(&a, &info);
-	info.tokens = ft_sarradd(info.tokens, " ");
-	info.len_tokens = ft_sarrsize(info.tokens);
+	s->a = &a;
 	s->info = &info;
+	automata_init(s->a, s->info);
+	s->a->str = s->line;
+	finalstate = evaluate(s->a);
+	if (finalstate > s->a->errorlen)
+		get_token(s->a, s->info);
+	s->info->tokens = ft_sarradd(s->info->tokens, " ");
+	s->info->len_tokens = ft_sarrsize(s->info->tokens);
 	split_tokens(s);
 	move_tokens(s);
 	joins_tokens(s);
-	//ft_sarrprint(s->info->tokens);
 	return (s);
 }

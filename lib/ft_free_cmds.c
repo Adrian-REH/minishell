@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   ft_free_cmds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:33:30 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 01:53:18 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-void *ft_free_info(t_data *info)
+void	*ft_free_cmds(t_cmd *cmds, int len)
 {
-	ft_free_p2(info->tokens);
+	int	i;
+
+	i = -1;
+	while (++i < len)
+	{
+		if (cmds[i].cmd)
+			ft_free_p2(cmds[i].cmd);
+		if (cmds[i].line)
+			free(cmds[i].line);
+		if (is_fd_open(cmds[i].fd_aux[0]))
+			close(cmds[i].fd_aux[0]);
+		if (is_fd_open(cmds[i].fd_aux[1]))
+			close(cmds[i].fd_aux[0]);
+	}
 	return (NULL);
-}
-
-t_handler	*ft_clear(t_handler *s)
-{
-	s->len_block = 0;
-	ft_free_blocks(s->block, s->len_block);
-	free(s->block);
-	s->block = NULL;
-	s->info = NULL;
-	//ft_free_info(s->info);
-	//s->info = NULL;
-	s->state[0] = 0;
-	s->state[1] = 0;
-	s->state[2] = 0;
-	return (s);
 }

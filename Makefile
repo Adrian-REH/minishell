@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/09/20 23:16:48 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/23 01:52:16 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,17 @@ SRCS = 	 lib/ft_sarrprint.c \
 src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/is_open_fd.c \
+lib/ft_free_execs.c \
+lib/ft_free_file.c \
+lib/ft_free_blocks.c \
+lib/ft_free_cmds.c \
+lib/ft_print_structs.c \
 lib/get_token.c \
 lib/ft_getenv.c \
 lib/ft_isbuiltin.c \
 lib/ft_sarrfree.c \
+lib/ft_concat_fds.c \
 lib/ft_idbystr.c \
 lib/ft_idbychar.c \
 lib/ft_find_str.c \

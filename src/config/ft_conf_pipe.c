@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:04:22 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/22 23:41:53 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	ft_setup_exec(t_exec *exec, t_handler *s)
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
-	if (s->info->oid != (i + k))
+	if (s->info->oid != (i + k) && s->info->tokens[i + k])
 	{
 		if (k == 1 && !strcmp(s->info->tokens[i + k], " "))
 			return (1);
@@ -56,7 +56,8 @@ void	ft_conf_pipe(t_handler *s, int i)
 		exec = ((k = b->len_exec_prev), b->prev_exec);
 	ft_setup_exec(exec + k, s);
 	exec[k].state[0] = init_cmd(exec[k].cmd, s, i, -1);
-	pipe(exec[k].cmd[0].fd_aux);
+	if (exec[k].state[0] == 0)
+		pipe(exec[k].cmd[0].fd_aux);
 	exec[k].state[1] = init_cmd(exec[k].cmd + 1, s, i, 1);
 	exec[k].cmd[2].cmd = NULL;
 	exec[k].func[EMPTY][EMPTY] = (int *(*)(void *, int))ft_exec_pipe;

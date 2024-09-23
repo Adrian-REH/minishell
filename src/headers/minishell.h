@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:14:52 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/20 23:14:35 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 02:06:32 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ typedef struct s_file
 	char				*end_heredoc;
 	char				**content;
 	int					len_content;
-	char				*in_dir_file;
+	char				*idfile;
 	char				*odfile;
 }						t_file;
 
@@ -170,6 +170,7 @@ typedef struct s_handler
 	t_data				*info;
 	int					state[3];
 	int					code;
+	t_automata			*a;
 	char				**env;
 	struct s_handler	*(*seg[5])(struct s_handler *rule);
 	int					(*fb[10])(struct s_cmd *cmd);
@@ -224,6 +225,12 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+int			is_fd_open(int fd);
+void		*ft_free_blocks(t_block *block, int len);
+void		*ft_free_execs(t_exec *execs, int len);
+void		*ft_free_cmds(t_cmd *cmds, int len);
+void		*ft_free_file(t_file *file);
+void		ft_concat_fds(int input, int output);
 char		**ft_sarrdelbyindex(char **arr, int i);
 char		**ft_sarrdel(char **arr, char *string);
 int			handler_keep_content(char **tkn, int i);
@@ -257,5 +264,8 @@ int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
 /*-----------EXCEPTIONS-------------------*/
 void		ft_exeption_fd(int inp, int out, int fd[2]);
+
+
+void ft_print_handler(t_handler *s);
 
 #endif

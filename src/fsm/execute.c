@@ -6,12 +6,11 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 17:09:24 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 00:19:47 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
 
 void	setup_exec_io(int j, int i, t_block *b, t_exec *exec)
 {
