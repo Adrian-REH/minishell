@@ -57,10 +57,8 @@ int	main(int argc, char **argv, char **argenv)
 		if (comand == NULL)
 			break ;
 		handler.line = comand;
-		printf("TODO BIEN AQUI: 01\n");
 		if (comand && *comand)
 			add_history(comand);
-		printf("TODO BIEN AQUI: 02\n");
 		handler.seg[0](&handler);
 		(handler.seg[1](&handler), handler.seg[2](&handler));
 		handler.seg[3](&handler);
