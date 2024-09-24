@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/22 12:28:21 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:27:01 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,6 @@ static int	*ft_exec_give_cmd(t_exec *e)
 	return (NULL);
 }
 
-static void	ft_heredoc(t_exec *e)
-{
-	char	*p_heredoc;
-
-	while (1)
-	{
-		ft_putstr_fd("heredoc>", STDOUT_FILENO);
-		p_heredoc = get_next_line(0);
-		if (ft_strcmp(e->file.end_heredoc, p_heredoc) == 0)
-		{
-			(free(p_heredoc), close(e->cmd->fd_aux[WRITE]));
-			break ;
-		}
-		(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
-	}
-	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
-}
-
 static void	get_execute_fds(t_exec *e, int i)
 {
 	t_exec	*exec;
@@ -69,20 +51,24 @@ static void	get_execute_fds(t_exec *e, int i)
 	e = &exec[i];
 	while (j >= 0 && (exec[j].op == 6))
 		j--;
-	while (++j < i && (exec[j].op == 6))
+	j++;
+	while (j <= i && (exec[j].op == 6))
 	{
-		while (1)
+		ft_putstr_fd("heredoc>", STDOUT_FILENO);
+		p_heredoc = get_next_line(0);
+		if (ft_strcmp(exec[j].file.end_heredoc, p_heredoc) == 0)
 		{
-			ft_putstr_fd("heredoc>", STDOUT_FILENO);
-			p_heredoc = get_next_line(0);
-			if (ft_strcmp(exec[j].file.end_heredoc, p_heredoc) == 0)
-			{
-				(free(p_heredoc));
-				break ;
-			}
-			(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
+			j++;
+			(free(p_heredoc));
+			continue ;
 		}
+		(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
 	}
+	printf("heredoc2\n");
+	close(e->cmd->fd_aux[WRITE]);
+	printf("heredoc3\n");
+	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
+	printf("heredoc4\n");
 }
 
 int	*ft_exec_heredoc(t_exec *e, int index)
@@ -90,16 +76,13 @@ int	*ft_exec_heredoc(t_exec *e, int index)
 	e = &e[index];
 	if (e->state[0] == 0)
 	{
+		printf("heredoc\n");
 		if (e[-1].file.input != 0 && e[-1].op == 6)
 			ft_concat_fds(e[-1].file.input, e->cmd->fd_aux[WRITE]);
 		get_execute_fds(e, index);
-		ft_heredoc(e);
 	}
-	e->cmd++;
 	if (e->state[1] == 0)
-	{
 		ft_exec_give_cmd(e);
-	}
 	e->status = e->state[1];
 	e->state[0] = e->state[1];
 	return (e->state);

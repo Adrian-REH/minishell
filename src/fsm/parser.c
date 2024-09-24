@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:30:26 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:07:44 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,5 +192,6 @@ t_handler	*ft_parser(t_handler *s)
 	split_tokens(s);
 	move_tokens(s);
 	joins_tokens(s);
+	//ft_sarrprint(s->info->tokens);
 	return (s);
 }

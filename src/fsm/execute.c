@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 00:19:47 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:09:57 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int	execute_cmds(t_block *b, int isnext)
 			else if (j == b->len_exec && \
 			(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
 				exec[i].file.output = 1;
-			exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
+			if (exec[i].func[EMPTY][EMPTY])
+				exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
 		}
 	}
 	return (0);
