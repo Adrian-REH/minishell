@@ -50,7 +50,11 @@ static void	ft_move_conf(t_exec *exec, int k)
 	while (j >= 0 && exec[j].op == HEREDOC)
 	{
 		exec[k].cmd->line = exec[j].cmd->line;
+		exec[j].cmd->line = NULL;
+		if (exec[k].cmd->cmd)
+			exec[k].cmd->cmd = (free(exec[k].cmd->cmd), NULL);
 		exec[k].cmd->cmd = exec[j].cmd->cmd;
+		exec[j].cmd->cmd = NULL;
 		exec[k].cmd->fd_aux[0] = (exec[j].cmd->fd_aux[0]);
 		exec[k].cmd->fd_aux[1] = (exec[j].cmd->fd_aux[1]);
 		exec[j].state[1] = 1;

@@ -192,6 +192,5 @@ t_handler	*ft_parser(t_handler *s)
 	split_tokens(s);
 	move_tokens(s);
 	joins_tokens(s);
-	//ft_sarrprint(s->info->tokens);
 	return (s);
 }

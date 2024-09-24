@@ -57,7 +57,6 @@ int	*handler_execute(t_handler *a)
 	j = ((i = -1), 0);
 	while (a->info->tokens[++i])
 	{
-		printf("token: %s\n", a->info->tokens[i]);
 		a->state[2] = idstr(a->operators, a->info->tokens[i]);
 		if (a->state[2] == 9 || a->state[2] == 10)
 			a->block[a->info->i].priority = ((a->state[2] = 0), 1);

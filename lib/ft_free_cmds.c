@@ -21,11 +21,9 @@ void	*ft_free_cmds(t_cmd *cmds, int len)
 	{
 		if (cmds[i].cmd)
 			ft_free_p2(cmds[i].cmd);
-		if (cmds[i].line)
-			free(cmds[i].line);
-		if (is_fd_open(cmds[i].fd_aux[0]))
+		if (is_fd_open(cmds[i].fd_aux[0]) && cmds[i].fd_aux[0] != 0)
 			close(cmds[i].fd_aux[0]);
-		if (is_fd_open(cmds[i].fd_aux[1]))
+		if (is_fd_open(cmds[i].fd_aux[1]) && cmds[i].fd_aux[1] != 1)
 			close(cmds[i].fd_aux[0]);
 	}
 	return (NULL);

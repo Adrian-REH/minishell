@@ -15,6 +15,7 @@
 void	*ft_free_blocks(t_block *block, int len)
 {
 	int	i;
+
 	i = -1;
 	while (++i <= len)
 	{
@@ -22,9 +23,9 @@ void	*ft_free_blocks(t_block *block, int len)
 		free(block[i].prev_exec);
 		ft_free_execs(block[i].next_exec, block[i].len_exec_next);
 		free(block[i].next_exec);
-		if (is_fd_open(block[i].fd[0]))
+		if (is_fd_open(block[i].fd[0]) && block[i].fd[0] != 0)
 			close(block[i].fd[0]);
-		if (is_fd_open(block[i].fd[1]))
+		if (is_fd_open(block[i].fd[1]) && block[i].fd[1] != 1)
 			close(block[i].fd[0]);
 		ft_free_file(&block[i].file);
 	}

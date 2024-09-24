@@ -64,11 +64,8 @@ static void	get_execute_fds(t_exec *e, int i)
 		}
 		(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
 	}
-	printf("heredoc2\n");
 	close(e->cmd->fd_aux[WRITE]);
-	printf("heredoc3\n");
 	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
-	printf("heredoc4\n");
 }
 
 int	*ft_exec_heredoc(t_exec *e, int index)
@@ -76,10 +73,9 @@ int	*ft_exec_heredoc(t_exec *e, int index)
 	e = &e[index];
 	if (e->state[0] == 0)
 	{
-		printf("heredoc\n");
 		if (e[-1].file.input != 0 && e[-1].op == 6)
 			ft_concat_fds(e[-1].file.input, e->cmd->fd_aux[WRITE]);
-		get_execute_fds(e, index);
+		get_execute_fds((e - index), index);
 	}
 	if (e->state[1] == 0)
 		ft_exec_give_cmd(e);

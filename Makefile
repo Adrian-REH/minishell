@@ -27,7 +27,10 @@ lib/ft_free_execs.c \
 lib/ft_free_file.c \
 lib/ft_free_blocks.c \
 lib/ft_free_cmds.c \
-lib/ft_print_structs.c \
+lib/prints/ft_print_structs.c \
+lib/prints/ft_print_file.c \
+lib/prints/ft_print_cmds.c \
+lib/prints/ft_print_execs.c \
 lib/get_token.c \
 lib/ft_getenv.c \
 lib/ft_isbuiltin.c \
@@ -104,6 +107,7 @@ $(NAME) : $(OBJ)
 
 $(OBJ_DIRS):
 	mkdir -p obj/lib 
+	mkdir -p obj/lib/prints
 	mkdir -p obj/src 
 	mkdir -p obj/src/excep
 	mkdir -p obj/src/resource 

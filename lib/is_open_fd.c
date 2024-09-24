@@ -14,7 +14,7 @@
 
 int	is_fd_open(int fd)
 {
-	struct stat statbuf;
+	struct stat	statbuf;
 
 	return ((fstat(fd, &statbuf) != -1 || errno != EBADF) && fd > 2);
 }

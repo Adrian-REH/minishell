@@ -172,7 +172,7 @@ typedef struct s_handler
 	int					code;
 	t_automata			*a;
 	char				**env;
-	struct s_handler	*(*seg[5])(struct s_handler *rule);
+	struct s_handler	*(*seg[6])(struct s_handler *rule);
 	int					(*fb[10])(struct s_cmd *cmd);
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
@@ -262,10 +262,13 @@ char		**ft_sarradd(char **arr, char *string);
 int			ft_sarrprint(char **arr);
 int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
+/*-----------PRINTS-------------------*/
+void		ft_print_file(t_file *f);
+void		ft_print_cmds(t_cmd *c);
+void		ft_print_execs(t_exec *e, int len);
+void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
 void		ft_exeption_fd(int inp, int out, int fd[2]);
-
-
-void ft_print_handler(t_handler *s);
+void		ft_print_handler(t_handler *s);
 
 #endif

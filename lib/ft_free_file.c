@@ -14,13 +14,13 @@
 
 void	*ft_free_file(t_file *file)
 {
-	if (is_fd_open(file->input))
+	if (is_fd_open(file->input) && file->input != 0)
 		close(file->input);
-	if (is_fd_open(file->output))
+	if (is_fd_open(file->output) && file->output != 1)
 		close(file->output);
-	if (is_fd_open(file->fd_aux[0]))
+	if (is_fd_open(file->fd_aux[0]) && file->fd_aux[0] != 0)
 		close(file->fd_aux[0]);
-	if (is_fd_open(file->fd_aux[1]))
+	if (is_fd_open(file->fd_aux[1]) && file->fd_aux[1] != 1)
 		close(file->fd_aux[1]);
 	if (file->content)
 		ft_free_p2(file->content);

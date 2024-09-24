@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **argenv)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
+	ft_bzero(&handler, sizeof(t_handler));
 	handler.env = duparr(argenv);
 	init_handler(&handler);
 	while (1)
@@ -61,12 +62,6 @@ int	main(int argc, char **argv, char **argenv)
 			add_history(comand);
 		handler.seg[0](&handler);
 		(handler.seg[1](&handler), handler.seg[2](&handler));
-		handler.seg[3](&handler);
-		//printf("-------------------PRINT - BEFORE - CLEANED----------------------\n");
-		//ft_print_handler(&handler);
-		//printf("-------------------CLEANING----------------------\n");
-		handler.seg[4](&handler);
-		//printf("-------------------PRINT - AFTER - CLEANED----------------------\n");
-		//ft_print_handler(&handler);
+		(handler.seg[3](&handler), handler.seg[4](&handler));
 	}
 }
