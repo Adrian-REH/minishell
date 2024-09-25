@@ -6,7 +6,7 @@
 #    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/20 12:20:24 by adherrer          #+#    #+#              #
-#    Updated: 2024/09/23 01:52:16 by adherrer         ###   ########.fr        #
+#    Updated: 2024/09/25 15:48:09 by adherrer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,9 @@ lib/is_open_fd.c \
 lib/ft_free_execs.c \
 lib/ft_free_file.c \
 lib/ft_free_blocks.c \
+lib/ft_join_tokens.c \
+lib/ft_split_tokens.c \
+lib/ft_move_tokens.c \
 lib/ft_free_cmds.c \
 lib/prints/ft_print_structs.c \
 lib/prints/ft_print_file.c \

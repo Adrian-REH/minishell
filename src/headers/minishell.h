@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:14:52 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/23 02:06:32 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:46:49 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,10 @@ char		**ft_sarradd(char **arr, char *string);
 int			ft_sarrprint(char **arr);
 int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
+int			split_tokens(t_handler *s);
+char		**split_token(char **tkn, char *space_pos, int i);
+int			move_tokens(t_handler *s);
+int			joins_tokens(t_handler *s);
 /*-----------PRINTS-------------------*/
 void		ft_print_file(t_file *f);
 void		ft_print_cmds(t_cmd *c);
