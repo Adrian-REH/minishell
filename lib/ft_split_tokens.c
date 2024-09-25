@@ -33,7 +33,6 @@ int	split_tokens(t_handler *s)
 	}
 	s->info->len_tokens = ft_sarrsize(tokens);
 	s->info->tokens = tokens;
-
 	return (1);
 }
 
@@ -45,13 +44,13 @@ char	**split_token(char **tkn, char *space_pos, int i)
 	if (tkn[i][0] == '\"' && space_pos)
 	{
 		q_pos = ft_strchr(tkn[i] + 1, '\"');
-		temp = tkn[i];
-		tkn[i] = ft_substr(tkn[i] + 1, 0, ft_strlen(tkn[i]) - ft_strlen(q_pos) - 1);
+		temp = tkn[i] + 1;
+		tkn[i] = ft_substr(temp, 0, ft_strlen(tkn[i]) - ft_strlen(q_pos) - 1);
 		if (!tkn[i])
 			return (NULL);
 		q_pos = ft_strtrim(q_pos, " ");
 		tkn = ft_sarraddbyindex(tkn, q_pos, i + 1);
-		tkn[i + 1] = (free(temp), ft_strdelchr(tkn[i + 1], '\"'));
+		tkn[i + 1] = (free(temp - 1), ft_strdelchr(tkn[i + 1], '\"'));
 	}
 	else if (space_pos)
 	{

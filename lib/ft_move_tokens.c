@@ -12,12 +12,49 @@
 
 #include "../src/headers/minishell.h"
 
+static int	ft_isjoinedtoken(int state[3], char	**tokens, int *i, int y)
+{
+	char	*temp;
+
+	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
+	state[2] == 14 && y != -1)
+	{
+		temp = tokens[y - 1];
+		tokens[y - 1] = ft_strjoin(tokens[y - 1], " ");
+		temp = (free(temp), tokens[y - 1]);
+		tokens[y - 1] = ft_strjoin(tokens[y - 1], tokens[*i]);
+		tokens = (free(temp), ft_sarrdelbyindex(tokens, *i));
+		(*i)--;
+		return (1);
+	}
+	return (0);
+}
+
+static int	ft_ismovedtoken(int state[3], char **tokens, int *i, int *j, int *y)
+{
+	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
+	state[2] == 14 && *j != -1)
+	{
+		tokens = ft_sarraddbyindex(tokens, tokens[*i], *j);
+		tokens = ft_sarrdelbyindex(tokens, *i + 1);
+		(*i)--;
+		*y = *j + 1;
+		*j = -1;
+	}
+	return (0);
+}
+
+static int	isemptytoken(int state[3])
+{
+	return ((state[0] == OP_EMPTY || state[0] == OP_PIPE) && \
+	(state[1] >= 1 && state[1] < 5) && state[2] == NOT_OPERATOR);
+}
+
 int	move_tokens(t_handler *s)
 {
 	int		i;
 	int		j;
 	int		y;
-	char	*temp;
 	char	**tokens;
 	int		state[3];
 
@@ -28,27 +65,12 @@ int	move_tokens(t_handler *s)
 	while (tokens[++i])
 	{
 		state[2] = idstr(s->operators, tokens[i]);
-		if ((state[0] == 0 || state[0] == 6) && (state[1] >= 1 && state[1] < 5) && state[2] == 14)
+		if (isemptytoken(state))
 			j = i - 1;
-		else if ((state[0] >= 1 && state[0] < 5) && state[1] == 14  && state[2] == 14 && j != -1)
-		{
-			tokens = ft_sarraddbyindex(tokens, tokens[i], j);
-			tokens = ft_sarrdelbyindex(tokens, i + 1);
-			i--;
-			y = j + 1;
-			j = -1;
-		}
-		else if ((state[0] >= 1 && state[0] < 5) && state[1] == 14  && state[2] == 14 && y != -1)
-		{
-			temp = tokens[y - 1];
-			tokens[y - 1] = ft_strjoin(tokens[y - 1], " ");
-			free(temp);
-			temp = tokens[y - 1];
-			tokens[y - 1] = ft_strjoin(tokens[y - 1], tokens[i]);
-			free(temp);
-			tokens = ft_sarrdelbyindex(tokens, i);
-			i--;
-		}
+		else if (ft_ismovedtoken(state, tokens, &i, &j, &y))
+			i = i;
+		else if (ft_isjoinedtoken(state, tokens, &i, y))
+			i = i;
 		state[1] = ((state[0] = state[1]), state[2]);
 	}
 	s->info->len_tokens = ft_sarrsize(tokens);
