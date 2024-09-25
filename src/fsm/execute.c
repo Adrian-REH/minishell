@@ -88,7 +88,6 @@ int	execute_block_sequence(t_handler *s, int i)
 		else if (i != 0 && st_blk(b[i - 1].status, b[i - 1].op, b[i].op))
 			return (1);
 		execute_cmds(&(b[i]), 0);
-		printf("waiting for pid\n");
 		b[i].status = ft_waiting_pid(b[i].prev_exec, b[i].len_exec_prev);
 	}
 	if (b[i].len_exec_next)

@@ -30,16 +30,17 @@ static int	ft_isjoinedtoken(int state[3], char	**tokens, int *i, int y)
 	return (0);
 }
 
-static int	ft_ismovedtoken(int state[3], char **tokens, int *i, int *j, int *y)
+static int	ft_ismovedtoken(int state[3], char **tokens, int *i, int *pos[2])
 {
 	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
-	state[2] == 14 && *j != -1)
+	state[2] == 14 && *pos[0] != -1)
 	{
-		tokens = ft_sarraddbyindex(tokens, tokens[*i], *j);
+		tokens = ft_sarraddbyindex(tokens, tokens[*i], *pos[0]);
 		tokens = ft_sarrdelbyindex(tokens, *i + 1);
 		(*i)--;
-		*y = *j + 1;
-		*j = -1;
+		*pos[1] = *pos[0] + 1;
+		*pos[0] = -1;
+		return (1);
 	}
 	return (0);
 }
@@ -67,7 +68,7 @@ int	move_tokens(t_handler *s)
 		state[2] = idstr(s->operators, tokens[i]);
 		if (isemptytoken(state))
 			j = i - 1;
-		else if (ft_ismovedtoken(state, tokens, &i, &j, &y))
+		else if (ft_ismovedtoken(state, tokens, &i, (int *[2]){&j, &y}))
 			i = i;
 		else if (ft_isjoinedtoken(state, tokens, &i, y))
 			i = i;
