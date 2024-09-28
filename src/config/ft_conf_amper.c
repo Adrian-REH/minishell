@@ -24,6 +24,7 @@ static void	init_conf(t_exec *exec, t_handler *s)
 	exec->cmd[0].cmd = 0;
 	exec->file.input = 0;
 	exec->file.output = 1;
+	exec->file.content = NULL;
 }
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)

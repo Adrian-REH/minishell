@@ -12,34 +12,34 @@
 
 #include "../src/headers/minishell.h"
 
-static int	ft_isjoinedtoken(int state[3], char	**tokens, int *i, int y)
+static int	ft_isjoinedtoken(int state[3], t_data *info, int *i, int y)
 {
 	char	*temp;
 
 	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
 	state[2] == 14 && y != -1)
 	{
-		temp = tokens[y - 1];
-		tokens[y - 1] = ft_strjoin(tokens[y - 1], " ");
-		temp = (free(temp), tokens[y - 1]);
-		tokens[y - 1] = ft_strjoin(tokens[y - 1], tokens[*i]);
-		tokens = (free(temp), ft_sarrdelbyindex(tokens, *i));
+		temp = info->tokens[y - 1];
+		info->tokens[y - 1] = ft_strjoin(info->tokens[y - 1], " ");
+		temp = (free(temp), info->tokens[y - 1]);
+		info->tokens[y - 1] = ft_strjoin(info->tokens[y - 1], info->tokens[*i]);
+		info->tokens = (free(temp), ft_sarrdelbyindex(info->tokens, *i));
 		(*i)--;
 		return (1);
 	}
 	return (0);
 }
 
-static int	ft_ismovedtoken(int state[3], char **tokens, int *i, int *pos[2])
+static int	ft_ismovedtoken(int state[3], t_data *info, int *i, int *j, int *y)
 {
 	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
-	state[2] == 14 && *pos[0] != -1)
+	state[2] == 14 && *j != -1)
 	{
-		tokens = ft_sarraddbyindex(tokens, tokens[*i], *pos[0]);
-		tokens = ft_sarrdelbyindex(tokens, *i + 1);
+		info->tokens = ft_sarraddbyindex(info->tokens, info->tokens[*i], *j);
+		info->tokens = ft_sarrdelbyindex(info->tokens, *i + 1);
 		(*i)--;
-		*pos[1] = *pos[0] + 1;
-		*pos[0] = -1;
+		*y = *j + 1;
+		*j = -1;
 		return (1);
 	}
 	return (0);
@@ -66,15 +66,17 @@ int	move_tokens(t_handler *s)
 	while (tokens[++i])
 	{
 		state[2] = idstr(s->operators, tokens[i]);
+		printf("%d | %d | %d \n", state[0], state[1], state[2]);
 		if (isemptytoken(state))
 			j = i - 1;
-		else if (ft_ismovedtoken(state, tokens, &i, (int *[2]){&j, &y}))
-			i = i;
-		else if (ft_isjoinedtoken(state, tokens, &i, y))
-			i = i;
+		else if (ft_ismovedtoken(state, s->info, &i, &j, &y)){
+			printf("Muevo! :%d\n", ft_sarrsize(tokens));
+			i = i;}
+		else if (ft_isjoinedtoken(state, s->info, &i, y)){
+			printf("Uno! \n");
+			i = i;}
 		state[1] = ((state[0] = state[1]), state[2]);
 	}
-	s->info->len_tokens = ft_sarrsize(tokens);
-	s->info->tokens = tokens;
+	s->info->len_tokens = ft_sarrsize(s->info->tokens);
 	return (1);
 }

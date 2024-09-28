@@ -22,8 +22,10 @@ static void	ft_setup_exec(t_exec *exec, t_handler *s)
 	exec->state[0] = 0;
 	exec->state[1] = 0;
 	exec->cmd[0].cmd = 0;
+	ft_bzero(&(exec->file), sizeof(t_file));
 	exec->file.input = 0;
 	exec->file.output = 1;
+	exec->file.content = NULL;
 }
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)

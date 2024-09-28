@@ -55,7 +55,13 @@ t_handler	*ft_parser(t_handler *s)
 	s->info->tokens = ft_sarradd(s->info->tokens, " ");
 	s->info->len_tokens = ft_sarrsize(s->info->tokens);
 	split_tokens(s);
+	printf("PRIMERO SPLITEO LOS TOKENS\n");
+	ft_sarrprint(s->info->tokens);
 	move_tokens(s);
+	printf("SEGUNDO MUEVO LOS TOKENS\n");
+	ft_sarrprint(s->info->tokens);
 	joins_tokens(s);
+	printf("TERCERO UNO LOS TOKENS\n");
+	ft_sarrprint(s->info->tokens);
 	return (s);
 }

@@ -17,7 +17,7 @@ void	*ft_free_blocks(t_block *block, int len)
 	int	i;
 
 	i = -1;
-	while (++i <= len)
+	while (++i < len)
 	{
 		ft_free_execs(block[i].prev_exec, block[i].len_exec_prev);
 		free(block[i].prev_exec);

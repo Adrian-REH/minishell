@@ -22,6 +22,7 @@ void	ft_print_cmds(t_cmd *c)
 	while (j < i)
 	{
 		printf("\t\t------------CMD %d\n", j);
+		printf("\t\tcmd dir:      %p\n", c->cmd);
 		printf("\t\tline:         %s\n", c->line);
 		printf("\t\tfd_aux[0]:    %d | fd_aux[1]: %d\n", \
 		c->fd_aux[0], c->fd_aux[1]);
