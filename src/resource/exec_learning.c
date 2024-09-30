@@ -28,6 +28,8 @@ int	st_blk(int sts, int op, int next_op)
 {
 	int	status[3][2][3];
 
+	if (sts > 0)
+		sts = 1;
 	status[BLOCK_EMPTY][0][BLOCK_EMPTY] = 0;
 	status[BLOCK_EMPTY][0][BLOCK_AND] = 0;
 	status[BLOCK_EMPTY][1][BLOCK_AND] = 1;

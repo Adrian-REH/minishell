@@ -111,7 +111,7 @@ t_handler	*ft_execute(t_handler *s)
 	i = -1;
 	while (++i < s->len_block)
 	{
-		if (execute_block_sequence(s, i))
+		if (execute_block_sequence(s, i) == -1)
 			continue ;
 	}
 	return ((s->code = s->block[i - 1].status), s);
