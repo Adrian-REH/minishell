@@ -12,6 +12,19 @@
 
 #include "../headers/minishell.h"
 
+int	get_error(int	type, int change)
+{
+	static int	code;
+
+	if (type == 0 && change == 0)
+		return (code);
+	else if (change != 0)
+		code = type;
+	else
+		code = type;
+	return (code);
+}
+
 void	ft_conf_exception(t_handler *s, int i)
 {
 	(void)s;

@@ -56,6 +56,8 @@ static void	get_execute_fds(t_exec *e, int i)
 	{
 		ft_putstr_fd("heredoc>", STDOUT_FILENO);
 		p_heredoc = get_next_line(0);
+		if (p_heredoc == NULL && get_error(0, 0) >= 0)
+			break ;
 		if (ft_strcmp(exec[j].file.end_heredoc, p_heredoc) == 0)
 		{
 			j++;
@@ -77,8 +79,10 @@ int	*ft_exec_heredoc(t_exec *e, int index)
 			ft_concat_fds(e[-1].file.input, e->cmd->fd_aux[WRITE]);
 		get_execute_fds((e - index), index);
 	}
-	if (e->state[1] == 0)
+	if (e->state[1] == 0 && get_error(0, 0) == 0)
 		ft_exec_give_cmd(e);
+	if (get_error(0, 0) >= 0)
+		e->state[1] = 1;
 	e->status = e->state[1];
 	e->state[0] = e->state[1];
 	return (e->state);
