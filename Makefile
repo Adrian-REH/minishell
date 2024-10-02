@@ -22,6 +22,7 @@ SRCS = 	 lib/ft_sarrprint.c \
 src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/ft.c \
 lib/is_open_fd.c \
 lib/ft_free_execs.c \
 lib/ft_free_file.c \
@@ -61,6 +62,7 @@ src/fsm/config.c \
 src/fsm/execute.c \
 src/fsm/clear.c \
 src/fsm/subprocess.c \
+src/resource/config_learning_error.c \
 src/resource/init_learning.c \
 src/resource/config_learning.c \
 src/resource/exec_learning.c \
