@@ -12,20 +12,6 @@
 
 #include "headers/minishell.h"
 
-struct signal_info {
-    int signal_num;
-};
-
-int	ft_static(int j)
-{
-	static int i = 0;
-
-	if (j != 0)
-		i = j;
-	return (i);
-}
-
-
 void	sigint_handler(int signum)
 {
 	if (signum == SIGINT)
@@ -35,7 +21,6 @@ void	sigint_handler(int signum)
 		rl_on_new_line();
 		rl_redisplay();
 		get_error(signum, 0);
-		//Tengo que hacer que el block se libere
 	}
 }
 
@@ -61,18 +46,14 @@ int	main(int argc, char **argv, char **argenv)
 
 	(void)argc;
 	(void)argv;
-	sa.sa_handler  = sigint_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
+	sa.sa_handler = sigint_handler;
+	sa.sa_flags = (sigemptyset(&sa.sa_mask), 0);
 	sigaction(SIGINT, &sa, NULL);
-	printf("Bienvenido a Minishell\n");
 	ft_bzero(&handler, sizeof(t_handler));
 	handler.env = duparr(argenv);
 	init_handler(&handler);
 	while (1)
 	{
-		//if (get_error(0))
-		//	handler.seg[4](&handler);
 		comand = readline("minishell> ");
 		get_error(0, 1);
 		if (comand == NULL)

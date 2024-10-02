@@ -35,7 +35,8 @@ static int	ft_ismovedtoken(int state[3], t_data *info, int *i, int **pos)
 	if ((state[0] >= 1 && state[0] < 5) && state[1] == 14 && \
 	state[2] == 14 && *pos[0] != -1)
 	{
-		info->tokens = ft_sarraddbyindex(info->tokens, info->tokens[*i], *pos[0]);
+		info->tokens = ft_sarraddbyindex(info->tokens, \
+		info->tokens[*i], *pos[0]);
 		info->tokens = ft_sarrdelbyindex(info->tokens, *i + 1);
 		(*i)--;
 		*pos[1] = *pos[0] + 1;

@@ -12,7 +12,7 @@
 
 #include "../headers/minishell.h"
 
-int	get_error(int	type, int change)
+int	get_error(int type, int change)
 {
 	static int	code;
 

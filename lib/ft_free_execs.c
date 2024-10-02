@@ -20,7 +20,6 @@ void	*ft_free_execs(t_exec *execs, int len)
 	while (++i < len)
 	{
 		ft_free_cmds(execs[i].cmd, 2);
-		ft_free_file(&execs[i].file);
 		if (execs[i].state)
 			free(execs[i].state);
 	}
