@@ -36,7 +36,10 @@ char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
 	char	*tmp;
 	int		j;
 
-	line = ft_strchr(result + i, ' ') - 1;
+	if (ft_strchr(result + i, ' '))
+		line = ft_strchr(result + i, ' ') - 1;
+	else if (ft_strchr(result + i + 1, '$'))
+		line = ft_strchr(result + i + 1, '$') - 1;
 	tmp = ft_substr(result, i + 1, line - result - i);
 	line = ft_strtrim(tmp, "\"");
 	free(tmp);
@@ -72,7 +75,8 @@ void	ft_process_quote(struct s_cmd *cmd, char *line)
 			(printf("%d", cmd->handler->code), i++);
 			continue ;
 		}
-		else if (result[i] == '$' && ft_isalpha(result[i + 1]) && flag)
+		else if (result[i] == '$' \
+		&& ft_isalpha(result[i + 1]) && flag)
 		{
 			line = extract_and_print_env(line, result, cmd, i);
 			i += ft_strlen(line) - 1;

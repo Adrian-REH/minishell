@@ -63,4 +63,33 @@ void	operators_init(t_handler *a)
 	a->operators = ft_sarradd(a->operators, "&&");
 	a->operators = ft_sarradd(a->operators, "(");
 	a->operators = ft_sarradd(a->operators, ")");
+	a->operators = ft_sarradd(a->operators, "*");
+}
+
+void	errors_init_amper(t_handler *h)
+{
+	h->ferror[0][OP_HEREDOC][OP_AMPER] = (int (*)(void *, int))syntax_error;
+	h->ferror[14][OP_HEREDOC][OP_AMPER] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_APPEND][OP_AMPER] = (int (*)(void *, int))syntax_error;
+	h->ferror[14][OP_APPEND][OP_AMPER] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_PIPE][OP_AMPER] = (int (*)(void *, int))syntax_error;
+}
+
+void	tactions_errors_init(t_handler *h)
+{
+	h->ferror[0][OP_OR][14] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_AND][14] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_OR][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_AND][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_AMPER][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_GREATER][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_HEREDOC][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_APPEND][0] = (int (*)(void *, int))syntax_error;
+	h->ferror[0][OP_PIPE][0] = (int (*)(void *, int))syntax_error;
+	errors_init_pipe(h);
+	errors_init_and(h);
+	errors_init_or(h);
+	errors_init_heredoc(h);
+	errors_init_append(h);
+	errors_init_amper(h);
 }

@@ -22,6 +22,14 @@ void	sigint_handler(int signum)
 		rl_redisplay();
 		get_error(signum, 0);
 	}
+	if (signum == SIGQUIT)
+	{
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+		get_error(signum, 0);
+	}
 }
 
 void	init_handler(t_handler *s)
@@ -33,6 +41,7 @@ void	init_handler(t_handler *s)
 	s->seg[4] = ft_clear;
 	operators_init(s);
 	builtings_init(s);
+	tactions_errors_init(s);
 	tactions_handler_init(s);
 	tactions_builtins_init(s);
 	s->code = 0;
@@ -48,7 +57,7 @@ int	main(int argc, char **argv, char **argenv)
 	(void)argv;
 	sa.sa_handler = sigint_handler;
 	sa.sa_flags = (sigemptyset(&sa.sa_mask), 0);
-	sigaction(SIGINT, &sa, NULL);
+	(sigaction(SIGINT, &sa, NULL), sigaction(SIGQUIT, &sa, NULL));
 	ft_bzero(&handler, sizeof(t_handler));
 	handler.env = duparr(argenv);
 	init_handler(&handler);

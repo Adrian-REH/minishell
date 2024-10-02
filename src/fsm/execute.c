@@ -109,6 +109,10 @@ t_handler	*ft_execute(t_handler *s)
 	int	i;
 
 	i = -1;
+	if (get_error(0, 0))
+		return (s);
+	if (s->len_block == 0)
+		return (s);
 	while (++i < s->len_block)
 	{
 		if (execute_block_sequence(s, i) == -1)

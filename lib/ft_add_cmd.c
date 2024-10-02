@@ -14,7 +14,8 @@
 
 t_cmd	*add_cmd(t_cmd *cmds, t_cmd cmd)
 {
-	int	i;
+	int		i;
+	t_cmd	cmd_null;
 
 	i = 0;
 	if (cmds == NULL)
@@ -28,5 +29,7 @@ t_cmd	*add_cmd(t_cmd *cmds, t_cmd cmd)
 		i++;
 	cmds = ft_realloc(cmds, sizeof(t_cmd) * (i + 2));
 	cmds[i++] = cmd;
+	ft_bzero(&cmd_null, sizeof(t_cmd));
+	cmds[i] = cmd_null;
 	return (cmds);
 }

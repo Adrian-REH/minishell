@@ -25,11 +25,31 @@ int	get_error(int type, int change)
 	return (code);
 }
 
-void	ft_conf_exception(t_handler *s, int i)
+void	parser_error(t_handler *s, int error)
 {
-	(void)s;
-	(void)i;
+	if (s->a->errors[error])
+	{
+		ft_putstr_fd(" syntax error near unexpected token '", 2);
+		ft_putstr_fd(s->a->errors[error], 2);
+		ft_putstr_fd("'\n", 2);
+	}
+	get_error(2, 0);
 	s->code = 2;
+}
+
+int	syntax_error(char *operator, int type)
+{
+	if (type == 2)
+		ft_putstr_fd(" syntax error near unexpected token '", 2);
+	else if (type == 1)
+	{
+		ft_putstr_fd(" ambiguous redirect", 2);
+		return (type);
+	}
+	ft_putstr_fd(operator, 2);
+	ft_putstr_fd("'\n", 2);
+	get_error(2, 0);
+	return (2);
 }
 
 void	ft_execute_exception(t_cmd *cmd)

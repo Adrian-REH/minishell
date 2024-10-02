@@ -18,10 +18,12 @@ t_handler	*ft_subprocess(t_handler *handler)
 	pid_t	result;
 	int		status;
 
+	if (get_error(0, 0))
+		return (handler);
 	if (handler->w_cmd)
 	{
 		i = -1;
-		while (handler->w_cmd[++i].pid)
+		while (i < handler->n_pids && handler->w_cmd[++i].pid)
 		{
 			result = waitpid(handler->w_cmd[i].pid, &status, WNOHANG);
 			if (result == handler->w_cmd[i].pid)
@@ -29,6 +31,7 @@ t_handler	*ft_subprocess(t_handler *handler)
 				printf("[%d] Done\t\t\t%s\n", i + 1, handler->w_cmd[i].cmd[0]);
 				handler->n_pids--;
 				handler->w_cmd = delete_cmd(handler->w_cmd, i);
+				i--;
 			}
 		}
 	}

@@ -46,7 +46,6 @@ void	ft_print_handler(t_handler *s)
 	printf("n_pids: %d\n", s->n_pids);
 	printf("len_block: %d\n", s->len_block);
 	ft_print_blocks(s->block, s->len_block);
-	printf("n_pids: %d\n", s->n_pids);
 	printf("state[0]: %d | state[1]: %d | state[2]: %d \n", \
 	s->state[0], s->state[1], s->state[2]);
 	printf("code: %d\n", s->code);

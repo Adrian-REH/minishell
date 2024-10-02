@@ -16,7 +16,7 @@ static int	evaluate(t_automata *a)
 {
 	a->ostate = 0;
 	a->i = -1;
-	while (++a->i < ft_strlen(a->str))
+	while (++a->i < ft_strlen(a->str) && a->state != 11)
 	{
 		a->state = a->get_state(a->state, idx(a->alphabet, a->str[a->i]));
 		if (a->fsa[a->state])
@@ -26,6 +26,26 @@ static int	evaluate(t_automata *a)
 		a->ostate = a->state;
 	}
 	return (a->state);
+}
+
+static int	verify_syntax(t_handler *s)
+{
+	int	i;
+	int	state[3];
+
+	i = -1;
+	state[0] = 0;
+	state[1] = 0;
+	state[2] = 0;
+	while (s->info->tokens[++i])
+	{
+		state[2] = idstr(s->operators, s->info->tokens[i]);
+		if (s->ferror[state[0]][state[1]][state[2]])
+			return (s->ferror[state[0]][state[1]][state[2]]("", 2));
+		state[0] = state[1];
+		state[1] = state[2];
+	}
+	return (s->code);
 }
 
 void	automata_init(t_automata *a, void *data)
@@ -43,6 +63,8 @@ t_handler	*ft_parser(t_handler *s)
 	t_automata	a;
 	t_data		info;
 
+	if (get_error(0, 0))
+		return (s);
 	ft_bzero(&a, sizeof(t_automata));
 	ft_bzero(&info, sizeof(t_data));
 	s->a = &a;
@@ -50,12 +72,14 @@ t_handler	*ft_parser(t_handler *s)
 	automata_init(s->a, s->info);
 	s->a->str = s->line;
 	finalstate = evaluate(s->a);
-	if (finalstate > s->a->errorlen)
+	if (finalstate > 11)
 		get_token(s->a, s->info);
+	if (finalstate >= 4 && finalstate <= 11)
+		return (parser_error(s, finalstate - 4), s);
 	s->info->tokens = ft_sarradd(s->info->tokens, " ");
 	s->info->len_tokens = ft_sarrsize(s->info->tokens);
 	split_tokens(s);
-	move_tokens(s);
-	joins_tokens(s);
+	(move_tokens(s), joins_tokens(s));
+	s->code = verify_syntax(s);
 	return (s);
 }

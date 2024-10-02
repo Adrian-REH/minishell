@@ -49,7 +49,7 @@ int	joins_tokens(t_handler *s)
 			y = i - 1;
 		else if (ft_isjoinedtoken(state, tokens, &i, y))
 			i = i;
-		if (state[1] == 6)
+		if (state[1] >= 6 && state[1] <= 8)
 			y = -1;
 		state[1] = ((state[0] = state[1]), state[2]);
 	}

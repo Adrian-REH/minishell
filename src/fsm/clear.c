@@ -20,7 +20,6 @@ void	*ft_free_info(t_data *info)
 
 t_handler	*ft_clear(t_handler *s)
 {
-	//ft_print_handler(s);
 	ft_free_blocks(s->block, s->len_block);
 	s->len_block = 0;
 	free(s->block);

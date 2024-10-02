@@ -12,17 +12,6 @@
 
 #include "../headers/minishell.h"
 
-void	swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a)
-{
-	if ((a->state[0] == OP_PIPE || a->state[1] == OP_PIPE) && \
-	(a->state[2] >= 1 && a->state[2] <= 4))
-	{
-		a->info->oid = -1;
-		if (exec[i_exec - 1].op)
-			exec[i_exec - 1].state[1] = 2;
-	}
-}
-
 t_exec	*place_exec(t_handler *a, t_exec *exec, int *i_exec)
 {
 	t_block	*b;
@@ -100,6 +89,8 @@ t_handler	*ft_config(t_handler *s)
 {
 	int	i;
 
+	if (get_error(0, 0))
+		return (s);
 	s->state[0] = 0;
 	s->state[1] = 0;
 	s->state[2] = 0;

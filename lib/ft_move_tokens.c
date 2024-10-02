@@ -48,7 +48,9 @@ static int	ft_ismovedtoken(int state[3], t_data *info, int *i, int **pos)
 
 static int	isemptytoken(int state[3])
 {
-	return ((state[0] == OP_EMPTY || state[0] == OP_PIPE) && \
+	return ((state[0] == OP_EMPTY || state[0] == OP_PIPE \
+	|| state[0] == OP_OR || state[0] == OP_AND || state[0] == OP_PAREN_O \
+	|| state[0] == OP_PAREN_C) && \
 	(state[1] >= 1 && state[1] < 5) && state[2] == NOT_OPERATOR);
 }
 

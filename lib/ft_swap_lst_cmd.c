@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_delete_cmd.c                                    :+:      :+:    :+:   */
+/*   ft_add_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:11:25 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:32:34 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:16 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:28:21 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/headers/minishell.h"
 
-t_cmd	*delete_cmd(t_cmd *cmds, int i)
+void	swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a)
 {
-	int	j;
-
-	j = i;
-	ft_free_cmds(&(cmds[i]), 1);
-	while (cmds[j].pid)
+	if ((a->state[0] == OP_PIPE || a->state[1] == OP_PIPE) && \
+	(a->state[2] >= 1 && a->state[2] <= 4))
 	{
-		cmds[j] = cmds[j + 1];
-		j++;
+		a->info->oid = -1;
+		if (exec[i_exec - 1].op)
+			exec[i_exec - 1].state[1] = 2;
 	}
-	cmds[j].pid = 0;
-	return (cmds);
 }

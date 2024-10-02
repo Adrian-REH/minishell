@@ -48,6 +48,7 @@ typedef enum e_operators
 	OP_AND,
 	OP_PAREN_O,
 	OP_PAREN_C,
+	OP_WILDCARD,
 	OP_INVALID,
 }	t_operators;
 
@@ -173,7 +174,8 @@ typedef struct s_handler
 	t_automata			*a;
 	char				**env;
 	struct s_handler	*(*seg[6])(struct s_handler *rule);
-	int					(*fb[10])(struct s_cmd *cmd);
+	int					(*fb[12])(struct s_cmd *cmd);
+	int					(*ferror[15][15][15])(void *, int error);
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
@@ -203,6 +205,13 @@ t_handler	*ft_execute(t_handler *s);
 t_handler	*ft_config(t_handler *s);
 t_handler	*ft_subprocess(t_handler *handler);
 /*------------LEARNING--------------*/
+void		tactions_errors_init(t_handler *h);
+void		errors_init_pipe(t_handler *h);
+void		errors_init_heredoc(t_handler *h);
+void		errors_init_and(t_handler *h);
+void		errors_init_or(t_handler *h);
+void		errors_init_append(t_handler *h);
+void		errors_init_amper(t_handler *h);
 int			st_blk(int sts, int op, int next_op);
 void		init_handler(t_handler *s);
 void		tactions_builtins_init(t_handler *a);
@@ -225,6 +234,7 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
 int			is_fd_open(int fd);
 void		*ft_free_blocks(t_block *block, int len);
 void		*ft_free_execs(t_exec *execs, int len);
@@ -272,6 +282,8 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			syntax_error(char *operator, int type);
+void		parser_error(t_handler *s, int error);
 int			get_error(int type, int change);
 void		ft_exeption_fd(int inp, int out, int fd[2]);
 void		ft_print_handler(t_handler *s);
