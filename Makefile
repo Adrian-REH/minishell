@@ -22,7 +22,7 @@ SRCS = 	 lib/ft_sarrprint.c \
 src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
-lib/ft.c \
+lib/ft_swap_lst_cmd.c \
 lib/is_open_fd.c \
 lib/ft_free_execs.c \
 lib/ft_free_file.c \

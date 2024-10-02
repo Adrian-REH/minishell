@@ -35,7 +35,7 @@ char	*local_path(int i)
 	return (res);
 }
 
-void	change_value_pwd(char *s, t_cmd *cmd, int control)
+void	change_pwd(char *s, t_cmd *cmd, int control)
 {
 	int		i;
 	char	*temp;
@@ -65,7 +65,7 @@ void	change_value_pwd(char *s, t_cmd *cmd, int control)
 static int	handle_directory_change(char *temp, t_cmd *cmd, int status)
 {
 	if (temp == 0)
-		status = (chdir(getenv("HOME")), 0);
+		status = (chdir(getenv("HOME")), change_pwd(getenv("HOME"), cmd, 1), 0);
 	else if (ft_isdigit(temp[0]))
 		status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
 	else if (temp[0] == '~')
@@ -80,13 +80,13 @@ static int	handle_directory_change(char *temp, t_cmd *cmd, int status)
 			if (chdir(temp) == -1)
 				status = (ft_putstr_fd("No such file or directory\n", 2), 1);
 			else
-				status = (change_value_pwd(NULL, cmd, 1), 0);
+				status = (change_pwd(NULL, cmd, 1), 0);
 		}
 	}
 	else if (chdir(temp) == -1)
 		status = (ft_putstr_fd("No such file or directory\n", 2), 1);
 	else
-		status = (change_value_pwd(NULL, cmd, 1), 0);
+		status = (change_pwd(NULL, cmd, 1), 0);
 	return (status);
 }
 
@@ -112,7 +112,7 @@ int	ft_exec_cd(t_cmd *cmd)
 		return (ft_putstr_fd("Error malloc\n", 2), free(line), 1);
 	if (ft_sarrsize(str) > 1)
 		return (ft_putstr_fd(" too many arguments\n", 2), (cmd->status = 1), 1);
-	change_value_pwd(NULL, cmd, 0);
+	change_pwd(NULL, cmd, 0);
 	status = handle_directory_change(str[0], cmd, status);
 	cmd->status = status;
 	return (ft_free_p2(str), status);

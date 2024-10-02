@@ -24,7 +24,6 @@ void	sigint_handler(int signum)
 	}
 	if (signum == SIGQUIT)
 	{
-		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
