@@ -11,6 +11,7 @@
 # **************************************************************************** #
 
 NAME = minishell
+NAME_B = minishell_bonus
 
 CC = gcc
 
@@ -22,6 +23,7 @@ SRCS = 	 lib/ft_sarrprint.c \
 src/excep/service_excep.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/ft_sarrtostr.c \
 lib/ft_swap_lst_cmd.c \
 lib/is_open_fd.c \
 lib/ft_free_execs.c \
@@ -88,6 +90,7 @@ src/exec/ft_exec_greater.c\
 src/exec/ft_exec_amper.c\
 src/exec/ft_exec_append.c\
 src/exec/ft_exec_less.c\
+src/exec/resolve_wildcard.c\
 src/exec/do_exec.c\
 src/exec/ft_exec_heredoc.c\
 src/exec/ft_exec_pipe.c
@@ -109,6 +112,11 @@ $(NAME) : $(OBJ)
 	gcc $(CFLAGS)  $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 	@echo "$(CYAN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
+$(NAME_B) : $(OBJ)
+	@echo "$(CYAN) ☕ EXECUTE DEFAULT PART! ☕ $(DEF_COLOR)"
+	make all -C lib/libft
+	gcc $(CFLAGS)  $(OBJ) $(LIBFT) -o $(NAME_B) -lreadline
+	@echo "$(CYAN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
 $(OBJ_DIRS):
 	mkdir -p obj/lib 
@@ -122,6 +130,8 @@ $(OBJ_DIRS):
 	mkdir -p obj/src/config
 
 all :$(OBJ_DIR) $(NAME)
+
+bonus :$(OBJ_DIR) $(NAME_B)
 
 fclean : clean
 	$(RM) $(NAME)
@@ -138,4 +148,4 @@ clean :
 re : fclean all
 
 
-.PHONY:     all clean fclean re
+.PHONY:     all clean fclean re bonus

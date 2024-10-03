@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_delete_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 19:53:59 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:25 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:32:34 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../src/headers/minishell.h"
 
-int	ft_strlen(const char *s)
+char	*ft_sarrtostr(char **arr)
 {
-	int	p;
+	char	*str;
+	char	*tmp;
+	int		i;
 
-	p = 0;
-	if (!s)
-		return (0);
-	while (s[p])
-		p++;
-	return (p);
+	i = -1;
+	str = ft_strdup("");
+	while (arr[++i])
+	{
+		tmp = str;
+		str = ft_strjoin(tmp, arr[i]);
+		tmp = (free(tmp), str);
+		str = ft_strjoin(tmp, " ");
+		free(tmp);
+	}
+	return (str);
 }
-/* int	main()
-{
-	char *p = "0000";
-	char c = ft_strlen(p) + 48;
-	write(1, c, 1);
-} */

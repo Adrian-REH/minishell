@@ -179,6 +179,8 @@ typedef struct s_handler
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
+char		*resolve_wildcard(char *str);
+char		*ft_process_wildcards(char *line, char **arr);
 int			dispatch_command_built(t_exec *e);
 int			ft_exec_echo(t_cmd *cmd);
 int			ft_exec_echon(t_cmd *cmd);
@@ -234,6 +236,7 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		*ft_sarrtostr(char **arr);
 void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
 int			is_fd_open(int fd);
 void		*ft_free_blocks(t_block *block, int len);

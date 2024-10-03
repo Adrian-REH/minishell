@@ -64,8 +64,7 @@ void	ft_process_quote(struct s_cmd *cmd, char *line)
 	int		flag;
 
 	result = ft_strtrim(line, " ");
-	i = -1;
-	flag = 2;
+	flag = ((i = -1), 2);
 	while (result[++i])
 	{
 		if (toggle_quote_flag(&flag, result, i))
@@ -90,14 +89,20 @@ int	ft_exec_echo(struct s_cmd *cmd)
 {
 	char	*line;
 	int		len;
+	char	*result;
+	char	**arr;
 
 	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
 	if (line)
 	{
 		len = ft_strlen("echo");
-		memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
-	ft_process_quote(cmd, line);
+	arr = ft_split(line, ' ');
+	if (line)
+		result = ft_process_wildcards(line, arr);
+	ft_free_p2(arr);
+	ft_process_quote(cmd, result);
 	printf("\n");
 	exit(0);
 }
@@ -111,13 +116,13 @@ int	ft_exec_echon(struct s_cmd *cmd)
 	if (line)
 	{
 		len = ft_strlen("echo");
-		memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
 	len = 0;
 	line = ft_strnstr(cmd->line, "-n", ft_strlen(cmd->line)) + 1;
 	while (line[len] == 'n')
 		len++;
-	memmove(line, line + len, strlen(line + len) + 1);
+	ft_memmove(line, line + len, strlen(line + len) + 1);
 	ft_process_quote(cmd, line);
 	exit(0);
 }

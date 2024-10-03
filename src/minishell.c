@@ -29,6 +29,8 @@ void	sigint_handler(int signum)
 		rl_redisplay();
 		get_error(signum, 0);
 	}
+	if (signum == SIGKILL)
+		get_error(1000, 0);
 }
 
 void	init_handler(t_handler *s)
@@ -57,9 +59,8 @@ int	main(int argc, char **argv, char **argenv)
 	sa.sa_handler = sigint_handler;
 	sa.sa_flags = (sigemptyset(&sa.sa_mask), 0);
 	(sigaction(SIGINT, &sa, NULL), sigaction(SIGQUIT, &sa, NULL));
-	ft_bzero(&handler, sizeof(t_handler));
-	handler.env = duparr(argenv);
-	init_handler(&handler);
+	(sigaction(SIGKILL, &sa, NULL), ft_bzero(&handler, sizeof(t_handler)));
+	handler.env = (init_handler(&handler), duparr(argenv));
 	while (1)
 	{
 		comand = readline("minishell> ");
@@ -73,4 +74,5 @@ int	main(int argc, char **argv, char **argenv)
 		(handler.seg[1](&handler), handler.seg[2](&handler));
 		(handler.seg[3](&handler), handler.seg[4](&handler));
 	}
+	handler.seg[4](&handler);
 }
