@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_greater.c                                  :+:      :+:    :+:   */
+/*   resolve_wildcard.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/22 23:11:56 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:21:03 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,17 @@ char	*ft_process_wildcards(char *line, char **arr)
 {
 	char	*val;
 	char	*result;
+	int		flag;
 
 	result = ((val = NULL), ft_strdup(""));
+	flag = 1;
 	while (*arr)
 	{
 		if (ft_strchr(*arr, '*') && !ft_strchr(*arr, '"' ) \
-		&& !ft_strchr(*arr, '\''))
+		&& !ft_strchr(*arr, '\'') && flag)
 			val = resolve_wildcard(*arr);
+		else if (ft_strchr(*arr, '\'') || ft_strchr(*arr, '\"'))
+			flag = !flag;
 		if (val)
 		{
 			result = ((line = result), ft_strjoin(line, val));
