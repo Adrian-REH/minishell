@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/10/03 18:21:03 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:29:03 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,17 @@ char	*match_name(char *fname, char *pattern)
 	return (NULL);
 }
 
+char	*add_space(char **arr, char	*result, char *line)
+{
+	if (*arr)
+	{
+		result = ((line = result), ft_strjoin(line, " "));
+		if (line)
+			free(line);
+	}
+	return (result);
+}
+
 char	*ft_process_wildcards(char *line, char **arr)
 {
 	char	*val;
@@ -64,12 +75,7 @@ char	*ft_process_wildcards(char *line, char **arr)
 		}
 		else
 			result = ft_strjoin(result, *arr);
-		if (*(++arr))
-		{
-			result = ((line = result), ft_strjoin(line, " "));
-			if (line)
-				free(line);
-		}
+		result = add_space(++arr, result, line);
 	}
 	return (result);
 }
