@@ -54,7 +54,7 @@ char	*extract_env(char *line, char *result, t_cmd *cmd, int i)
 	return (line);
 }
 
-char *extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
+char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
 {
 	char	*tmp;
 
