@@ -20,14 +20,14 @@ void	sigint_handler(int signum)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		get_error(signum, 0);
+		get_error(130, 0);
 	}
 	if (signum == SIGQUIT)
 	{
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		get_error(signum, 0);
+		get_error(131, 0);
 	}
 	if (signum == SIGKILL)
 		get_error(1000, 0);

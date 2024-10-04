@@ -51,10 +51,10 @@ int	ft_exec_exit(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "exit ", ft_strlen("exit "));
+	line = ft_strnstr(cmd->line, "exit", ft_strlen("exit"));
 	if (line)
 	{
-		len = ft_strlen("exit ");
+		len = ft_strlen("exit");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
 	else
