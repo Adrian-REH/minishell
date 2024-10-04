@@ -51,11 +51,16 @@ int	ft_exec_exit(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
+	line = ft_strnstr(cmd->line, "exit ", ft_strlen("exit "));
 	if (line)
 	{
-		len = ft_strlen("exit");
-		memmove(line, line + len, strlen(line + len) + 1);
+		len = ft_strlen("exit ");
+		ft_memmove(line, line + len, strlen(line + len) + 1);
+	}
+	else
+	{
+		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+		return (127);
 	}
 	line = ft_strtrim(line, " ");
 	if (!line)

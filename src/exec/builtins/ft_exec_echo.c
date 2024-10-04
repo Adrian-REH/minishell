@@ -31,7 +31,7 @@ int	toggle_quote_flag(int *flag, char *result, int i)
 	return (0);
 }
 
-char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
+char	*extract_env(char *line, char *result, t_cmd *cmd, int i)
 {
 	char	*tmp;
 	int		j;
@@ -49,11 +49,21 @@ char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
 	while (cmd->handler->env[++j])
 	{
 		if (!ft_strncmp(cmd->handler->env[j], tmp, ft_strlen(line)))
-		{
-			printf("%s", cmd->handler->env[j] + ft_strlen(line));
-			break ;
-		}
+			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
 	}
+	return (line);
+}
+
+char *extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
+{
+	char	*tmp;
+
+	tmp = NULL;
+	tmp = extract_env(line, result, cmd, i);
+	while (ft_strchr(tmp, '$'))
+		tmp = extract_env(line, tmp, cmd, i);
+	printf("%s", tmp);
+	free(tmp);
 	return (line);
 }
 
@@ -92,12 +102,14 @@ int	ft_exec_echo(struct s_cmd *cmd)
 	char	*result;
 	char	**arr;
 
-	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
+	line = ft_strnstr(cmd->line, "echo ", ft_strlen("echo "));
 	if (line)
 	{
-		len = ft_strlen("echo");
+		len = ft_strlen("echo ");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
+	else
+		ft_print_error("command not found ", 2, cmd->line);
 	arr = ft_split(line, ' ');
 	if (line)
 		result = ft_process_wildcards(line, arr);
@@ -112,16 +124,17 @@ int	ft_exec_echon(struct s_cmd *cmd)
 	char	*line;
 	int		len;
 
-	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
+	line = ft_strnstr(cmd->line, "echo ", ft_strlen("echo "));
 	if (line)
-	{
-		len = ft_strlen("echo");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
-	}
+		len = ft_strlen("echo ");
+	else
+		ft_print_error("command not found\n", 127, cmd->line);
 	len = 0;
 	line = ft_strnstr(cmd->line, "-n", ft_strlen(cmd->line)) + 1;
 	while (line[len] == 'n')
 		len++;
+	if (line[len] != ' ' && line[len] != '\0')
+		ft_exec_echo(cmd);
 	ft_memmove(line, line + len, strlen(line + len) + 1);
 	ft_process_quote(cmd, line);
 	exit(0);

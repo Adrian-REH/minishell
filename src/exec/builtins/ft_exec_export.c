@@ -47,11 +47,16 @@ int	ft_exec_export(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
+	line = ft_strnstr(cmd->line, "export ", ft_strlen("export "));
 	if (line)
 	{
-		len = ft_strlen("export");
+		len = ft_strlen("export ");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
+	}
+	else
+	{
+		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+		return (127);
 	}
 	line = ft_strtrim(line, " ");
 	ft_handler_env(cmd, NULL, line);
