@@ -100,5 +100,5 @@ char	*resolve_wildcard(char *str)
 		}
 		entry = readdir(dir);
 	}
-	return (ft_sarrtostr(arr));
+	return (ft_sarrtostr(arr, " "));
 }

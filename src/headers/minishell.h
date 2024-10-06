@@ -236,7 +236,8 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
-char		*ft_sarrtostr(char **arr);
+char		*extract_env(char *line, char *result, t_cmd *cmd, int i);
+char		*ft_sarrtostr(char **arr, char *sep);
 void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
 int			is_fd_open(int fd);
 void		*ft_free_blocks(t_block *block, int len);

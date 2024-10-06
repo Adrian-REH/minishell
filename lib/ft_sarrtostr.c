@@ -12,7 +12,7 @@
 
 #include "../src/headers/minishell.h"
 
-char	*ft_sarrtostr(char **arr)
+char	*ft_sarrtostr(char **arr, char *sep)
 {
 	char	*str;
 	char	*tmp;
@@ -25,7 +25,7 @@ char	*ft_sarrtostr(char **arr)
 		tmp = str;
 		str = ft_strjoin(tmp, arr[i]);
 		tmp = (free(tmp), str);
-		str = ft_strjoin(tmp, " ");
+		str = ft_strjoin(tmp, sep);
 		free(tmp);
 	}
 	return (str);

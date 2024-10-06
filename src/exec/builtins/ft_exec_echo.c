@@ -31,40 +31,17 @@ int	toggle_quote_flag(int *flag, char *result, int i)
 	return (0);
 }
 
-char	*extract_env(char *line, char *result, t_cmd *cmd, int i)
-{
-	char	*tmp;
-	int		j;
-
-	if (ft_strchr(result + i, ' '))
-		line = ft_strchr(result + i, ' ') - 1;
-	else if (ft_strchr(result + i + 1, '$'))
-		line = ft_strchr(result + i + 1, '$') - 1;
-	tmp = ft_substr(result, i + 1, line - result - i);
-	line = ft_strtrim(tmp, "\"");
-	free(tmp);
-	if (ft_strchr(line, '=') == 0)
-		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
-	j = -1;
-	while (cmd->handler->env[++j])
-	{
-		if (!ft_strncmp(cmd->handler->env[j], tmp, ft_strlen(line)))
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
-	}
-	return (line);
-}
-
 char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int i)
 {
 	char	*tmp;
 
 	tmp = NULL;
 	tmp = extract_env(line, result, cmd, i);
-	while (ft_strchr(tmp, '$'))
-		tmp = extract_env(line, tmp, cmd, i);
-	printf("%s", tmp);
-	free(tmp);
-	return (line);
+	if (tmp)
+		(printf("%s", tmp));
+	else
+		printf(" ");
+	return (tmp);
 }
 
 void	ft_process_quote(struct s_cmd *cmd, char *line)
