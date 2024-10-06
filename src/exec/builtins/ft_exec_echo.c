@@ -79,8 +79,8 @@ int	ft_exec_echo(struct s_cmd *cmd)
 	char	*result;
 	char	**arr;
 
-	line = ft_strnstr(cmd->line, "echo", ft_strlen("echo"));
-	if (line)
+	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
+	if (line && (line[4] == ' ' || line[4] == 0))
 	{
 		len = ft_strlen("echo");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
@@ -101,7 +101,7 @@ int	ft_exec_echon(struct s_cmd *cmd)
 	char	*line;
 	int		len;
 
-	line = ft_strnstr(cmd->line, "echo", ft_strlen("echo"));
+	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
 	if (line && (line[4] == ' ' || line[4] == 0))
 		len = ft_strlen("echo");
 	else

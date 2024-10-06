@@ -16,7 +16,7 @@ int	ft_exec_env(struct s_cmd *cmd)
 {
 	char	*line;
 
-	line = ft_strnstr(cmd->line, "env", ft_strlen("env"));
+	line = ft_strnstr(cmd->line, "env", ft_strlen(cmd->line));
 	if (!line || (line[3] != 0))
 	{
 		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);

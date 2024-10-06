@@ -18,8 +18,8 @@ int	ft_exec_pwd(t_cmd *cmd)
 	char	*line;
 
 	i = -1;
-	line = ft_strnstr(cmd->line, "pwd", ft_strlen("pwd"));
-	if (!line || (line[3] != 0))
+	line = ft_strnstr(cmd->line, "pwd", ft_strlen(cmd->line));
+	if (!line || (line[3] != 0 || line[3] != ' '))
 	{
 		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
 		return (127);

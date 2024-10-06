@@ -51,7 +51,7 @@ int	ft_exec_exit(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "exit", ft_strlen("exit"));
+	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
 	if (line && (line[4] == ' ' || line[4] == 0))
 	{
 		len = ft_strlen("exit");

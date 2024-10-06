@@ -84,7 +84,7 @@ int	ft_exec_export(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "export", ft_strlen("export"));
+	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
 	if (line && (line[6] == ' ' || line[6] == 0))
 	{
 		len = ft_strlen("export");
