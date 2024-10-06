@@ -14,6 +14,14 @@
 
 int	ft_exec_env(struct s_cmd *cmd)
 {
+	char	*line;
+
+	line = ft_strnstr(cmd->line, "env", ft_strlen("env"));
+	if (!line || (line[3] != 0))
+	{
+		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+		return (127);
+	}
 	ft_sarrprint(cmd->handler->env);
 	cmd->status = 0;
 	return (0);

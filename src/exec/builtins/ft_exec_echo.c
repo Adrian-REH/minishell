@@ -125,7 +125,7 @@ int	ft_exec_echon(struct s_cmd *cmd)
 	int		len;
 
 	line = ft_strnstr(cmd->line, "echo", ft_strlen("echo"));
-	if (line)
+	if (line && (line[4] == ' ' || line[4] == 0))
 		len = ft_strlen("echo");
 	else
 		ft_print_error("command not found\n", 127, cmd->line);

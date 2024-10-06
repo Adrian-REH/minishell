@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_pwd.c                                      :+:      :+:    :+:   */
+/*   service_excep.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:14:16 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:21:22 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:13:17 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
+#include "../headers/minishell.h"
 
-int	ft_exec_pwd(t_cmd *cmd)
+int	syntax_error(char *operator, int type)
 {
-	int		i;
-	char	*line;
-
-	i = -1;
-	line = ft_strnstr(cmd->line, "pwd", ft_strlen("pwd"));
-	if (!line || (line[3] != 0))
+	if (type == 2)
+		ft_putstr_fd(" syntax error near unexpected token '", 2);
+	else if (type == 1)
 	{
-		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
-		return (127);
+		ft_putstr_fd(" ambiguous redirect", 2);
+		return (type);
 	}
-	while (cmd->handler->env[++i])
-	{
-		if (!ft_strncmp(cmd->handler->env[i], "PWD", 3))
-			printf("%s\n", cmd->handler->env[i] + 4);
-	}
-	return (0);
+	ft_putstr_fd(operator, 2);
+	ft_putstr_fd("'\n", 2);
+	save_error(2);
+	return (2);
 }

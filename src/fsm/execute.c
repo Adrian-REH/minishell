@@ -41,7 +41,7 @@ int	execute_cmds(t_block *b, int isnext)
 		b->len_exec = ((exec = b->next_exec), b->len_exec_next);
 	else
 		b->len_exec = ((exec = b->prev_exec), b->len_exec_prev);
-	while (++i < b->len_exec && get_error(0, 0) == 0)
+	while (++i < b->len_exec && get_error() == 0)
 	{
 		if (exec[i].func[0][0])
 		{
@@ -109,7 +109,7 @@ t_handler	*ft_execute(t_handler *s)
 	int	i;
 
 	i = -1;
-	if (get_error(0, 0))
+	if (get_error() == 2)
 		return (s);
 	if (s->len_block == 0)
 		return (s);

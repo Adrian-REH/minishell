@@ -49,7 +49,7 @@ int	*handler_execute(t_handler *a)
 		a->state[2] = idstr(a->operators, a->info->tokens[i]);
 		if (a->state[2] == 9 || a->state[2] == 10)
 			a->block[a->info->i].priority = ((a->state[2] = 0), 1);
-		if (a->state[1] == NOT_OPERATOR && a->state[2] == EMPTY)
+		if ((a->state[0] == 6 || a->state[0] == 0) && a->state[1] == 14 && a->state[2] == 0)
 			if (do_exec(a->info->tokens[i - 1], a->env))
 				a->state[1] = UNIQ_COMMAND;
 		exec = place_exec(a, exec, &i_exec);
@@ -89,7 +89,7 @@ t_handler	*ft_config(t_handler *s)
 {
 	int	i;
 
-	if (get_error(0, 0))
+	if (get_error() == 2)
 		return (s);
 	s->state[0] = 0;
 	s->state[1] = 0;

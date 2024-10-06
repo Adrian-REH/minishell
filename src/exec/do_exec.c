@@ -17,6 +17,8 @@ char	**do_exec(char *line, char **env)
 	char	*cmd;
 	char	**command;
 
+	if (!line)
+		return (NULL);
 	command = ft_split(line, ' ');
 	if (!command)
 		return (perror("Memory error: "), NULL);

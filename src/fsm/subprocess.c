@@ -18,7 +18,7 @@ t_handler	*ft_subprocess(t_handler *handler)
 	pid_t	result;
 	int		status;
 
-	if (get_error(0, 0))
+	if (get_error() != 130 && get_error() != 131)
 		return (handler);
 	if (handler->w_cmd)
 	{

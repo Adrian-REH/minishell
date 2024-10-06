@@ -20,17 +20,17 @@ void	sigint_handler(int signum)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		get_error(130, 0);
+		save_error(130);
 	}
 	if (signum == SIGQUIT)
 	{
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		get_error(131, 0);
+		save_error(131);
 	}
 	if (signum == SIGKILL)
-		get_error(1000, 0);
+		save_error(1000);
 }
 
 void	init_handler(t_handler *s)
@@ -63,8 +63,7 @@ int	main(int argc, char **argv, char **argenv)
 	handler.env = (init_handler(&handler), duparr(argenv));
 	while (1)
 	{
-		comand = readline("minishell> ");
-		get_error(0, 1);
+		comand = (save_error(handler.code), readline("minishell> "));
 		if (comand == NULL)
 			break ;
 		handler.line = comand;

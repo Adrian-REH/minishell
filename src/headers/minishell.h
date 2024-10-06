@@ -285,9 +285,10 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			get_error();
 int			syntax_error(char *operator, int type);
 void		parser_error(t_handler *s, int error);
-int			get_error(int type, int change);
+int			save_error(int type);
 void		ft_exeption_fd(int inp, int out, int fd[2]);
 void		ft_print_handler(t_handler *s);
 

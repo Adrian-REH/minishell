@@ -18,6 +18,8 @@ char	**duparr(char **argenv)
 	int		i;
 
 	i = -1;
+	if (!argenv || !*argenv)
+		return (NULL);
 	arr = malloc(sizeof(char *) * (ft_sarrsize(argenv) + 1));
 	while (argenv[++i])
 		arr[i] = ft_strdup(argenv[i]);

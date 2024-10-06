@@ -98,8 +98,8 @@ int	ft_exec_cd(t_cmd *cmd)
 	int		status;
 
 	status = 0;
-	line = ft_strnstr(cmd->line, "cd", ft_strlen(cmd->line));
-	if (line)
+	line = ft_strnstr(cmd->line, "cd", ft_strlen("cd"));
+	if (line && (line[2] == ' ' || line[2] == 0))
 	{
 		len = ft_strlen("cd");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
