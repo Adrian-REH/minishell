@@ -22,7 +22,7 @@ int	ft_exec_unset(struct s_cmd *cmd)
 
 	cmd->status = 0;
 	line = ft_strnstr(cmd->line, "unset", ft_strlen(cmd->line));
-	if (line && (line[6] == ' ' || line[6] == 0))
+	if (line && (line[5] == ' ' || line[5] == 0))
 	{
 		len = ft_strlen("unset");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
