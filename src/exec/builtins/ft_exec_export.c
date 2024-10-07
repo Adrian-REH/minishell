@@ -68,7 +68,7 @@ char	*expand_env(char *result, struct s_cmd *cmd)
 		return (NULL);
 	while (arr[++j])
 	{
-		tmp = extract_env(arr[j], arr[j], cmd, 0);
+		tmp = extract_env(arr[j], arr[j], cmd);
 		if (tmp)
 			arr[j] = (tmp);
 		else

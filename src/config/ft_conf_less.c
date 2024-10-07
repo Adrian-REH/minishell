@@ -33,13 +33,11 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 
 	token = NULL;
 	if (idstr(s->operators, s->info->tokens[i + k]) == 14)
-		token = s->info->tokens[i];
-	else
 		token = s->info->tokens[i + k];
 	if (s->info->oid != (i + k))
 	{
 		cmd->status = 0;
-		cmd->line =token;
+		cmd->line = token;
 		cmd->pid = 0;
 		cmd->cmd = do_exec(token, s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
@@ -53,11 +51,17 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 {
 	char	*line;
+	char	*token;
 
+	token = NULL;
+	if (idstr(s->operators, s->info->tokens[i]) == 14)
+		token = s->info->tokens[i];
+	else
+		token = s->info->tokens[i + k];
 	if (s->info->oid != (i + k))
 	{
 		exec->cmd->status = 0;
-		line = s->info->tokens[i + k];
+		line = token;
 		line = ft_strdelchr(line, '\"');
 		exec->file.idfile = line;
 	}

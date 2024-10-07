@@ -78,13 +78,13 @@ static int	handle_directory_change(char *temp, t_cmd *cmd, int status)
 		if (temp)
 		{
 			if (chdir(temp) == -1)
-				status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+				status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
 			else
 				status = (change_pwd(NULL, cmd, 1), 0);
 		}
 	}
 	else if (chdir(temp) == -1)
-		status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+		status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
 	else
 		status = (change_pwd(NULL, cmd, 1), 0);
 	return (status);
