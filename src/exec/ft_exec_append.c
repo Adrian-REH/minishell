@@ -1,80 +1,103 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exec_append.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/22 23:11:56 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../headers/minishell.h"
 
-static int *ft_exec(t_exec *e, int index)
+static void	ft_dup2_infile(char *infile, int input)
 {
-    int j;
-    t_exec *exec;
-    char *infile;
-
-    exec = e;
-    e = &exec[index];
-    j = index;
-    infile = NULL;
-    while (j >= 0 && (exec[j].op == GREATER || exec[j].op == APPEND || exec[j].op == LESS))
-        j--;
-    e->cmd->pid = fork();
-    if (e->cmd->pid < 0)
-    {
-        ft_print_error("fork", 1, "");
-        return NULL;
-    }
-    else if (e->cmd->pid == 0)
-    {
-        while (++j < index && (exec[j].op == GREATER || exec[j].op == APPEND || exec[j].op == LESS))
-        {
-            if (exec[j].op == LESS)
-            {
-                e->file.input = open(exec[j].file.in_dir_file, O_RDONLY, 0644);
-                if (e->file.input == -1)
-                    (ft_print_error(strerror(errno), 1, NULL));
-                close(e->file.input);
-                infile = exec[j].file.in_dir_file;
-            }
-            else
-            {
-                e->file.output = open(exec[j].file.out_dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-                if (e->file.output == -1)
-                    (ft_print_error(strerror(errno), 1, NULL));
-                close(e->file.output);
-            }
-        }
-        e->file.output = open(e->file.out_dir_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        if (e->file.output == -1)
-            (ft_print_error(strerror(errno), 1, NULL));
-        if (dup2(e->file.output, STDOUT_FILENO) == -1)
-            (close(e->file.output), ft_print_error("dup2", 1, NULL));
-        close(e->file.output);
-        if (infile)
-        {
-            e->file.input = open(infile, O_RDONLY, 0644);
-            if (e->file.input == -1)
-                (ft_print_error(strerror(errno), 1, NULL));
-            if (dup2(e->file.input, STDIN_FILENO) == -1)
-                (close(e->file.input), ft_print_error("dup2", 1, NULL));
-        }else
-        {
-            if (dup2(e->file.input, STDIN_FILENO) == -1)
-                (close(e->file.input), ft_print_error("dup2", 1, NULL));
-        }
-        if (e->file.input != 0)
-            close(e->file.input);
-        dispatch_command(e);
-        exit(0);
-    }
-    return NULL;
+	if (infile)
+	{
+		input = open(infile, O_RDONLY, 0644);
+		if (input == -1)
+			(ft_print_error(strerror(errno), 1, NULL));
+		if (dup2(input, STDIN_FILENO) == -1)
+			ft_exeption_fd(input, 0, NULL);
+	}
+	else
+	{
+		if (dup2(input, STDIN_FILENO) == -1)
+			(ft_exeption_fd(input, 0, NULL));
+	}
+	if (input != 0)
+		close(input);
 }
-int *ft_exec_append(t_exec *e, int index)
+
+static char	*get_execute_fds(t_exec *e, int i, int j)
 {
-    t_exec *exec;
-    exec = e;
-    e = &e[index];
-    if (e->state[0] == 0)
-    {
-        ft_exec(exec, index);
-        //waitpid(e->cmd->pid, &e->cmd->status, 0); // En el caso de que el primer comando falle, el segundo no se ejecuta
-        //e->state[0] = WEXITSTATUS(e->cmd->status);
-    }
-    e->status = e->state[0];
-    e->state[1] = e->state[0];
-    return e->state;
+	t_exec	*exec;
+	char	*infile;
+	int		out;
+
+	exec = e;
+	infile = NULL;
+	e = &exec[i];
+	while (++j < i && (exec[j].op == 7 || exec[j].op == 8 || exec[j].op == 5))
+	{
+		if (exec[j].op == LESS)
+		{
+			e->file.input = open(exec[j].file.idfile, O_RDONLY, 0644);
+			if (e->file.input == -1)
+				(ft_print_error(strerror(errno), 1, NULL));
+			infile = (close(e->file.input), exec[j].file.idfile);
+		}
+		else
+		{
+			out = open(exec[j].file.odfile, 1 | O_CREAT | O_APPEND, 0644);
+			if (out == -1)
+				(ft_print_error(strerror(errno), 1, NULL));
+			close(out);
+		}
+	}
+	return (infile);
+}
+
+static int	*ft_exec(t_exec *e, int index)
+{
+	int		j;
+	t_exec	*exec;
+	char	*infile;
+
+	exec = e;
+	e = &exec[index];
+	j = index;
+	infile = NULL;
+	while (j >= 0 && (exec[j].op == 7 || exec[j].op == 8 || exec[j].op == 5))
+		j--;
+	e->cmd->pid = fork();
+	if (e->cmd->pid < 0)
+		return (ft_print_error("fork", 1, ""), NULL);
+	else if (e->cmd->pid == 0)
+	{
+		infile = get_execute_fds(exec, index, j);
+		e->file.output = open(e->file.odfile, 1 | O_CREAT | O_APPEND, 0644);
+		if (e->file.output == -1)
+			(ft_print_error(strerror(errno), 1, e->file.odfile));
+		if (dup2(e->file.output, STDOUT_FILENO) == -1)
+			ft_exeption_fd(e->file.input, e->file.output, NULL);
+		(close(e->file.output), ft_dup2_infile(infile, e->file.input));
+		exit(dispatch_command(e));
+	}
+	return (NULL);
+}
+
+int	*ft_exec_append(t_exec *e, int index)
+{
+	t_exec	*exec;
+
+	exec = e;
+	e = &e[index];
+	if (e->state[0] == 0)
+		ft_exec(exec, index);
+	e->status = e->state[0];
+	e->state[1] = e->state[0];
+	return (e->state);
 }

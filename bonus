@@ -1,0 +1,227 @@
+ls >outfile01 && cat outfile01
+cat <minishell.h&ls
+||
+|| echo oi
+&
+&&
+|& #-> não precisa
+*
+> *
+>> *
+> & # valido para < e >>
+> &&
+> ||
+echo oi || echo tchau
+env | grep USER || grep lucas
+> *
+>> *
+< *
+<< *
+(exit)
+(exit "")
+(exit " ")
+(exit a)
+(exit 123123)
+(exit 123 123)
+(exit 123 aaa)
+(exit aaa 123)
+(exit | cat)
+(echo hi && exit)
+(exit && echo hi)
+(cmdnotfound || exit)
+(exit || echo hi)
+(echo hola) && exit
+(echo hola) && exit
+(echo hola && (exit))
+((exit) && echo hola)
+export A="adios" && (export A="hola" && echo $A) && echo $A
+export A="adios" && (unset A) && echo $A
+ls && (unset PATH) && ls
+echo hola&& echo adios
+echo hola &&echo adios
+echo hola && echo adios
+
+echo a&& b&&echo c&& echo k&& echo z
+echo a && echo b&& echo c &&echo d  &&   echo e   &&echo f&&   echo g@&& with spaces
+ls doesnotexists&& echo adios
+echo hola&& ls doesnotexists
+
+echo hola|| echo adios
+echo hola ||echo adios
+echo hola || echo adios
+
+echo a|| b||echo c|| echo k|| echo z
+ls doesnotexists || echo bonjour
+ls doesnotexists|| echo bonjour
+echo hola|| ls doesnotexists
+echo a || echo b|| echo c ||echo d     ||   echo e   ||echo f&&        echo g@|| with spaces
+
+(echo hola)
+(echo hola )
+( echo hola )
+(echo a && echo b) && echo c
+(echo a || echo b) || echo c
+(ls doesnotexist || echo b) || echo c
+(echo a || ls doesnotexist) || echo c
+echo aa && (echo b && echo c)
+ls doesnotexist || (echo b && echo c)
+(ls && ls)
+(ls doesntexist || ls)
+(ls doesntexist && ls)
+(ls && ls) && echo $?
+
+echo *
+#touch file1.txt file2.txt
+echo *.txt
+echo fil*
+echo *le*
+touch file1.txt file2.txt;rm *.txt@rm *.txt
+echo *.*
+#echo hola > "fil*e"
+cat "fil*e"
+#rm "fil*e"
+
+
+echo hola && echo adios || echo noejecuta && echo si ejecuta
+echo hola && echon adios || echo siejecuta && echo fin
+ls | ( cat -e && cat -n ) | cat -n
+(ls | ( cata -e && cat -n ) | cat -e) && echo success
+export A=mivalor && echo $A
+(export A=mivalor) && echo $A
+export A=mivalor && (unset A) && echo$A
+echo hola | (cat -n | (cat -e && echo inception) && echo adios | (cat -n | (cat -e)))@mix () || && and &
+
+echo "&&"  echo hi
+echo "&&"  echo hi
+echo "||"  echo hi
+echo "|"|  echo hi
+echo " |"|  echo hi
+echo "()|&&))("
+
+echo hi		||	echo hi@\\techo hi\\t\\t||\\techo hi
+echo hi		&&	echo hi@\\techo hi\\t\\t&&\\techo hi
+echo hi		&&	(		echo hi&&          echo hi)@\\techo hi\\t\\t&&\\t(\\t\\techo hi&&          echo hi)
+
+< | a
+> | a
+>> | a
+| < a
+| > a
+| >> a
+< && a
+> && a
+>> && a
+< || a
+> || a
+>> || a
+< ) a
+> ) a
+>> ) a
+&& < a
+&& > a
+&& >> a
+&& || a
+&& ) a
+|| < a
+|| > a
+|| >> a
+|| && a
+|| ( a
+|| ) a
+) < a
+) > a
+) >> a
+( ) a
+) && a
+) || a
+) ( a
+() a
+) a
+&&echo
+&& echo
+ && echo
+
+||echo
+|| echo
+ || echo
+(echo hola)  cat -n
+
+echo hola | ( cat -n && cat -e) | cat -n
+echo hola | ( catn -n && cat -e) | cat -n
+echo hola | ( echo adios | cat -e) | cat -n
+((echo a) | (echo b) | (echo c | (echo d)))
+echo a | (echo b || echo c && echo d) || echo e | echo f
+echo a | (grep a) | cat | (wc -l)
+(echo a) | (cat -e)
+(echo a) | (cat -e | cat -e)
+echo a | (cat -e | cat -e | cat -e)
+echo a | (cat -e | cat -e | cat -e) | cat -e
+(echo a) | (cat -e | cat -e | cat -e) | cat -e
+(echo a) | (cat -e | cat -e | cat -e) | (cat -e)
+(cat /etc/shells) | (cat -e) | (cat -e) | (cat -e)
+(echo hola) | (cat -n)
+(echo hola) | (cat -n | cat -e)
+
+(echo hola > file1);cat file1; rm file1@(echo hola > file1)
+(echo hola > file1 > file2 > file3);ls;cat file3;rm file1 file2 file3@(echo hola > file1 > file2 > file3)
+(echo hola | cat -e) > file1;cat file1;rm file1@(echo hola | cat -e) > file1
+(echo hola && echo adios) > file1;cat file1;rm file1@(echo hola && echo adios) > file1
+echo hola && (echo adios) >> file1;cat file1;rm file1@echo hola && (echo adios) >> file1
+(echo hola) > file1;cat file1;rm file1@(echo hola) > file1
+(echo hola) > file1 >> file2 > file3;ls;cat file3;rm file1 file2 file3@(echo hola) > file1 >> file2 > file3
+(echo hola > file1 && echo adios | cat -e) > file1;ls;cat file1@(echo hola > file1 && echo adios | cat -e) > file1 
+(echo hola > file1) > file2;ls;cat file1;rm file1 file2@(echo hola > file1) > file2
+(echo hola > file1 && asdfs) 2> file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs) 2> file2
+(echo hola > file1 && asdfs) 2>file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs) 2>file2
+(echo hola > file1 && asdfs)2> file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs)2> file2
+(echo hola > file1 && asdfs)2>file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs)2>file2
+(echo hola > file1) a> file2@(echo hola > file1) a> file2
+(echo hola > file1)a> file2@(echo hola > file1)a> file2
+(echo hola > file1)a>file2@(echo hola > file1)a>file2
+(echo hola > file1) a>file2@(echo hola > file1) a>file2
+echo hola || 1> file;ls;rm file@echo hola || 1> file
+#rm file1 file2 file3
+
+(" "); echo $?
+(" ")
+
+(nonexistcmd); echo $?
+(nonexistcmd)
+
+(/Users/nonexist/directory); echo $?
+(/Users/nonexist/directory)
+
+(cat /Users/nonexist/directory); echo $?
+(cat /Users/nonexist/directory)
+
+(cat < noexiste);echo $?
+(cat < noexiste)
+
+(cat) < noexiste;echo $?
+(cat) < noexiste
+
+# touch noperm &> /dev/null; chmod 000 noperm&> /dev/null
+
+(cat < noperm);echo $?
+(cat < noperm)
+
+(cat) < noperm;echo $?
+(cat) < noperm
+
+(cat < noperm && echo hi);echo $?
+(cat < noperm && echo hi)
+(cat < noperm || echo hi);echo $?
+(cat < noperm || echo hi)
+
+(cat && echo hi) < noperm;echo $?
+(cat && echo hi) < noperm
+(cat || echo hi) < noperm;echo $?
+(cat || echo hi) < noperm;
+
+(cat || echo hi) < noperm && echo hii;echo $?
+(cat || echo hi) < noperm && echo hii;
+
+(cat || echo hi) < noperm || echo hii;echo $?
+(cat || echo hi) < noperm || echo hii;
+
+# chmod 666 nopem &> /dev/null; rm noperm &> /dev/null
