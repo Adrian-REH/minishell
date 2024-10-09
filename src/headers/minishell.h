@@ -180,7 +180,7 @@ typedef struct s_handler
 }						t_handler;
 /*------------EXECUTE--------------*/
 char		*resolve_wildcard(char *str);
-char		*ft_process_wildcards(char *line, char **arr);
+char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
 int			ft_exec_echo(t_cmd *cmd);
 int			ft_exec_echon(t_cmd *cmd);
@@ -236,7 +236,9 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
-char		*ft_sarrtostr(char **arr);
+char		*extract_env(char *line, char *result, t_cmd *cmd);
+char		*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i);
+char		*ft_sarrtostr(char **arr, char *sep);
 void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
 int			is_fd_open(int fd);
 void		*ft_free_blocks(t_block *block, int len);
@@ -285,9 +287,10 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			get_error();
 int			syntax_error(char *operator, int type);
 void		parser_error(t_handler *s, int error);
-int			get_error(int type, int change);
+int			save_error(int type);
 void		ft_exeption_fd(int inp, int out, int fd[2]);
 void		ft_print_handler(t_handler *s);
 

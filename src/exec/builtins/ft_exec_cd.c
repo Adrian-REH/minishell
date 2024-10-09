@@ -78,13 +78,13 @@ static int	handle_directory_change(char *temp, t_cmd *cmd, int status)
 		if (temp)
 		{
 			if (chdir(temp) == -1)
-				status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+				status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
 			else
 				status = (change_pwd(NULL, cmd, 1), 0);
 		}
 	}
 	else if (chdir(temp) == -1)
-		status = (ft_putstr_fd("No such file or directory\n", 2), 1);
+		status = (ft_putstr_fd(" No such file or directory\n", 2), 1);
 	else
 		status = (change_pwd(NULL, cmd, 1), 0);
 	return (status);
@@ -99,7 +99,7 @@ int	ft_exec_cd(t_cmd *cmd)
 
 	status = 0;
 	line = ft_strnstr(cmd->line, "cd", ft_strlen(cmd->line));
-	if (line)
+	if (line && (line[2] == ' ' || line[2] == 0))
 	{
 		len = ft_strlen("cd");
 		ft_memmove(line, line + len, strlen(line + len) + 1);

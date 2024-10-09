@@ -14,9 +14,16 @@
 
 int	ft_exec_pwd(t_cmd *cmd)
 {
-	int	i;
+	int		i;
+	char	*line;
 
 	i = -1;
+	line = ft_strnstr(cmd->line, "pwd", ft_strlen(cmd->line));
+	if (!line || (line[3] != 0 && line[3] != ' '))
+	{
+		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+		return (127);
+	}
 	while (cmd->handler->env[++i])
 	{
 		if (!ft_strncmp(cmd->handler->env[i], "PWD", 3))

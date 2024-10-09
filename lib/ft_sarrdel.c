@@ -44,7 +44,7 @@ char	**ft_sarrdelbyindex(char **arr, int idx)
 
 	i = -1;
 	j = 0;
-	new = ft_calloc(sizeof(void *), ft_sarrsize(arr) + 1);
+	new = arr;
 	while (arr[++i])
 	{
 		if (i == idx)

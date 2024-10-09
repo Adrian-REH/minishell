@@ -66,6 +66,8 @@ int	dispatch_command(t_exec *e)
 	int	type;
 
 	e->cmd->status = 0;
+	if (e->cmd->line == NULL)
+		return (0);
 	type = ft_isbuiltin(e->handler->builtins, e->cmd->line);
 	if (type == NOT_OPERATOR)
 		execute_command(e);

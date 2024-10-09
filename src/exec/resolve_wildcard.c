@@ -41,21 +41,25 @@ char	*match_name(char *fname, char *pattern)
 	return (NULL);
 }
 
-char	*add_space(char **arr, char	*result, char *line)
+char	*add_space(char **arr, char	*result)
 {
+	char	*tmp;
+
+	tmp = NULL;
 	if (*arr)
 	{
-		result = ((line = result), ft_strjoin(line, " "));
-		if (line)
-			free(line);
+		result = ((tmp = result), ft_strjoin(tmp, " "));
+		if (tmp)
+			free(tmp);
 	}
 	return (result);
 }
 
-char	*ft_process_wildcards(char *line, char **arr)
+char	*ft_process_wildcards(char **arr)
 {
 	char	*val;
 	char	*result;
+	char	*tmp;
 	int		flag;
 
 	result = ((val = NULL), ft_strdup(""));
@@ -69,13 +73,17 @@ char	*ft_process_wildcards(char *line, char **arr)
 			flag = !flag;
 		if (val)
 		{
-			result = ((line = result), ft_strjoin(line, val));
-			free(line);
-			val = ((line = NULL), free(val), NULL);
+			result = ((tmp = result), ft_strjoin(tmp, val));
+			free(tmp);
+			val = ((tmp = NULL), free(val), NULL);
 		}
 		else
-			result = ft_strjoin(result, *arr);
-		result = add_space(++arr, result, line);
+		{
+			tmp = result;
+			result = ft_strjoin(tmp, *arr);
+			free(tmp);
+		}
+		result = add_space(++arr, result);
 	}
 	return (result);
 }
@@ -100,5 +108,5 @@ char	*resolve_wildcard(char *str)
 		}
 		entry = readdir(dir);
 	}
-	return (ft_sarrtostr(arr));
+	return (ft_sarrtostr(arr, " "));
 }

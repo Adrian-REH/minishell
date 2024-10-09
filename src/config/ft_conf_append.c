@@ -29,13 +29,19 @@ static void	init_conf(t_exec *exec, t_handler *s)
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
-	if (s->info->oid != (i + k))
+	char	*token;
+
+	token = NULL;
+	if (idstr(s->operators, s->info->tokens[i + k]) == 14)
+		token = s->info->tokens[i + k];
+	if (s->info->oid != (i + k) && ft_strcmp(s->info->tokens[i + k], "|"))
 	{
-		cmd->line = s->info->tokens[i + k];
-		cmd->pid = 0;
-		cmd->cmd = do_exec(s->info->tokens[i + k], s->env);
+		cmd->line = token;
+		cmd->cmd = do_exec(token, s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
 		cmd->towait = 0;
+		cmd->pid = 0;
+		cmd->status = 0;
 		pipe(cmd->fd_aux);
 	}
 	else
@@ -46,10 +52,16 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 {
 	char	*line;
+	char	*token;
 
+	token = NULL;
+	if (idstr(s->operators, s->info->tokens[i]) == 14)
+		token = s->info->tokens[i];
+	else
+		token = s->info->tokens[i + k];
 	if (s->info->oid != (i + k))
 	{
-		line = s->info->tokens[i + k];
+		line = token;
 		line = ft_strdelchr(line, '\"');
 		exec->file.odfile = line;
 	}

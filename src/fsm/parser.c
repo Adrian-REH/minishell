@@ -63,8 +63,6 @@ t_handler	*ft_parser(t_handler *s)
 	t_automata	a;
 	t_data		info;
 
-	if (get_error(0, 0))
-		return (s);
 	ft_bzero(&a, sizeof(t_automata));
 	ft_bzero(&info, sizeof(t_data));
 	s->a = &a;
@@ -81,5 +79,7 @@ t_handler	*ft_parser(t_handler *s)
 	split_tokens(s);
 	(move_tokens(s), joins_tokens(s));
 	s->code = verify_syntax(s);
+	s->code = get_error();
+	save_error(0);
 	return (s);
 }
