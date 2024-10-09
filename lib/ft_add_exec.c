@@ -30,5 +30,6 @@ t_exec	*add_exec(t_exec *execs, t_exec exec)
 	printf("realloc: %d\n", i);
 	execs = ft_realloc(execs, sizeof(t_exec) * (i + 2));
 	execs[i++] = exec;
+	execs[i] = (t_exec){0};
 	return (execs);
 }

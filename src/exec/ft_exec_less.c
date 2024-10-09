@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:21:55 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/22 23:11:56 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*get_execute_fds(t_exec *e, int i, int j)
 	{
 		if (exec[j].op == LESS)
 		{
-			e->file.input = open(exec[j].file.in_dir_file, O_RDONLY, 0644);
+			e->file.input = open(exec[j].file.idfile, O_RDONLY, 0644);
 			if (e->file.input == -1)
 				(ft_print_error(strerror(errno), 1, NULL));
 			close(e->file.input);
@@ -74,7 +74,7 @@ static int	*ft_exec(t_exec *e, int index)
 	else if (e->cmd->pid == 0)
 	{
 		outfile = get_execute_fds(exec, index, j);
-		e->file.input = open(e->file.in_dir_file, O_RDONLY, 0644);
+		e->file.input = open(e->file.idfile, O_RDONLY, 0644);
 		if (e->file.input == -1)
 			(ft_print_error(strerror(errno), 1, NULL));
 		if (dup2(e->file.input, STDIN_FILENO) == -1)

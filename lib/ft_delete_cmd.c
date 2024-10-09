@@ -17,6 +17,7 @@ t_cmd	*delete_cmd(t_cmd *cmds, int i)
 	int	j;
 
 	j = i;
+	ft_free_cmds(&(cmds[i]), 1);
 	while (cmds[j].pid)
 	{
 		cmds[j] = cmds[j + 1];

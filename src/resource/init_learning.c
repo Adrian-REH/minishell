@@ -78,7 +78,7 @@ int	get_state(int i, int j)
 	{12, 11, 11, 11, 10, 1, 2, 11, 15, 14, 0, 0, 11},
 	{12, 11, 11, 11, 11, 1, 2, 14, 15, 14, 0, 0, 14},
 	{11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},
-	{12, 1, 5, 7, 1, 1, 2, 15, 16, 14, 14, 14, 14},
+	{12, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},
 	{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},
 	{13, 3, 5, 7, 9, 1, 2, 15, 16, 14, 14, 14, 14},
 	{13, 4, 5, 11, 11, 1, 2, 14, 14, 14, 14, 14, 14},
@@ -91,17 +91,13 @@ int	get_state(int i, int j)
 void	errors_init(t_automata *a)
 {
 	a->errors = NULL;
-	a->errors = ft_sarradd(NULL, "Empty string.");
-	a->errors = ft_sarradd(a->errors, "Open double quotes");
-	a->errors = ft_sarradd(a->errors, "Open single quotes");
-	a->errors = ft_sarradd(a->errors, "Pipe open");
-	a->errors = ft_sarradd(a->errors, "Or open");
-	a->errors = ft_sarradd(a->errors, "Less open");
-	a->errors = ft_sarradd(a->errors, "Heredoc open");
-	a->errors = ft_sarradd(a->errors, "Greater open");
-	a->errors = ft_sarradd(a->errors, "Append open");
-	a->errors = ft_sarradd(a->errors, "& Found");
-	a->errors = ft_sarradd(a->errors, "And open");
+	a->errors = ft_sarradd(a->errors, "||");
+	a->errors = ft_sarradd(a->errors, "new line");
+	a->errors = ft_sarradd(a->errors, "new line");
+	a->errors = ft_sarradd(a->errors, "new line");
+	a->errors = ft_sarradd(a->errors, "new line");
+	a->errors = ft_sarradd(a->errors, "&");
+	a->errors = ft_sarradd(a->errors, "&&");
 	a->errors = ft_sarradd(a->errors, "Invalid input");
 	a->errorlen = ft_sarrsize(a->errors);
 }

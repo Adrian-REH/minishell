@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:14:52 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/20 23:14:35 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:46:49 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef enum e_operators
 	OP_AND,
 	OP_PAREN_O,
 	OP_PAREN_C,
+	OP_WILDCARD,
 	OP_INVALID,
 }	t_operators;
 
@@ -97,7 +98,7 @@ typedef struct s_file
 	char				*end_heredoc;
 	char				**content;
 	int					len_content;
-	char				*in_dir_file;
+	char				*idfile;
 	char				*odfile;
 }						t_file;
 
@@ -170,12 +171,16 @@ typedef struct s_handler
 	t_data				*info;
 	int					state[3];
 	int					code;
+	t_automata			*a;
 	char				**env;
-	struct s_handler	*(*seg[5])(struct s_handler *rule);
-	int					(*fb[10])(struct s_cmd *cmd);
+	struct s_handler	*(*seg[6])(struct s_handler *rule);
+	int					(*fb[12])(struct s_cmd *cmd);
+	int					(*ferror[15][15][15])(void *, int error);
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
+char		*resolve_wildcard(char *str);
+char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
 int			ft_exec_echo(t_cmd *cmd);
 int			ft_exec_echon(t_cmd *cmd);
@@ -202,6 +207,13 @@ t_handler	*ft_execute(t_handler *s);
 t_handler	*ft_config(t_handler *s);
 t_handler	*ft_subprocess(t_handler *handler);
 /*------------LEARNING--------------*/
+void		tactions_errors_init(t_handler *h);
+void		errors_init_pipe(t_handler *h);
+void		errors_init_heredoc(t_handler *h);
+void		errors_init_and(t_handler *h);
+void		errors_init_or(t_handler *h);
+void		errors_init_append(t_handler *h);
+void		errors_init_amper(t_handler *h);
 int			st_blk(int sts, int op, int next_op);
 void		init_handler(t_handler *s);
 void		tactions_builtins_init(t_handler *a);
@@ -214,6 +226,9 @@ void		operators_init(t_handler *a);
 void		tactions_handler_init(t_handler *a);
 void		automata_init(t_automata *a, void *data);
 /*------------CONFIGURATION--------------*/
+t_exec		*place_exec(t_handler *a, t_exec *exec, int *i_exec);
+t_handler	*place_uniq_cmd(t_handler *a, int i);
+t_handler	*place_priority(t_handler *a);
 void		ft_conf_or(t_handler *s, int i);
 void		ft_conf_and(t_handler *s, int i);
 void		ft_conf_amper(t_handler *s, int i);
@@ -224,6 +239,16 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		*extract_env(char *line, char *result, t_cmd *cmd);
+char		*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i);
+char		*ft_sarrtostr(char **arr, char *sep);
+void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
+int			is_fd_open(int fd);
+void		*ft_free_blocks(t_block *block, int len);
+void		*ft_free_execs(t_exec *execs, int len);
+void		*ft_free_cmds(t_cmd *cmds, int len);
+void		*ft_free_file(t_file *file);
+void		ft_concat_fds(int input, int output);
 char		**ft_sarrdelbyindex(char **arr, int i);
 char		**ft_sarrdel(char **arr, char *string);
 int			handler_keep_content(char **tkn, int i);
@@ -255,7 +280,21 @@ char		**ft_sarradd(char **arr, char *string);
 int			ft_sarrprint(char **arr);
 int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
+int			split_tokens(t_handler *s);
+char		**split_token(char **tkn, char *space_pos, int i);
+int			move_tokens(t_handler *s);
+int			joins_tokens(t_handler *s);
+/*-----------PRINTS-------------------*/
+void		ft_print_file(t_file *f);
+void		ft_print_cmds(t_cmd *c);
+void		ft_print_execs(t_exec *e, int len);
+void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			get_error(void);
+int			syntax_error(char *operator, int type);
+void		parser_error(t_handler *s, int error);
+int			save_error(int type);
 void		ft_exeption_fd(int inp, int out, int fd[2]);
+void		ft_print_handler(t_handler *s);
 
 #endif

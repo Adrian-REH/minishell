@@ -6,24 +6,11 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 17:52:46 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:27:01 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-void	ft_concat_fds(int input, int output)
-{
-	char *line;
-
-	line = get_next_line(input);
-	while(line)
-	{
-		ft_putstr_fd(line, output);
-		free(line);
-		line = get_next_line(input);
-	}
-}
 
 static int	*ft_exec_give_cmd(t_exec *e)
 {
@@ -54,7 +41,7 @@ static int	*ft_exec_give_cmd(t_exec *e)
 	return (NULL);
 }
 
-static void	ft_heredoc(t_exec *e)
+int	ft_execute_heredocs(t_exec *e, int *index)
 {
 	char	*p_heredoc;
 
@@ -62,58 +49,55 @@ static void	ft_heredoc(t_exec *e)
 	{
 		ft_putstr_fd("heredoc>", STDOUT_FILENO);
 		p_heredoc = get_next_line(0);
-		if (ft_strcmp(e->file.end_heredoc, p_heredoc) == 0)
+		if (p_heredoc == NULL && get_error() >= 0)
 		{
-			(free(p_heredoc), close(e->cmd->fd_aux[WRITE]));
+			(index[0])++;
+			printf("\n");
+			return (1);
+		}
+		if (ft_strcmp(e[*index].file.end_heredoc, p_heredoc) == 0)
+		{
+			(index[0])++;
+			(free(p_heredoc));
 			break ;
 		}
 		(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
 	}
-	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
+	return (0);
 }
-
 
 static void	get_execute_fds(t_exec *e, int i)
 {
 	t_exec	*exec;
 	int		j;
-	char	*p_heredoc;
+	int		state;
 
 	exec = ((j = i), e);
 	e = &exec[i];
 	while (j >= 0 && (exec[j].op == 6))
 		j--;
-	while (++j < i && (exec[j].op == 6))
+	j++;
+	while (j < i && (exec[j].op == 6))
 	{
-		while (1)
-		{
-			ft_putstr_fd("heredoc>", STDOUT_FILENO);
-			p_heredoc = get_next_line(0);
-			if (ft_strcmp(exec[j].file.end_heredoc, p_heredoc) == 0)
-			{
-				(free(p_heredoc));
-				break ;
-			}
-			(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
-		}
+		state = ft_execute_heredocs(e, &j);
+		if (get_error() > 0)
+			break ;
+		if (state)
+			continue ;
 	}
+	close(e->cmd->fd_aux[WRITE]);
+	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
 }
 
 int	*ft_exec_heredoc(t_exec *e, int index)
 {
 	e = &e[index];
 	if (e->state[0] == 0)
-	{
-		if (e[-1].file.input != 0 && e[-1].op == 6)
-			ft_concat_fds(e[-1].file.input, e->cmd->fd_aux[WRITE]);
-		get_execute_fds(e, index);
-		ft_heredoc(e);
-	}
-	e->cmd++;
-	if (e->state[1] == 0)
-	{
+		get_execute_fds((e - index), index);
+	if (e->state[1] == 0 && get_error() == 0)
 		ft_exec_give_cmd(e);
-	}
+	if (get_error() >= 0)
+		e->state[1] = 1;
 	e->status = e->state[1];
 	e->state[0] = e->state[1];
 	return (e->state);

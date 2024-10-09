@@ -12,16 +12,35 @@
 
 #include "../headers/minishell.h"
 
-void	ft_conf_exception(t_handler *s, int i)
+static int	storage_error(int error, int change)
 {
-	(void)s;
-	(void)i;
-	s->code = 2;
+	static int	err;
+
+	if (change)
+		err = error;
+	return (err);
 }
 
-void	ft_execute_exception(t_cmd *cmd)
+int	save_error(int error)
 {
-	(void)cmd;
+	return (storage_error(error, 1));
+}
+
+int	get_error(void)
+{
+	return (storage_error(0, 0));
+}
+
+void	parser_error(t_handler *s, int error)
+{
+	if (s->a->errors[error])
+	{
+		ft_putstr_fd(" syntax error near unexpected token '", 2);
+		ft_putstr_fd(s->a->errors[error], 2);
+		ft_putstr_fd("'\n", 2);
+	}
+	save_error(2);
+	s->code = 2;
 }
 
 void	ft_exeption_fd(int inp, int out, int fd[2])

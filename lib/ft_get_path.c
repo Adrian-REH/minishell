@@ -30,6 +30,8 @@ char	*get_path(char *command, char **env)
 	char	*exec;
 
 	i = 0;
+	if (!env)
+		return (command);
 	path_env = ft_split(find_str("PATH", env), ':');
 	if (!path_env)
 		return (NULL);

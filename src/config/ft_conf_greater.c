@@ -24,14 +24,20 @@ static void	init_conf(t_exec *exec, t_handler *s)
 	exec->cmd[0].cmd = 0;
 	exec->file.input = 0;
 	exec->file.output = 1;
+	exec->file.content = NULL;
 }
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
+	char	*token;
+
+	token = NULL;
+	if (idstr(s->operators, s->info->tokens[i + k]) == 14)
+		token = s->info->tokens[i + k];
 	if (s->info->oid != (i + k) && ft_strcmp(s->info->tokens[i + k], "|"))
 	{
-		cmd->line = s->info->tokens[i + k];
-		cmd->cmd = do_exec(s->info->tokens[i + k], s->env);
+		cmd->line = token;
+		cmd->cmd = do_exec(token, s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
 		cmd->towait = 0;
 		cmd->pid = 0;
@@ -46,10 +52,16 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 static int	init_file(t_exec *exec, t_handler *s, int i, int k)
 {
 	char	*line;
+	char	*token;
 
+	token = NULL;
+	if (idstr(s->operators, s->info->tokens[i]) == 14)
+		token = s->info->tokens[i];
+	else
+		token = s->info->tokens[i + k];
 	if (s->info->oid != (i + k))
 	{
-		line = s->info->tokens[i + k];
+		line = token;
 		line = ft_strdelchr(line, '\"');
 		exec->file.odfile = line;
 	}
@@ -68,7 +80,11 @@ static void	ft_move_conf(t_exec *exec, int k)
 		if (exec[j].state[0] == 0)
 		{
 			exec[k].cmd[0].line = exec[j].cmd[0].line;
+			exec[j].cmd[0].line = NULL;
+			if (exec[k].cmd->cmd)
+				exec[k].cmd->cmd = (free(exec[k].cmd->cmd), NULL);
 			exec[k].cmd[0].cmd = exec[j].cmd[0].cmd;
+			exec[j].cmd[0].cmd = NULL;
 			exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
 			exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
 			exec[k].state[0] = 0;

@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_add_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 19:53:59 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:11:16 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:28:21 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../src/headers/minishell.h"
 
-int	ft_strlen(const char *s)
+void	swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a)
 {
-	int	p;
-
-	p = 0;
-	if (!s)
-		return (0);
-	while (s[p])
-		p++;
-	return (p);
+	if ((a->state[0] == OP_PIPE || a->state[1] == OP_PIPE) && \
+	(a->state[2] >= 1 && a->state[2] <= 4))
+	{
+		a->info->oid = -1;
+		if (exec[i_exec - 1].op)
+			exec[i_exec - 1].state[1] = 2;
+	}
 }
-/* int	main()
-{
-	char *p = "0000";
-	char c = ft_strlen(p) + 48;
-	write(1, c, 1);
-} */

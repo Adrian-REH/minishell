@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 08:17:30 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/23 01:32:21 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	init_conf(t_exec *exec, t_handler *s, int i)
 	exec->state = ft_calloc(sizeof(int), 2);
 	exec->state[0] = 0;
 	exec->state[1] = 0;
-	exec->cmd = malloc(sizeof(t_cmd));
+	exec->cmd = ft_calloc(sizeof(t_cmd), 3);
 	exec->cmd->handler = s;
 	exec->cmd->line = s->info->tokens[i];
 	exec->cmd->pid = 0;

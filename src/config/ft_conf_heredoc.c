@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 05:00:10 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:26:54 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ static void	init_conf(t_exec *exec, t_handler *s)
 {
 	exec->cmd = ft_calloc(sizeof(t_cmd), 3);
 	exec->cmd->handler = s;
+	exec->cmd->fd_aux[0] = 0;
+	exec->cmd->fd_aux[1] = 0;
 	exec->op = HEREDOC;
 	exec->state = ft_calloc(sizeof(int), 2);
 	exec->state[0] = 0;
 	exec->state[1] = 0;
 	exec->file.input = 0;
 	exec->file.output = 1;
+	exec->file.content = NULL;
 }
 
 static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
@@ -47,16 +50,20 @@ static void	ft_move_conf(t_exec *exec, int k)
 	j = k - 1;
 	while (j >= 0 && exec[j].op == HEREDOC)
 	{
-		exec[k].cmd[1].line = exec[j].cmd[1].line;
-		exec[k].cmd[1].cmd = exec[j].cmd[1].cmd;
-		exec[k].cmd[1].fd_aux[0] = (exec[j].cmd[1].fd_aux[0]);
-		exec[k].cmd[1].fd_aux[1] = (exec[j].cmd[1].fd_aux[1]);
+		exec[k].cmd->line = exec[j].cmd->line;
+		exec[j].cmd->line = NULL;
+		if (exec[k].cmd->cmd)
+			exec[k].cmd->cmd = (free(exec[k].cmd->cmd), NULL);
+		exec[k].cmd->cmd = exec[j].cmd->cmd;
+		exec[j].cmd->cmd = NULL;
+		exec[k].cmd->fd_aux[0] = (exec[j].cmd->fd_aux[0]);
+		exec[k].cmd->fd_aux[1] = (exec[j].cmd->fd_aux[1]);
 		exec[j].state[1] = 1;
 		exec[j].state[0] = 1;
 		exec[k].state[1] = 0;
 		exec[k].state[0] = 0;
-		close(exec[j].cmd[1].fd_aux[0]);
-		close(exec[j].cmd[1].fd_aux[1]);
+		close(exec[j].cmd->fd_aux[0]);
+		close(exec[j].cmd->fd_aux[1]);
 		j--;
 	}
 }
@@ -73,10 +80,10 @@ void	ft_conf_heredoc(t_handler *s, int i)
 	else
 		exec = ((k = b->len_exec_prev), b->prev_exec);
 	init_conf(exec + k, s);
-	exec[k].state[1] = init_cmd(exec[k].cmd + 1, s, i, -1);
+	exec[k].state[1] = init_cmd(exec[k].cmd, s, i, -1);
 	ft_move_conf(exec, k);
 	exec[k].file.end_heredoc = ft_strjoin(s->info->tokens[i + 1], "\n");
-	pipe(exec[k].cmd[0].fd_aux);
+	pipe(exec[k].cmd->fd_aux);
 	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_heredoc;
 	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)

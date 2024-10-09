@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   service_excep.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 19:53:59 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/15 06:13:17 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/minishell.h"
 
-int	ft_strlen(const char *s)
+int	syntax_error(char *operator, int type)
 {
-	int	p;
-
-	p = 0;
-	if (!s)
-		return (0);
-	while (s[p])
-		p++;
-	return (p);
+	if (type == 2)
+		ft_putstr_fd(" syntax error near unexpected token '", 2);
+	else if (type == 1)
+	{
+		ft_putstr_fd(" ambiguous redirect", 2);
+		return (type);
+	}
+	ft_putstr_fd(operator, 2);
+	ft_putstr_fd("'\n", 2);
+	save_error(2);
+	return (2);
 }
-/* int	main()
-{
-	char *p = "0000";
-	char c = ft_strlen(p) + 48;
-	write(1, c, 1);
-} */

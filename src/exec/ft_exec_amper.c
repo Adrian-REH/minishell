@@ -27,18 +27,14 @@ static void	ft_wait(t_exec *e)
 {
 	pid_t	result;
 
-	if (e->cmd->towait)
-		waitpid(e->cmd->pid, &e->cmd->status, 0);
-	else
+	result = waitpid(e->cmd->pid, &e->cmd->status, WNOHANG);
+	if (result == 0)
 	{
-		result = waitpid(e->cmd->pid, &e->cmd->status, WNOHANG);
-		if (result == 0)
-		{
-			e->handler->n_pids++;
-			e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
-			printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
-		}
+		e->handler->n_pids++;
+		e->handler->w_cmd = add_cmd(e->handler->w_cmd, *(e->cmd));
+		printf("[%d] %d\n", e->handler->n_pids, e->cmd->pid);
 	}
+	e->cmd->pid = 0;
 }
 
 int	*ft_exec_amper(t_exec *e, int index)
@@ -48,13 +44,13 @@ int	*ft_exec_amper(t_exec *e, int index)
 	{
 		ft_exec(e);
 		ft_wait(e);
-		e->state[0] = WEXITSTATUS(e->cmd->status);
 	}
 	e->cmd++;
 	if (e->state[1] == 0 && e->cmd->cmd)
 	{
 		ft_exec(e);
-		ft_wait(e);
+		if (e->state[0] != 0)
+			ft_wait(e);
 		e->state[1] = WEXITSTATUS(e->cmd->status);
 	}
 	if (e->state[1] != 0 || e->state[1] != 0)

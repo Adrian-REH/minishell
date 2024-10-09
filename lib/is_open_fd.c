@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   is_open_fd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 19:53:59 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:19 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/23 01:50:23 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/23 01:50:33 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../src/headers/minishell.h"
 
-int	ft_strlen(const char *s)
+int	is_fd_open(int fd)
 {
-	int	p;
+	struct stat	statbuf;
 
-	p = 0;
-	if (!s)
-		return (0);
-	while (s[p])
-		p++;
-	return (p);
+	return ((fstat(fd, &statbuf) != -1 || errno != EBADF) && fd > 2);
 }
-/* int	main()
-{
-	char *p = "0000";
-	char c = ft_strlen(p) + 48;
-	write(1, c, 1);
-} */

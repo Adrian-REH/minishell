@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_pwd.c                                      :+:      :+:    :+:   */
+/*   ft_free_cmds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 06:14:16 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:21:22 by adherrer         ###   ########.fr       */
+/*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
+/*   Updated: 2024/09/23 01:53:18 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
+#include "../src/headers/minishell.h"
 
-int	ft_exec_pwd(t_cmd *cmd)
+void	*ft_free_cmds(t_cmd *cmds, int len)
 {
-	int		i;
-	char	*line;
+	int	i;
 
 	i = -1;
-	line = ft_strnstr(cmd->line, "pwd", ft_strlen(cmd->line));
-	if (!line || (line[3] != 0 && line[3] != ' '))
+	while (++i < len)
 	{
-		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
-		return (127);
+		if (cmds[i].cmd)
+			ft_free_p2(cmds[i].cmd);
+		if (is_fd_open(cmds[i].fd_aux[0]) && cmds[i].fd_aux[0] != 0)
+			close(cmds[i].fd_aux[0]);
+		if (is_fd_open(cmds[i].fd_aux[1]) && cmds[i].fd_aux[1] != 1)
+			close(cmds[i].fd_aux[0]);
 	}
-	while (cmd->handler->env[++i])
-	{
-		if (!ft_strncmp(cmd->handler->env[i], "PWD", 3))
-			printf("%s\n", cmd->handler->env[i] + 4);
-	}
-	return (0);
+	return (NULL);
 }

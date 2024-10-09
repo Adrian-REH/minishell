@@ -18,6 +18,8 @@ char	**sarr_clean_quote(char **arr)
 	char	*line;
 
 	i = -1;
+	if (!arr)
+		return (NULL);
 	while (arr[++i])
 	{
 		line = ft_strtrim(arr[i], "\"");

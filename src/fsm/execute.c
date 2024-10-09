@@ -6,12 +6,11 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:12:49 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/21 17:09:24 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:09:57 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
 
 void	setup_exec_io(int j, int i, t_block *b, t_exec *exec)
 {
@@ -42,19 +41,19 @@ int	execute_cmds(t_block *b, int isnext)
 		b->len_exec = ((exec = b->next_exec), b->len_exec_next);
 	else
 		b->len_exec = ((exec = b->prev_exec), b->len_exec_prev);
-	while (++i < b->len_exec)
+	while (++i < b->len_exec && get_error() == 0)
 	{
 		if (exec[i].func[0][0])
 		{
-			setup_exec_io(j, i, b, exec);
-			j++;
+			j += (setup_exec_io(j, i, b, exec), 1);
 			if (j == 1 && 1 != b->len_exec && \
 			(exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == 5))
 				exec[i].file.output = (b->fd[1]);
 			else if (j == b->len_exec && \
 			(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
 				exec[i].file.output = 1;
-			exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
+			if (exec[i].func[EMPTY][EMPTY])
+				exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
 		}
 	}
 	return (0);
@@ -110,9 +109,13 @@ t_handler	*ft_execute(t_handler *s)
 	int	i;
 
 	i = -1;
+	if (get_error() == 2)
+		return (s);
+	if (s->len_block == 0)
+		return (s);
 	while (++i < s->len_block)
 	{
-		if (execute_block_sequence(s, i))
+		if (execute_block_sequence(s, i) == -1)
 			continue ;
 	}
 	return ((s->code = s->block[i - 1].status), s);
