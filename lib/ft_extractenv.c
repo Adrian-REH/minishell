@@ -12,6 +12,19 @@
 
 #include "../src/headers/minishell.h"
 
+char	*get_env_substr(t_cmd *cmd, char *line, int *i, int j)
+{
+	while (cmd->handler->env[++j])
+	{
+		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
+		{
+			*i += ft_strlen(line) - 1;
+			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
+		}
+	}
+	return (NULL);
+}
+
 char	*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i)
 {
 	char	*tmp;
@@ -33,15 +46,10 @@ char	*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i)
 	if (ft_strchr(line, '=') == 0)
 		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
 	j = -1;
-	while (cmd->handler->env[++j])
-	{
-		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
-		{
-			*i += ft_strlen(line) - 1;
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
-		}
-	}
-	return (NULL);
+	tmp = get_env_substr(cmd, line, i, j);
+	if (!tmp)
+		return (NULL);
+	return (tmp);
 }
 
 char	*extract_env(char *line, char *result, t_cmd *cmd)
@@ -64,7 +72,6 @@ char	*extract_env(char *line, char *result, t_cmd *cmd)
 	j = -1;
 	while (cmd->handler->env[++j])
 	{
-		
 		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
 			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
 	}

@@ -12,10 +12,25 @@
 
 #include "../../headers/minishell.h"
 
+static void	del_env(struct s_cmd *cmd, char **str)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (cmd->handler->env[++i])
+	{
+		j = -1;
+		while (str[++j])
+		{
+			if (!ft_strncmp(cmd->handler->env[i], str[j], ft_strlen(str[j])))
+				cmd->handler->env = ft_sarrdelbyindex(cmd->handler->env, i);
+		}
+	}
+}
+
 int	ft_exec_unset(struct s_cmd *cmd)
 {
-	int		i;
-	int		j;
 	char	**str;
 	char	*line;
 	size_t	len;
@@ -33,15 +48,6 @@ int	ft_exec_unset(struct s_cmd *cmd)
 		return (127);
 	}
 	str = ((line = ft_strtrim(line, " ")), ft_split(line, ' '));
-	i = -1;
-	while (cmd->handler->env[++i])
-	{
-		j = -1;
-		while (str[++j])
-		{
-			if (!ft_strncmp(cmd->handler->env[i], str[j], ft_strlen(str[j])))
-				cmd->handler->env = ft_sarrdelbyindex(cmd->handler->env, i);
-		}
-	}
+	del_env(cmd, str);
 	return ((cmd->status = 0), 0);
 }

@@ -18,14 +18,16 @@ int	reemplace_env(t_cmd *cmd, char **str, char *line)
 
 	i = -1;
 	while (cmd->handler->env[++i])
-		if (ft_strncmp(cmd->handler->env[i], str[0], ft_strlen(str[0])) == 0)
+	{
+		if (!ft_strncmp(cmd->handler->env[i], *str, ft_strlen(*str)))
 		{
-			if (ft_strchr(cmd->handler->env[i] + ft_strlen(str[0]), '=') == 0)
+			if (!ft_strchr(cmd->handler->env[i] + ft_strlen(str[0]), '='))
 			{
 				cmd->handler->env[i] = (free(cmd->handler->env[i]), line);
 				return (1);
 			}
 		}
+	}
 	return (0);
 }
 

@@ -226,6 +226,9 @@ void		operators_init(t_handler *a);
 void		tactions_handler_init(t_handler *a);
 void		automata_init(t_automata *a, void *data);
 /*------------CONFIGURATION--------------*/
+t_exec		*place_exec(t_handler *a, t_exec *exec, int *i_exec);
+t_handler	*place_uniq_cmd(t_handler *a, int i);
+t_handler	*place_priority(t_handler *a);
 void		ft_conf_or(t_handler *s, int i);
 void		ft_conf_and(t_handler *s, int i);
 void		ft_conf_amper(t_handler *s, int i);
@@ -287,7 +290,7 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
-int			get_error();
+int			get_error(void);
 int			syntax_error(char *operator, int type);
 void		parser_error(t_handler *s, int error);
 int			save_error(int type);
