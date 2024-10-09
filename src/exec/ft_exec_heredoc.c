@@ -77,13 +77,13 @@ static void	get_execute_fds(t_exec *e, int i)
 	while (j >= 0 && (exec[j].op == 6))
 		j--;
 	j++;
-	while (j <= i && (exec[j].op == 6))
+	while (j < i && (exec[j].op == 6))
 	{
 		state = ft_execute_heredocs(e, &j);
 		if (get_error() > 0)
 			break ;
 		if (state)
-			continue;
+			continue ;
 	}
 	close(e->cmd->fd_aux[WRITE]);
 	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
@@ -93,11 +93,7 @@ int	*ft_exec_heredoc(t_exec *e, int index)
 {
 	e = &e[index];
 	if (e->state[0] == 0)
-	{
-		//if (e[-1].file.input != 0 && e[-1].op == 6)
-		//	ft_concat_fds(e[-1].file.input, e->cmd->fd_aux[WRITE]);
 		get_execute_fds((e - index), index);
-	}
 	if (e->state[1] == 0 && get_error() == 0)
 		ft_exec_give_cmd(e);
 	if (get_error() >= 0)
