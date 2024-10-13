@@ -57,6 +57,7 @@ int	*ft_exec_amper(t_exec *e, int index)
 		e->status = -1;
 	e->file.input = e->cmd->fd_aux[READ];
 	e->file.output = e->cmd->fd_aux[WRITE];
+	e->cmd--;
 	e->status = e->state[1];
 	return (e->state);
 }

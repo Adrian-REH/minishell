@@ -62,17 +62,24 @@ int	execute_cmds(t_block *b, int isnext)
 int	ft_waiting_pid(t_exec *exec, int len)
 {
 	int	i;
+	int	j;
 	int	status;
 
 	i = -1;
+	status = 0;
 	while (++i < len)
 	{
-		if (exec[i].cmd->pid)
+		j = -1;
+		while (++j < 2 && exec[i].cmd)
 		{
-			waitpid(exec[i].cmd->pid, &status, 0);
-			exec[i].status = WEXITSTATUS(status);
+			if (exec[i].cmd[j].pid)
+			{
+				waitpid(exec[i].cmd[j].pid, &status, 0);
+				exec[i].status = WEXITSTATUS(status);
+			}
 		}
 	}
+	
 	return (exec[len - 1].status);
 }
 

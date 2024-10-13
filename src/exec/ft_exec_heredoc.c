@@ -73,11 +73,10 @@ static void	get_execute_fds(t_exec *e, int i)
 	int		state;
 
 	exec = ((j = i), e);
-	e = &exec[i];
 	while (j >= 0 && (exec[j].op == 6))
 		j--;
 	j++;
-	while (j < i && (exec[j].op == 6))
+	while (j < (i + 1) && (exec[j].op == 6))
 	{
 		state = ft_execute_heredocs(e, &j);
 		if (get_error() > 0)

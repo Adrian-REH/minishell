@@ -19,10 +19,16 @@ void	*ft_free_blocks(t_block *block, int len)
 	i = -1;
 	while (++i < len)
 	{
-		ft_free_execs(block[i].prev_exec, block[i].len_exec_prev);
-		free(block[i].prev_exec);
-		ft_free_execs(block[i].next_exec, block[i].len_exec_next);
-		free(block[i].next_exec);
+		if (block[i].prev_exec)
+		{
+			ft_free_execs(block[i].prev_exec, block[i].len_exec_prev);
+			free(block[i].prev_exec);
+		}
+		if (block[i].next_exec)
+		{
+			ft_free_execs(block[i].next_exec, block[i].len_exec_next);
+			free(block[i].next_exec);
+		}
 		if (is_fd_open(block[i].fd[0]) && block[i].fd[0] != 0)
 			close(block[i].fd[0]);
 		if (is_fd_open(block[i].fd[1]) && block[i].fd[1] != 1)

@@ -138,7 +138,7 @@ bonus :$(OBJ_DIR) $(NAME_B)
 
 fclean : clean
 	$(RM) $(NAME)
-	make clean -C lib/libft
+	$(RM) $(NAME_B)
 	make fclean -C lib/libft
 	@echo "$(CYAN) ✨ ¡CLEANED! ✨ $(DEF_COLOR)"
 
