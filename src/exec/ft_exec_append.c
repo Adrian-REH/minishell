@@ -61,7 +61,10 @@ int	*ft_exec_append(t_exec *e, int index)
 	exec = e;
 	e = &e[index];
 	if (e->state[0] == 0)
+	{
+		heredoc_read(exec, index, count_redirects(exec, index));
 		ft_exec(exec, index);
+	}
 	e->status = e->state[0];
 	e->state[1] = e->state[0];
 	return (e->state);

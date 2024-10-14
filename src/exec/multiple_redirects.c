@@ -12,31 +12,16 @@
 
 #include "../headers/minishell.h"
 
-int	ft_execute_heredocs(char *end_heredoc, int *index, int output)
+int	count_redirects(t_exec *e, int i)
 {
-	char	*p_heredoc;
+	int		j;
 
-	while (1)
-	{
-		ft_putstr_fd("heredoc>", STDOUT_FILENO);
-		p_heredoc = get_next_line(0);
-		if (p_heredoc == NULL && get_error() >= 0)
-		{
-			(index[0])++;
-			printf("\n");
-			return (1);
-		}
-		if (ft_strcmp(end_heredoc, p_heredoc) == 0)
-		{
-			(index[0])++;
-			(free(p_heredoc));
-			break ;
-		}
-		(ft_putstr_fd(p_heredoc, output), free(p_heredoc));
-	}
-	return (0);
+	j = i;
+	while (j >= 0 && (e[j].op <= 8 && e[j].op >= 5))
+		j--;
+	j++;
+	return (j);
 }
-
 
 static void	infile_open(t_exec *e, int i, int *j)
 {
@@ -61,28 +46,15 @@ static void	outfile_open(t_exec *e, int i, int *j)
 void	get_execute_files(t_exec *e, int i)
 {
 	int		j;
-	int		output;
-	int		state;
 
-	output = ((j = i), e[i].cmd->fd_aux[WRITE]);
-	while (j >= 0 && (e[j].op <= 8 && e[j].op >= 5))
-		j--;
-	j++;
+	j = count_redirects(e, i);
 	while (j < (i + 1) && (e[j].op <= 8 && e[j].op >= 5))
 	{
 		if (e[j].op == LESS)
 			infile_open(e, i, &j);
 		else if (e[j].op != 6)
 			outfile_open(e, i, &j);
-		else if (e[j].op == 6)
-		{
-			state = ft_execute_heredocs(e[j].file.end_heredoc, &j, output);
-			if (get_error() > 0)
-				break ;
-			if (state)
-				continue ;
-		}
+		else
+			j++;
 	}
-	close(output);
-	e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
 }

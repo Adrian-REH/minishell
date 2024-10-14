@@ -62,6 +62,7 @@ int	*ft_exec_less(t_exec *e, int index)
 	e = &e[index];
 	if (e->state[0] == 0)
 	{
+		heredoc_read(exec, index, count_redirects(exec, index));
 		ft_exec(exec, index);
 		if (e->file.output != 1)
 			close(e->file.output);
