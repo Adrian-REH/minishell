@@ -71,6 +71,7 @@ src/resource/init_learning.c \
 src/resource/config_learning.c \
 src/resource/exec_learning.c \
 src/config/ft_conf_and.c \
+src/config/place_config.c \
 src/config/ft_conf_pipe.c \
 src/config/ft_conf_or.c \
 src/config/ft_conf_less.c \
@@ -137,7 +138,7 @@ bonus :$(OBJ_DIR) $(NAME_B)
 
 fclean : clean
 	$(RM) $(NAME)
-	make clean -C lib/libft
+	$(RM) $(NAME_B)
 	make fclean -C lib/libft
 	@echo "$(CYAN) ✨ ¡CLEANED! ✨ $(DEF_COLOR)"
 
@@ -149,5 +150,7 @@ clean :
 
 re : fclean all
 
+norm :
+	norminette | grep -i "error"
 
-.PHONY:     all clean fclean re bonus
+.PHONY:     all clean fclean re bonus norm

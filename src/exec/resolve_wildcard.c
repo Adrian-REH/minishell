@@ -55,11 +55,30 @@ char	*add_space(char **arr, char	*result)
 	return (result);
 }
 
+char	*concat_and_release(char *val, char *result, char **arr)
+{
+	char	*tmp;
+
+	tmp = result;
+	if (val)
+	{
+		result = ft_strjoin(tmp, val);
+		val = (free(tmp), (tmp = NULL), free(val), NULL);
+	}
+	else
+	{
+		result = ft_strjoin(tmp, *arr);
+		free(tmp);
+	}
+	if (!result && val)
+		return (free(val), NULL);
+	return (result);
+}
+
 char	*ft_process_wildcards(char **arr)
 {
 	char	*val;
 	char	*result;
-	char	*tmp;
 	int		flag;
 
 	result = ((val = NULL), ft_strdup(""));
@@ -71,18 +90,7 @@ char	*ft_process_wildcards(char **arr)
 			val = resolve_wildcard(*arr);
 		else if (ft_strchr(*arr, '\'') || ft_strchr(*arr, '\"'))
 			flag = !flag;
-		if (val)
-		{
-			result = ((tmp = result), ft_strjoin(tmp, val));
-			free(tmp);
-			val = ((tmp = NULL), free(val), NULL);
-		}
-		else
-		{
-			tmp = result;
-			result = ft_strjoin(tmp, *arr);
-			free(tmp);
-		}
+		result = concat_and_release(val, result, arr);
 		result = add_space(++arr, result);
 	}
 	return (result);
@@ -94,8 +102,10 @@ char	*resolve_wildcard(char *str)
 	struct dirent	*entry;
 	char			*result;
 	char			**arr;
+	char			**tmp;
 
 	arr = NULL;
+	tmp = NULL;
 	dir = opendir(".");
 	entry = readdir(dir);
 	while (entry)
@@ -103,8 +113,10 @@ char	*resolve_wildcard(char *str)
 		if (entry->d_type == DT_REG)
 		{
 			result = match_name(entry->d_name, str);
+			tmp = arr;
 			if (result)
-				arr = ft_sarradd(arr, result);
+				arr = ft_sarradd(tmp, result);
+			ft_free_p2(tmp);
 		}
 		entry = readdir(dir);
 	}

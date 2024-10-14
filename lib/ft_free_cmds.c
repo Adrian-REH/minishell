@@ -19,12 +19,17 @@ void	*ft_free_cmds(t_cmd *cmds, int len)
 	i = -1;
 	while (++i < len)
 	{
-		if (cmds[i].cmd)
-			ft_free_p2(cmds[i].cmd);
-		if (is_fd_open(cmds[i].fd_aux[0]) && cmds[i].fd_aux[0] != 0)
-			close(cmds[i].fd_aux[0]);
-		if (is_fd_open(cmds[i].fd_aux[1]) && cmds[i].fd_aux[1] != 1)
-			close(cmds[i].fd_aux[0]);
+		if ((*cmds).cmd)
+		{
+			ft_free_p2((*cmds).cmd);
+			(*cmds).cmd = NULL;
+		}
+		(*cmds).line = NULL;
+		if (is_fd_open((*cmds).fd_aux[0]) && (*cmds).fd_aux[0] != 0)
+			close((*cmds).fd_aux[0]);
+		if (is_fd_open((*cmds).fd_aux[1]) && (*cmds).fd_aux[1] != 1)
+			close((*cmds).fd_aux[0]);
+		cmds++;
 	}
 	return (NULL);
 }

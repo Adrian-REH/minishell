@@ -19,7 +19,14 @@ void	*ft_free_execs(t_exec *execs, int len)
 	i = -1;
 	while (++i < len)
 	{
-		ft_free_cmds(execs[i].cmd, 2);
+		if (execs[i].cmd)
+		{
+			ft_free_cmds(execs[i].cmd, 2);
+			free(execs[i].cmd);
+			execs[i].cmd = NULL;
+		}
+		if (execs[i].file.end_heredoc)
+			free(execs[i].file.end_heredoc);
 		if (execs[i].state)
 			free(execs[i].state);
 	}

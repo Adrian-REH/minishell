@@ -78,11 +78,8 @@ void	ft_process_quote(struct s_cmd *cmd, char *line)
 int	ft_exec_echo(struct s_cmd *cmd)
 {
 	char	*line;
-	int		len; 
-/* 	char	*result;
-	char	**arr; */
+	int		len;
 
-	//result = NULL;
 	line = ft_strnstr(cmd->line, "echo", ft_strlen(cmd->line));
 	if (line && (line[4] == ' ' || line[4] == 0))
 	{
@@ -91,10 +88,6 @@ int	ft_exec_echo(struct s_cmd *cmd)
 	}
 	else
 		ft_print_error("command not found ", 2, cmd->line);
-/* 	arr = ft_split(line, ' ');
- 	if (line)
-		result = ft_process_wildcards(arr);
-	ft_free_p2(arr); */
 	ft_process_quote(cmd, line);
 	printf("\n");
 	exit(0);

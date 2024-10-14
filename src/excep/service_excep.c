@@ -26,7 +26,7 @@ int	save_error(int error)
 	return (storage_error(error, 1));
 }
 
-int	get_error()
+int	get_error(void)
 {
 	return (storage_error(0, 0));
 }

@@ -41,6 +41,25 @@ static int	handler_exit_result(char *line, t_cmd *cmd)
 	return (0);
 }
 
+static char	*find_exit(struct s_cmd *cmd)
+{
+	char	*line;
+	size_t	len;
+
+	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
+	if (line && (line[4] == ' ' || line[4] == 0))
+	{
+		len = ft_strlen("exit");
+		ft_memmove(line, line + len, strlen(line + len) + 1);
+	}
+	else
+	{
+		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+		return (NULL);
+	}
+	return (line);
+}
+
 /*
 LLama a la funcion handler_exit_result para verificar liberar memoria
 */
@@ -51,17 +70,9 @@ int	ft_exec_exit(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
-	line = ft_strnstr(cmd->line, "exit", ft_strlen(cmd->line));
-	if (line && (line[4] == ' ' || line[4] == 0))
-	{
-		len = ft_strlen("exit");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
-	}
-	else
-	{
-		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
+	line = find_exit(cmd);
+	if (!line)
 		return (127);
-	}
 	line = ft_strtrim(line, " ");
 	if (!line)
 		cmd->status = (ft_putstr_fd("Error malloc\n", 2), 1);
