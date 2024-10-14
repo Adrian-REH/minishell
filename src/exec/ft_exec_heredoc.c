@@ -12,34 +12,6 @@
 
 #include "../headers/minishell.h"
 
-static int	*ft_exec_give_cmd(t_exec *e)
-{
-	e->cmd->pid = fork();
-	if (e->cmd->pid < 0)
-		return (ft_print_error("fork", 1, ""), NULL);
-	else if (e->cmd->pid == 0)
-	{
-		if (e->file.output == -1)
-			(ft_print_error(strerror(errno), 1, NULL));
-		if (e->file.input == -1)
-			(ft_print_error(strerror(errno), 1, NULL));
-		if (dup2(e->file.input, STDIN_FILENO) == -1)
-			(close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
-		if (e->file.input != 0)
-			close(e->file.input);
-		if (e->file.output != 1)
-		{
-			if (dup2(e->file.output, STDOUT_FILENO) == -1)
-				(ft_print_error("dup2", 1, NULL));
-			close(e->file.output);
-		}
-		exit(dispatch_command(e));
-	}
-	if (e->file.output != 1)
-		close(e->file.output);
-	return (NULL);
-}
-
 int	ft_execute_heredocs(char *end_heredoc, int *index, int output)
 {
 	char	*p_heredoc;
@@ -65,39 +37,84 @@ int	ft_execute_heredocs(char *end_heredoc, int *index, int output)
 	return (0);
 }
 
-static void	get_execute_fds(t_exec *e, int i)
+void	heredoc_read(t_exec *e, int i, int j)
 {
-	int		j;
 	int		state;
 	int		output;
 
-	j = i;
-	output = e[i].cmd->fd_aux[WRITE];
-	while (j >= 0 && (e[j].op == 6))
-		j--;
-	j++;
-	while (j < (i + 1) && (e[j].op == 6))
+	output = (e[i].cmd->fd_aux[WRITE]);
+	while (j < (i + 1) && (e[j].op <= 8 && e[j].op >= 5))
 	{
-		state = ft_execute_heredocs(e[j].file.end_heredoc, &j, output);
-		if (get_error() > 0)
-			break ;
-		if (state)
-			continue ;
+		if (e[j].op == 6)
+		{
+			state = ft_execute_heredocs(e[j].file.end_heredoc, &j, output);
+			if (get_error() > 0)
+				break ;
+			if (state)
+				continue ;
+		}
+		else
+			j++;
 	}
+
 	close(output);
 	e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
 }
 
+static void	ft_dup2_outfile(char *outfile, int output)
+{
+	if (outfile)
+	{
+		output = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (output == -1)
+			(ft_exeption_fd(0, output, NULL));
+	}
+	else if (output != 1)
+	{
+		if (dup2(output, STDOUT_FILENO) == -1)
+			(ft_exeption_fd(0, output, NULL));
+	}
+	if (output != 1)
+		close(output);
+}
+
+static int	*ft_exec_give_cmd(t_exec *e, int index)
+{
+
+	e->cmd->pid = fork();
+	if (e->cmd->pid < 0)
+		return (ft_print_error("fork", 1, ""), NULL);
+	else if (e->cmd->pid == 0)
+	{
+		get_execute_files(e, index);
+		if (e->file.output == -1)
+			(ft_print_error(strerror(errno), 1, NULL));
+		if (e->file.input == -1)
+			(ft_print_error(strerror(errno), 1, NULL));
+		if (dup2(e->file.input, STDIN_FILENO) == -1)
+			(close(e->file.input), ft_print_error("dup2: ", 1, "input error"));
+		if (e->file.input != 0)
+			close(e->file.input);
+		ft_dup2_outfile(e->file.odfile, e->file.output);
+		exit(dispatch_command(e));
+	}
+	if (e->file.output != 1)
+		close(e->file.output);
+	close(e[index].cmd->fd_aux[WRITE]);
+	return (NULL);
+}
+
 int	*ft_exec_heredoc(t_exec *e, int index)
 {
-	if (e[index].state[0] == 0)
-		get_execute_fds(e, index);
-	e = &e[index];
-	if (e->state[1] == 0 && get_error() == 0)
-		ft_exec_give_cmd(e);
+	
+	if (e[index].state[0] == 0 && get_error() == 0)
+	{
+		heredoc_read(e, index, count_redirects(e, index));
+		ft_exec_give_cmd(e, index);
+	}
 	if (get_error() >= 0)
-		e->state[1] = 1;
-	e->status = e->state[1];
-	e->state[0] = e->state[1];
-	return (e->state);
+		e[index].state[1] = 1;
+	e[index].status = e[index].state[1];
+	e[index].state[0] = e[index].state[1];
+	return (e[index].state);
 }

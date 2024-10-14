@@ -89,6 +89,7 @@ src/exec/builtins/ft_exec_env.c \
 src/exec/builtins/ft_exec_exit.c \
 src/exec/dispatch_command.c\
 src/exec/ft_exec_cmd.c\
+src/exec/multiple_redirects.c\
 src/exec/ft_exec_greater.c\
 src/exec/ft_exec_amper.c\
 src/exec/ft_exec_append.c\

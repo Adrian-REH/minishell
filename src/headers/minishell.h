@@ -179,6 +179,9 @@ typedef struct s_handler
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
+int			ft_execute_heredocs(char *end_heredoc, int *index, int output);
+void		heredoc_read(t_exec *e, int i, int j);
+void		get_execute_files(t_exec *e, int i);
 char		*resolve_wildcard(char *str);
 char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
@@ -239,6 +242,7 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+int			count_redirects(t_exec *e, int i);
 char		*extract_env(char *line, char *result, t_cmd *cmd);
 char		*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i);
 char		*ft_sarrtostr(char **arr, char *sep);
