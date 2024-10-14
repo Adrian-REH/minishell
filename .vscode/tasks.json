@@ -1,6 +1,16 @@
 {
     "tasks": [
         {
+          "label": "build",
+          "type": "shell",
+          "command": "make",
+          "group": {
+            "kind": "build",
+            "isDefault": true
+          },
+          "problemMatcher": ["$gcc"]
+        },
+        {
             "type": "cppbuild",
             "label": "C/C++: gcc build active file",
             "command": "/usr/bin/gcc",

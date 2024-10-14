@@ -32,7 +32,7 @@ void	*ft_free_blocks(t_block *block, int len)
 		if (is_fd_open(block[i].fd[0]) && block[i].fd[0] != 0)
 			close(block[i].fd[0]);
 		if (is_fd_open(block[i].fd[1]) && block[i].fd[1] != 1)
-			close(block[i].fd[0]);
+			close(block[i].fd[1]);
 		ft_free_file(&block[i].file);
 	}
 	return (NULL);

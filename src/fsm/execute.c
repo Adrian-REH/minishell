@@ -17,6 +17,7 @@ void	setup_exec_io(int j, int i, t_block *b, t_exec *exec)
 	if ((j == b->len_exec - 1) && \
 	(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
 	{
+		close(b->fd[1]);
 		exec[i].file.input = b->fd[0];
 		exec[i].file.output = 1;
 		if (exec[i].cmd[1].cmd)

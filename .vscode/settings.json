@@ -10,7 +10,8 @@
     "push_swap.h": "c",
     "readline.h": "c",
     "ft_strcpy_minishell": "c",
-    "minishell.h": "c"
+    "minishell.h": "c",
+    "numbers": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
