@@ -29,21 +29,14 @@ char	**ft_sarradd(char **arr, char *string)
 		while (arr[size])
 		{
 			new_arr[size] = ft_strdup(arr[size]);
-			if (!new_arr[size])
-			{
-				ft_free_p2(new_arr);
-				return (NULL);
-			}
-			size++;
+			if (!new_arr[size++])
+				return (ft_free_p2(new_arr), NULL);
 		}
 		ft_free_p2(arr);
 	}
 	new_arr[size++] = ft_strdup(string);
 	if (!new_arr[size - 1])
-	{
-		ft_free_p2(new_arr);
-		return (NULL);
-	}
+		return (ft_free_p2(new_arr), NULL);
 	new_arr[size] = NULL;
 	return (new_arr);
 }

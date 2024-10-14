@@ -80,7 +80,6 @@ int	ft_waiting_pid(t_exec *exec, int len)
 			}
 		}
 	}
-	
 	return (exec[len - 1].status);
 }
 

@@ -16,13 +16,9 @@ static int	*ft_exec_give_cmd(t_exec *e)
 {
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
-	{
-		ft_print_error("fork", 1, "");
-		return (NULL);
-	}
+		return (ft_print_error("fork", 1, ""), NULL);
 	else if (e->cmd->pid == 0)
 	{
-		printf("input_c: %d | output_c: %d\n", e->file.input, e->file.output);
 		if (e->file.output == -1)
 			(ft_print_error(strerror(errno), 1, NULL));
 		if (e->file.input == -1)
