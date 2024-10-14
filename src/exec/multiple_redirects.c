@@ -37,6 +37,7 @@ int	ft_execute_heredocs(char *end_heredoc, int *index, int output)
 	return (0);
 }
 
+
 static void	infile_open(t_exec *e, int i, int *j)
 {
 	e[i].file.input = open(e[*j].file.idfile, O_RDONLY, 0644);
