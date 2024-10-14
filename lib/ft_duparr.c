@@ -23,6 +23,5 @@ char	**duparr(char **argenv)
 	arr = malloc(sizeof(char *) * (ft_sarrsize(argenv) + 1));
 	while (argenv[++i])
 		arr[i] = ft_strdup(argenv[i]);
-	arr[i] = NULL;
 	return (arr);
 }

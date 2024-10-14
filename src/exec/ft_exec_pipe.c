@@ -67,12 +67,11 @@ static int	*ft_exec_sec_cmd(t_exec *e)
 	return (NULL);
 }
 
-int	*ft_exec_pipe(t_exec *exec, int index)
+int	*ft_exec_pipe(t_exec *e, int index)
 {
 	char	*p_heredoc;
-	t_exec	*e;
 
-	e = &exec[index];
+	e = &e[index];
 	if (e->state[1] == 1)
 	{
 		ft_putstr_fd(">", STDOUT_FILENO);
@@ -85,7 +84,6 @@ int	*ft_exec_pipe(t_exec *exec, int index)
 	e->cmd++;
 	if (e->state[1] == 0)
 		ft_exec_sec_cmd(e);
-	e->cmd--;
 	e->status = e->state[1];
 	return (e->state);
 }

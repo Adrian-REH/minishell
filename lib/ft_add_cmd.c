@@ -27,7 +27,7 @@ t_cmd	*add_cmd(t_cmd *cmds, t_cmd cmd)
 	}
 	while (cmds[i].pid)
 		i++;
-	cmds = ft_realloc(cmds, sizeof(t_exec) * i, sizeof(t_cmd) * (i + 2));
+	cmds = ft_realloc(cmds, sizeof(t_cmd) * (i + 2));
 	cmds[i++] = cmd;
 	ft_bzero(&cmd_null, sizeof(t_cmd));
 	cmds[i] = cmd_null;

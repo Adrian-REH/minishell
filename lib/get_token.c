@@ -17,16 +17,13 @@ void	get_token(t_automata *a, void *data)
 	char	*cmdline;
 	char	*aux;
 	t_data	*info;
-	char	**tmp;
 
-	tmp = NULL;
 	info = (t_data *)data;
 	cmdline = ft_substr(a->str, a->j, a->i - a->j);
 	aux = cmdline;
 	cmdline = ft_strtrim(cmdline, " ");
 	free(aux);
 	a->j = a->i;
-	tmp = info->tokens;
-	info->tokens = ft_sarradd(tmp, cmdline);
+	info->tokens = ft_sarradd(info->tokens, cmdline);
 	free(cmdline);
 }
