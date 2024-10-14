@@ -60,14 +60,13 @@ void	automata_init(t_automata *a, void *data)
 t_handler	*ft_parser(t_handler *s)
 {
 	int			finalstate;
+	t_automata	a;
+	t_data		info;
 
-	s->a = (t_automata *)ft_calloc(1, sizeof(t_automata));
-	if (!s->a)
-		return (NULL);
-	s->info = (t_data *)ft_calloc(1, sizeof(t_data));
-	if (!s->info)
-		return (NULL);
-	s->info->i = 0;
+	ft_bzero(&a, sizeof(t_automata));
+	ft_bzero(&info, sizeof(t_data));
+	s->a = &a;
+	s->info = &info;
 	automata_init(s->a, s->info);
 	s->a->str = s->line;
 	finalstate = evaluate(s->a);

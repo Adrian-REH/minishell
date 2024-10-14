@@ -17,7 +17,7 @@ static void	init_conf(t_exec *exec, t_handler *s, int i)
 	exec->state = ft_calloc(sizeof(int), 2);
 	exec->state[0] = 0;
 	exec->state[1] = 0;
-	exec->cmd = (t_cmd *)ft_calloc(sizeof(t_cmd), 3);
+	exec->cmd = ft_calloc(sizeof(t_cmd), 3);
 	exec->cmd->handler = s;
 	exec->cmd->line = s->info->tokens[i];
 	exec->cmd->pid = 0;
