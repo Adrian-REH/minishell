@@ -29,59 +29,28 @@ static void	ft_dup2_outfile(char *outfile, int output)
 		close(output);
 }
 
-static char	*get_execute_fds(t_exec *e, int i, int j)
-{
-	t_exec	*exec;
-	char	*outfile;
-	int		out;
-
-	exec = e;
-	outfile = NULL;
-	e = &exec[i];
-	while (++j < i && (exec[j].op == 7 || exec[j].op == 8 || exec[j].op == 5))
-	{
-		if (exec[j].op == LESS)
-		{
-			e->file.input = open(exec[j].file.idfile, O_RDONLY, 0644);
-			if (e->file.input == -1)
-				(ft_print_error(strerror(errno), 1, NULL));
-			close(e->file.input);
-		}
-		else
-		{
-			out = open(exec[j].file.odfile, 1 | O_CREAT | O_APPEND, 0644);
-			if (out == -1)
-				(ft_print_error(strerror(errno), 1, NULL));
-			outfile = (close(out), exec[j].file.odfile);
-		}
-	}
-	return (outfile);
-}
-
 static int	*ft_exec(t_exec *e, int index)
 {
-	int		j;
-	char	*outfile;
 	t_exec	*exec;
 
 	e = ((exec = e), &exec[index]);
-	outfile = ((j = index), NULL);
-	while (j >= 0 && (exec[j].op == 7 || exec[j].op == 8 || exec[j].op == 5))
-		j--;
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
 		return (ft_print_error("fork", 1, ""), NULL);
 	else if (e->cmd->pid == 0)
 	{
-		outfile = get_execute_fds(exec, index, j);
+		get_execute_files(exec, index);
 		e->file.input = open(e->file.idfile, O_RDONLY, 0644);
 		if (e->file.input == -1)
 			(ft_print_error(strerror(errno), 1, NULL));
 		if (dup2(e->file.input, STDIN_FILENO) == -1)
 			ft_exeption_fd(e->file.input, e->file.output, NULL);
-		(close(e->file.input), ft_dup2_outfile(outfile, e->file.output));
+		(close(e->file.input), ft_dup2_outfile(e->file.odfile, e->file.output));
 		exit(dispatch_command(e));
 	}
+	if (e->file.output != 1)
+		close(e->file.output);
+	close(exec[index].cmd->fd_aux[WRITE]);
 	return (NULL);
 }
 

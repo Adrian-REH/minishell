@@ -48,7 +48,7 @@ static void	ft_move_conf(t_exec *exec, int k)
 	int	j;
 
 	j = k - 1;
-	while (j >= 0 && exec[j].op == HEREDOC)
+	while (j >= 0 && exec[j].op != PIPE)
 	{
 		if (exec[j].state[0] == 0)
 		{

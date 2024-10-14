@@ -42,6 +42,7 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 		cmd->cmd = do_exec(token, s->env);
 		cmd->cmd = sarr_clean_quote(cmd->cmd);
 		cmd->towait = 0;
+		pipe(cmd->fd_aux);
 	}
 	else
 		return (1);
@@ -75,20 +76,20 @@ static void	ft_move_conf(t_exec *exec, int k)
 	int	j;
 
 	j = k - 1;
-	while (j >= 0 && exec[j].op != PIPE && exec[j].op != HEREDOC)
+	while (j >= 0 && exec[j].op != PIPE)
 	{
 		if (exec[j].state[0] == 0)
 		{
-			exec[k].cmd[0].line = exec[j].cmd[0].line;
-			exec[j].cmd[0].line = NULL;
-			if (exec[k].cmd->cmd)
-				exec[k].cmd->cmd = (free(exec[k].cmd->cmd), NULL);
-			exec[k].cmd[0].cmd = exec[j].cmd[0].cmd;
-			exec[j].cmd[0].cmd = NULL;
-			exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
-			exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
+			exec[k].cmd->line = exec[j].cmd[0].line;
+			exec[j].cmd->line = NULL;
+			exec[k].cmd->cmd = exec[j].cmd[0].cmd;
+			exec[j].cmd->cmd = NULL;
+			exec[k].cmd->fd_aux[0] = (exec[j].cmd->fd_aux[0]);
+			exec[k].cmd->fd_aux[1] = (exec[j].cmd->fd_aux[1]);
 			exec[k].state[0] = 0;
+			exec[k].state[1] = 0;
 			exec[j].state[0] = 1;
+			exec[j].state[1] = 1;
 		}
 		j--;
 	}
@@ -109,9 +110,9 @@ void	ft_conf_less(t_handler *s, int i)
 	exec[k].state[0] = init_cmd(exec[k].cmd, s, i, -1);
 	exec[k].state[1] = init_file(&(exec[k]), s, i, 1);
 	ft_move_conf(exec, k);
-	s->info->oid = i + 1;
 	exec[k].cmd[2].cmd = NULL;
 	exec[k].func[0][0] = (int *(*)(void *, int))ft_exec_less;
+	s->info->oid = i + 1;
 	if (s->block[s->info->i].isnext)
 		b->len_exec_next++;
 	else

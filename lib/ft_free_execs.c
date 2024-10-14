@@ -28,7 +28,10 @@ void	*ft_free_execs(t_exec *execs, int len)
 		if (execs[i].file.end_heredoc)
 			free(execs[i].file.end_heredoc);
 		if (execs[i].state)
-			free(execs[i].state);
+		{
+ 			free(execs[i].state);
+			execs[i].state = NULL;
+		}
 	}
 	return (NULL);
 }

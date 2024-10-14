@@ -24,6 +24,7 @@ void	ft_print_execs(t_exec *e, int len)
 		printf("\t------------EXEC %d\n", i);
 		printf("\tpriority:     %d\n", e->priority);
 		printf("\tfinish:       %d\n", e->finish);
+		printf("\tstate_dir:       %p\n", e->state);
 		printf("\tstate[0]:     %d | state[1]: %d | state[2]: %d\n", \
 		e->state[0], e->state[1], e->state[2]);
 		printf("\top:           %d\n", e->op);

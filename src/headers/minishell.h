@@ -179,6 +179,7 @@ typedef struct s_handler
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
 /*------------EXECUTE--------------*/
+void		get_execute_files(t_exec *e, int i);
 char		*resolve_wildcard(char *str);
 char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
