@@ -22,6 +22,7 @@ static int	*ft_exec_give_cmd(t_exec *e)
 	}
 	else if (e->cmd->pid == 0)
 	{
+		printf("input_c: %d | output_c: %d\n", e->file.input, e->file.output);
 		if (e->file.output == -1)
 			(ft_print_error(strerror(errno), 1, NULL));
 		if (e->file.input == -1)
@@ -38,10 +39,12 @@ static int	*ft_exec_give_cmd(t_exec *e)
 		}
 		exit(dispatch_command(e));
 	}
+	if (e->file.output != 1)
+		close(e->file.output);
 	return (NULL);
 }
 
-int	ft_execute_heredocs(t_exec *e, int *index)
+int	ft_execute_heredocs(char *end_heredoc, int *index, int output)
 {
 	char	*p_heredoc;
 
@@ -55,45 +58,45 @@ int	ft_execute_heredocs(t_exec *e, int *index)
 			printf("\n");
 			return (1);
 		}
-		if (ft_strcmp(e[*index].file.end_heredoc, p_heredoc) == 0)
+		if (ft_strcmp(end_heredoc, p_heredoc) == 0)
 		{
 			(index[0])++;
 			(free(p_heredoc));
 			break ;
 		}
-		(ft_putstr_fd(p_heredoc, e->cmd->fd_aux[WRITE]), free(p_heredoc));
+		(ft_putstr_fd(p_heredoc, output), free(p_heredoc));
 	}
 	return (0);
 }
 
 static void	get_execute_fds(t_exec *e, int i)
 {
-	t_exec	*exec;
 	int		j;
 	int		state;
+	int		output;
 
-	exec = ((j = i), e);
-	e = &exec[i];
-	while (j >= 0 && (exec[j].op == 6))
+	j = i;
+	output = e[i].cmd->fd_aux[WRITE];
+	while (j >= 0 && (e[j].op == 6))
 		j--;
 	j++;
-	while (j < i && (exec[j].op == 6))
+	while (j < (i + 1) && (e[j].op == 6))
 	{
-		state = ft_execute_heredocs(e, &j);
+		state = ft_execute_heredocs(e[j].file.end_heredoc, &j, output);
 		if (get_error() > 0)
 			break ;
 		if (state)
 			continue ;
 	}
-	close(e->cmd->fd_aux[WRITE]);
-	e->file.input = ((e->cmd->pid = 0), e->cmd->fd_aux[READ]);
+	close(output);
+	e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
 }
 
 int	*ft_exec_heredoc(t_exec *e, int index)
 {
+	if (e[index].state[0] == 0)
+		get_execute_fds(e, index);
 	e = &e[index];
-	if (e->state[0] == 0)
-		get_execute_fds((e - index), index);
 	if (e->state[1] == 0 && get_error() == 0)
 		ft_exec_give_cmd(e);
 	if (get_error() >= 0)
