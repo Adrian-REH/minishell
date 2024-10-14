@@ -260,7 +260,7 @@ t_cmd		*add_cmd(t_cmd *cmds, t_cmd cmd);
 t_cmd		*delete_cmd(t_cmd *cmds, int i);
 t_exec		*add_exec(t_exec *execs, t_exec exec);
 char		*ft_strdelchr(char *str, char c);
-void		*ft_realloc(void *ptr, size_t size);
+void		*ft_realloc(void *ptr, size_t size_old, size_t size);
 int			dispatch_command(t_exec *e);
 int			*ft_signals(t_exec *e);
 char		*ft_getenv(t_cmd *cmd, char *str);

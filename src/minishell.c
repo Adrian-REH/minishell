@@ -73,5 +73,12 @@ int	main(int argc, char **argv, char **argenv)
 		(handler.seg[1](&handler), handler.seg[2](&handler));
 		(handler.seg[3](&handler), handler.seg[4](&handler));
 	}
+	rl_cleanup_after_signal();
 	handler.seg[4](&handler);
+	ft_free_p2(handler.env);
+	handler.env = NULL;
+	ft_free_p2(handler.builtins);
+	handler.builtins = NULL;
+	ft_free_p2(handler.operators);
+	handler.operators = NULL;
 }

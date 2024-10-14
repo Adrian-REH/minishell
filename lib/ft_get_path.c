@@ -17,6 +17,8 @@ void	ft_free_p2(char **dst)
 	size_t	n_word;
 
 	n_word = 0;
+	if (!dst)
+		return ;
 	while (dst[n_word])
 		free(dst[n_word++]);
 	free(dst);

@@ -24,8 +24,11 @@ void	*ft_free_file(t_file *file)
 		close(file->fd_aux[1]);
 	if (file->content)
 		ft_free_p2(file->content);
-	free(file->idfile);
-	free(file->odfile);
-	free(file->end_heredoc);
+	if (file->idfile)
+		free(file->idfile);
+	if (file->odfile)
+		free(file->odfile);
+	if (file->end_heredoc)
+		free(file->end_heredoc);
 	return (NULL);
 }

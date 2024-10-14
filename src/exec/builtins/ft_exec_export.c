@@ -54,7 +54,7 @@ static void	ft_save_env(t_cmd *cmd, char **str, char *line)
 		return (ft_free_p2(str));
 	if (!reemplace_env(cmd, str, line))
 		cmd->handler->env = ft_sarradd(cmd->handler->env, line);
-	ft_free_p2(str);
+	(ft_free_p2(str));
 }
 
 char	*expand_env(char *result, struct s_cmd *cmd)
@@ -76,7 +76,9 @@ char	*expand_env(char *result, struct s_cmd *cmd)
 		else
 			arr[j] = (ft_strdup(""));
 	}
-	return (ft_sarrtostr(arr, ""));
+	tmp = ft_sarrtostr(arr, "");
+	ft_free_p2(arr);
+	return (tmp);
 }
 
 int	ft_exec_export(struct s_cmd *cmd)
@@ -86,6 +88,7 @@ int	ft_exec_export(struct s_cmd *cmd)
 	size_t	len;
 
 	cmd->status = 0;
+	tmp = NULL;
 	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
 	if (line && (line[6] == ' ' || line[6] == 0))
 	{
@@ -100,10 +103,8 @@ int	ft_exec_export(struct s_cmd *cmd)
 	line = ft_strtrim(line, " ");
 	tmp = expand_env(line, cmd);
 	if (!tmp)
-		ft_save_env(cmd, NULL, line);
+		(ft_save_env(cmd, NULL, line), free(line));
 	else
-	{
-		(ft_save_env(cmd, NULL, tmp));
-	}
+		(ft_save_env(cmd, NULL, tmp), free(line), free(tmp));
 	return (cmd->status);
 }

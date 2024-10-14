@@ -102,8 +102,10 @@ char	*resolve_wildcard(char *str)
 	struct dirent	*entry;
 	char			*result;
 	char			**arr;
+	char			**tmp;
 
 	arr = NULL;
+	tmp = NULL;
 	dir = opendir(".");
 	entry = readdir(dir);
 	while (entry)
@@ -111,8 +113,10 @@ char	*resolve_wildcard(char *str)
 		if (entry->d_type == DT_REG)
 		{
 			result = match_name(entry->d_name, str);
+			tmp = arr;
 			if (result)
-				arr = ft_sarradd(arr, result);
+				arr = ft_sarradd(tmp, result);
+			ft_free_p2(tmp);
 		}
 		entry = readdir(dir);
 	}
