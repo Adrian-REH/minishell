@@ -282,6 +282,7 @@ char		**duparr(char **argenv);
 void		ft_sarrfree(char ***arr);
 char		**ft_sarradd(char **arr, char *string);
 int			ft_sarrprint(char **arr);
+int			ft_tsarrprint(char **arr, char *title);
 int			ft_sarrsize(char **arr);
 char		**sarr_clean_quote(char **arr);
 int			split_tokens(t_handler *s);

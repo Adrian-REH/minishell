@@ -87,11 +87,12 @@ int	ft_exec_export(struct s_cmd *cmd)
 	char	*tmp;
 	size_t	len;
 
-	cmd->status = 0;
-	tmp = NULL;
+	tmp = ((cmd->status = 0), NULL);
 	line = ft_strnstr(cmd->line, "export", ft_strlen(cmd->line));
 	if (line && (line[6] == ' ' || line[6] == 0))
 	{
+		if (line[6] == 0)
+			return (ft_sarrprinttitle(cmd->handler->env, "declare -x "), 0);
 		len = ft_strlen("export");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
@@ -100,8 +101,7 @@ int	ft_exec_export(struct s_cmd *cmd)
 		cmd->status = (ft_putstr_fd("command not found\n", 2), 127);
 		return (127);
 	}
-	line = ft_strtrim(line, " ");
-	tmp = expand_env(line, cmd);
+	tmp = ((line = ft_strtrim(line, " ")), expand_env(line, cmd));
 	if (!tmp)
 		(ft_save_env(cmd, NULL, line), free(line));
 	else

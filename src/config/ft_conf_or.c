@@ -15,11 +15,12 @@
 void	ft_conf_or(t_handler *s, int i)
 {
 	(void)i;
-	s->block[s->info->i].op = BLOCK_OR;
+	if (s->block[s->info->i].op == 0)
+		s->block[s->info->i].op = BLOCK_OR;
 	if (s->block[s->info->i].len_exec_next > 0)
 	{
 		s->info->i++;
-		s->block[s->info->i].isnext = 0;
+		s->block[s->info->i].isnext = 1;
 		s->block[s->info->i].len_exec_prev = 0;
 		s->block[s->info->i].len_exec_next = 0;
 		s->block[s->info->i].next_exec = 0;
@@ -27,6 +28,8 @@ void	ft_conf_or(t_handler *s, int i)
 		s->block[s->info->i].prev_exec = 0;
 		s->block[s->info->i].op = BLOCK_OR;
 	}
-	else
+	else if (s->block[s->info->i].len_exec_prev > 0)
 		s->block[s->info->i].isnext = 1;
+	else
+		s->block[s->info->i].isnext = 0;
 }

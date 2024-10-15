@@ -26,3 +26,19 @@ int	ft_sarrprint(char **arr)
 	}
 	return (i);
 }
+
+int	ft_tsarrprint(char **arr, char *title)
+{
+	int	i;
+
+	if (!arr || !arr[0] || !title)
+		return (0);
+	i = -1;
+	while (arr[++i])
+	{
+		ft_putstr_fd(title, 1);
+		ft_putstr_fd(arr[i], 1);
+		ft_putstr_fd("\n", 1);
+	}
+	return (i);
+}
