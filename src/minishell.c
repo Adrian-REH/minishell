@@ -81,11 +81,10 @@ int	main(int argc, char **argv, char **argenv)
 		handler.line = comand;
 		if (comand && *comand)
 			add_history(comand);
-		handler.seg[0](&handler);
-		handler.seg[1](&handler);
+		(handler.seg[0](&handler), handler.seg[1](&handler));
 		handler.seg[2](&handler);
 		handler.seg[3](&handler);
 		handler.seg[4](&handler);
 	}
-	clean_and_finish(&handler);
+	handler.seg[4](&handler);
 }
