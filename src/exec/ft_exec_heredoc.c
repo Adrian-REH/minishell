@@ -56,7 +56,6 @@ void	heredoc_read(t_exec *e, int i, int j)
 		else
 			j++;
 	}
-
 	close(output);
 	e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
 }
@@ -80,7 +79,6 @@ static void	ft_dup2_outfile(char *outfile, int output)
 
 static int	*ft_exec_give_cmd(t_exec *e, int index)
 {
-
 	e->cmd->pid = fork();
 	if (e->cmd->pid < 0)
 		return (ft_print_error("fork", 1, ""), NULL);
@@ -106,7 +104,6 @@ static int	*ft_exec_give_cmd(t_exec *e, int index)
 
 int	*ft_exec_heredoc(t_exec *e, int index)
 {
-	
 	if (e[index].state[0] == 0 && get_error() == 0)
 	{
 		heredoc_read(e, index, count_redirects(e, index));
