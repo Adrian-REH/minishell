@@ -92,7 +92,7 @@ int	ft_exec_export(struct s_cmd *cmd)
 	if (line && (line[6] == ' ' || line[6] == 0))
 	{
 		if (line[6] == 0)
-			return (ft_sarrprinttitle(cmd->handler->env, "declare -x "), 0);
+			return (ft_tsarrprint(cmd->handler->env, "declare -x "), 0);
 		len = ft_strlen("export");
 		ft_memmove(line, line + len, strlen(line + len) + 1);
 	}
