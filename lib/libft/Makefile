@@ -37,6 +37,7 @@ CORE_FILES = \
 	ft_strdup.c		\
 	ft_strnstr.c	\
 	ft_atoi.c		\
+	ft_isspace.c	\
 	ft_calloc.c		\
 	ft_strlcpy.c	\
 	ft_strlcat.c	\
