@@ -91,3 +91,4 @@ char	**ft_sarraddbyindex(char **arr, char *string, int i)
 	}
 	return ((new_arr[j] = NULL), new_arr);
 }
+

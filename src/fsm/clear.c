@@ -12,28 +12,17 @@
 
 #include "../headers/minishell.h"
 
+void	*ft_free_info(t_data *info)
+{
+	ft_free_p2(info->tokens);
+	return (NULL);
+}
+
 t_handler	*ft_clear(t_handler *s)
 {
-	if (s->block)
-		(ft_free_blocks(s->block, s->len_block), free(s->block));
+	ft_free_blocks(s->block, s->len_block);
 	s->len_block = 0;
-	if (s->info)
-	{
-		ft_free_p2(s->info->tokens);
-		free(s->info);
-		s->info = NULL;
-	}
-	if (s->a)
-	{
-		ft_free_p2(s->a->alphabet);
-		s->a->alphabet = NULL;
-		ft_free_p2(s->a->errors);
-		s->a->errors = NULL;
-		free(s->a->str);
-		free(s->a);
-		s->a = NULL;
-	}
-	s->info = NULL;
+	free(s->block);
 	s->block = NULL;
 	s->state[0] = 0;
 	s->state[1] = 0;
