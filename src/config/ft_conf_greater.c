@@ -75,7 +75,7 @@ static void	ft_move_conf(t_exec *exec, int k)
 	int	j;
 
 	j = k - 1;
-	while (j >= 0 && exec[j].op != PIPE && exec[j].op != HEREDOC)
+	while (j >= 0 && exec[j].op != PIPE)
 	{
 		if (exec[j].state[0] == 0)
 		{
@@ -88,7 +88,9 @@ static void	ft_move_conf(t_exec *exec, int k)
 			exec[k].cmd[0].fd_aux[0] = (exec[j].cmd[0].fd_aux[0]);
 			exec[k].cmd[0].fd_aux[1] = (exec[j].cmd[0].fd_aux[1]);
 			exec[k].state[0] = 0;
+			exec[k].state[1] = 0;
 			exec[j].state[0] = 1;
+			exec[j].state[1] = 1;
 		}
 		j--;
 	}

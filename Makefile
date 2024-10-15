@@ -15,7 +15,7 @@ NAME_B = minishell_bonus
 
 CC = gcc
 
-CFLAGS = -Werror -Wall -Wextra # -g3 -fsanitize=thread 
+CFLAGS = -Werror -Wall -Wextra -g3 # -g3 -fsanitize=thread 
 
 RM = rm -rf
 OBJ_DIRS = obj/

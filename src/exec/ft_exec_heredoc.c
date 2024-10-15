@@ -41,12 +41,15 @@ void	heredoc_read(t_exec *e, int i, int j)
 {
 	int		state;
 	int		output;
+	int		eherd;
 
 	output = (e[i].cmd->fd_aux[WRITE]);
+	eherd = 0;
 	while (j < (i + 1) && (e[j].op <= 8 && e[j].op >= 5))
 	{
 		if (e[j].op == 6)
 		{
+			eherd = 1;
 			state = ft_execute_heredocs(e[j].file.end_heredoc, &j, output);
 			if (get_error() > 0)
 				break ;
@@ -57,7 +60,8 @@ void	heredoc_read(t_exec *e, int i, int j)
 			j++;
 	}
 	close(output);
-	e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
+	if (eherd)
+		e[i].file.input = ((e[i].cmd->pid = 0), e[i].cmd->fd_aux[READ]);
 }
 
 static void	ft_dup2_outfile(char *outfile, int output)

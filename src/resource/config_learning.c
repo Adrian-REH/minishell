@@ -25,9 +25,9 @@ void	tactions_handler_init2(t_handler *a)
 
 void	tactions_handler_init(t_handler *a)
 {
-	a->fta[1][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_greater;
-	a->fta[2][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_less;
-	a->fta[4][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_append;
+	//a->fta[1][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_greater;
+	//a->fta[2][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_less;
+	//a->fta[4][NOT_OPERATOR][0] = (void (*)(void *, int))ft_conf_append;
 	a->fta[EMPTY][UNIQ_COMMAND][EMPTY] = (void (*)(void *, int))ft_conf_cmd;
 	a->fta[EMPTY][NOT_OPERATOR][8] = (void (*)(void *, int))ft_conf_cmd;
 	a->fta[EMPTY][NOT_OPERATOR][7] = (void (*)(void *, int))ft_conf_cmd;

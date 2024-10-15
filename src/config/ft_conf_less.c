@@ -82,6 +82,8 @@ static void	ft_move_conf(t_exec *exec, int k)
 		{
 			exec[k].cmd->line = exec[j].cmd[0].line;
 			exec[j].cmd->line = NULL;
+			if (exec[k].cmd->cmd)
+				exec[k].cmd->cmd = (free(exec[k].cmd->cmd), NULL);
 			exec[k].cmd->cmd = exec[j].cmd[0].cmd;
 			exec[j].cmd->cmd = NULL;
 			exec[k].cmd->fd_aux[0] = (exec[j].cmd->fd_aux[0]);

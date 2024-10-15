@@ -57,9 +57,15 @@ static int	*ft_exec(t_exec *e, int index)
 int	*ft_exec_greater(t_exec *e, int index)
 {
 	t_exec	*exec;
+	int		j;
 
 	exec = e;
+	j = index;
 	e = &e[index];
+	while (j > 0 && exec[j].op != PIPE)
+		j--;
+	if (exec[j].op == PIPE)
+		e->file.input = exec[j].file.input;
 	if (e->state[0] == 0)
 	{
 		heredoc_read(exec, index, count_redirects(exec, index));

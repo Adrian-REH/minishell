@@ -25,6 +25,7 @@ int	count_redirects(t_exec *e, int i)
 
 static void	infile_open(t_exec *e, int i, int *j)
 {
+	printf("AQUI\n");
 	e[i].file.input = open(e[*j].file.idfile, O_RDONLY, 0644);
 	if (e[i].file.input == -1)
 		(ft_print_error(strerror(errno), 1, NULL));
