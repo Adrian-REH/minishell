@@ -70,6 +70,8 @@ void	ft_process_quote(struct s_cmd *cmd, char *line)
 		else if (result[i] == '$' \
 		&& ft_isalpha(result[i + 1]) && flag)
 			line = extract_and_print_env(result, result, cmd, &i);
+		else if (result[i] == '\\' && result[i + 1] == 'n' && flag)
+			i += (printf("%c", '\n'), 1);
 		else
 			printf("%c", result[i]);
 	}
