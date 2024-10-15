@@ -20,16 +20,14 @@ t_exec	*place_exec(t_handler *a, t_exec *exec, int *i_exec)
 	if (b->isnext)
 	{
 		b->next_exec = \
-		ft_realloc(b->next_exec, sizeof(t_exec) * (b->len_exec_next), \
-		sizeof(t_exec) * (b->len_exec_next + 1));
+		ft_realloc(b->next_exec, sizeof(t_exec) * (b->len_exec_next + 1));
 		exec = b->next_exec;
 		*i_exec = b->len_exec_next;
 	}
 	else
 	{
 		b->prev_exec = \
-		ft_realloc(b->prev_exec, sizeof(t_exec) * (b->len_exec_prev), \
-		sizeof(t_exec) * (b->len_exec_prev + 1));
+		ft_realloc(b->prev_exec, sizeof(t_exec) * (b->len_exec_prev + 1));
 		*i_exec = b->len_exec_prev;
 		exec = b->prev_exec;
 	}
@@ -40,17 +38,10 @@ t_exec	*place_exec(t_handler *a, t_exec *exec, int *i_exec)
 
 t_handler	*place_uniq_cmd(t_handler *a, int i)
 {
-	char	**tmp;
-
-	tmp = NULL;
 	if ((a->state[0] == 6 || a->state[0] == 0) \
 	&& a->state[1] == 14 && a->state[2] == 0)
-	{
-		tmp = do_exec(a->info->tokens[i - 1], a->env);
-		if (tmp)
+		if (do_exec(a->info->tokens[i - 1], a->env))
 			a->state[1] = UNIQ_COMMAND;
-	}
-	ft_free_p2(tmp);
 	return (a);
 }
 

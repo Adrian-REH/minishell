@@ -86,5 +86,5 @@ int	main(int argc, char **argv, char **argenv)
 		handler.seg[3](&handler);
 		handler.seg[4](&handler);
 	}
-	clean_and_finish(&handler);
+	handler.seg[4](&handler);
 }
