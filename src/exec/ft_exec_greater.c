@@ -43,7 +43,7 @@ static int	*ft_exec(t_exec *e, int index)
 	else if (e->cmd->pid == 0)
 	{
 		get_execute_files(exec, index);
-		e->file.output = open(e->file.odfile, 1 | O_WRONLY | O_CREAT, 0644);
+		e->file.output = open(e->file.odfile, O_WRONLY | 64 | 512, 0644);
 		if (e->file.output == -1)
 			(ft_print_error(strerror(errno), 1, NULL));
 		if (dup2(e->file.output, STDOUT_FILENO) == -1)
