@@ -17,7 +17,6 @@ int	idx(char *alphabet[], char c)
 	int	i;
 
 	i = -1;
-
 	if (ft_chrpos("\t\n\v\f\r ", c, 0) != -1)
 		return (0);
 	while (alphabet[++i])
