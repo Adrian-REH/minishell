@@ -26,7 +26,9 @@ static void	init_conf(t_exec *exec, t_handler *s, int i)
 	exec->file.output = 1;
 	exec->op = UNIQ_COMMAND;
 	exec->cmd->cmd = do_exec(exec->cmd->line, s->env);
-	exec->cmd->cmd = sarr_clean_quote(exec->cmd->cmd);
+	if (!exec->cmd->cmd)
+		exec->state[0] = 1;
+	//exec->cmd->cmd = sarr_clean_quote(exec->cmd->cmd);
 }
 
 void	ft_conf_cmd(t_handler *s, int i)

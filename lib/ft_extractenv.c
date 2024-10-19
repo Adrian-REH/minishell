@@ -12,20 +12,20 @@
 
 #include "../src/headers/minishell.h"
 
-char	*get_env_substr(t_cmd *cmd, char *line, int *i, int j)
+char	*get_env_substr(char**env, char *line, int *i, int j)
 {
-	while (cmd->handler->env[++j])
+	while (env[++j])
 	{
-		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
+		if (!ft_strncmp(env[j], line, ft_strlen(line)))
 		{
 			*i += ft_strlen(line) - 1;
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
+			return (ft_strdup(env[j] + ft_strlen(line)));
 		}
 	}
 	return (NULL);
 }
 
-char	*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i)
+char	*extract_envbyindex(char *line, char *result, char **env, int *i)
 {
 	char	*tmp;
 	int		limit;
@@ -46,13 +46,13 @@ char	*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i)
 	if (ft_strchr(line, '=') == 0)
 		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
 	j = -1;
-	tmp = get_env_substr(cmd, line, i, j);
+	tmp = get_env_substr(env, line, i, j);
 	if (!tmp)
-		return (NULL);
+		return ((*i += ft_strlen(line) - 1), NULL);
 	return (tmp);
 }
 
-char	*extract_env(char *line, char *result, t_cmd *cmd)
+char	*extract_env(char *line, char *result, char **env)
 {
 	char	*tmp;
 	int		j;
@@ -70,10 +70,10 @@ char	*extract_env(char *line, char *result, t_cmd *cmd)
 	if (ft_strchr(line, '=') == 0)
 		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
 	j = -1;
-	while (cmd->handler->env[++j])
+	while (env[++j])
 	{
-		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
+		if (!ft_strncmp(env[j], line, ft_strlen(line)))
+			return (ft_strdup(env[j] + ft_strlen(line)));
 	}
 	return (NULL);
 }

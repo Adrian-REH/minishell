@@ -24,11 +24,14 @@ src/excep/service_excep.c\
 src/excep/syntax_error.c\
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
+lib/ft_sarrjoin.c \
 lib/ft_sarrtostr.c \
 lib/ft_extractenv.c \
 lib/ft_swap_lst_cmd.c \
 lib/is_open_fd.c \
 lib/ft_free_execs.c \
+lib/toggle_quote_flag.c \
+lib/ft_expand_tokens.c \
 lib/ft_free_file.c \
 lib/ft_free_blocks.c \
 lib/ft_join_tokens.c \

@@ -79,6 +79,7 @@ t_handler	*ft_parser(t_handler *s)
 	s->info->len_tokens = ft_sarrsize(s->info->tokens);
 	split_tokens(s);
 	(move_tokens(s), joins_tokens(s));
+	ft_expand_tokens(s);
 	s->code = verify_syntax(s);
 	s->code = get_error();
 	save_error(0);

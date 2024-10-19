@@ -39,6 +39,8 @@ static int	*ft_exec(t_exec *e, int index)
 		return (ft_print_error("fork", 1, ""), NULL);
 	else if (e->cmd->pid == 0)
 	{
+		if (e->file.input != 0)
+			close(e->file.input);
 		get_execute_files(exec, index);
 		e->file.input = open(e->file.idfile, O_RDONLY, 0644);
 		if (e->file.input == -1)
@@ -48,8 +50,6 @@ static int	*ft_exec(t_exec *e, int index)
 		(close(e->file.input), ft_dup2_outfile(e->file.odfile, e->file.output));
 		exit(dispatch_command(e));
 	}
-	if (e->file.output != 1)
-		close(e->file.output);
 	close(exec[index].cmd->fd_aux[WRITE]);
 	return (NULL);
 }
@@ -66,8 +66,6 @@ int	*ft_exec_less(t_exec *e, int index)
 		ft_exec(exec, index);
 		if (e->file.output != 1)
 			close(e->file.output);
-		if (e->file.input != 0)
-			close(e->file.input);
 	}
 	e->status = e->state[0];
 	e->state[1] = e->state[0];

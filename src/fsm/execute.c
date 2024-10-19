@@ -49,7 +49,11 @@ int	execute_cmds(t_block *b, int isnext)
 			j += (setup_exec_io(j, i, b, exec), 1);
 			if (j == 1 && 1 != b->len_exec && \
 			(exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == 5))
+			{
 				exec[i].file.output = (b->fd[1]);
+				if (exec[i].op == 5)
+					exec[i].file.input = (b->fd[0]);
+			}
 			else if (j == b->len_exec && \
 			(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
 				exec[i].file.output = 1;
