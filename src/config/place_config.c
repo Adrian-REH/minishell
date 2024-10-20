@@ -56,7 +56,23 @@ t_handler	*place_uniq_cmd(t_handler *a, int i)
 
 t_handler	*place_priority(t_handler *a)
 {
-	if (a->state[2] == 9 || a->state[2] == 10)
+	if (a->state[2] == 9 && a->block[a->info->i].isnext)
+	{
+		a->state[2] = 0;
+	}
+	else if (a->state[2] == 9 && !a->block[a->info->i].isnext)
+	{
 		a->block[a->info->i].priority = ((a->state[2] = 0), 1);
+	}
+	else if (a->state[2] == 10 && !a->block[a->info->i].isnext)
+	{
+		a->state[2] = 0;
+		if (a->block[a->info->i - 1].op)
+			a->block[a->info->i - 1].priority = 1;
+	}
+	else if (a->state[2] == 10 && a->block[a->info->i].isnext)
+	{
+		a->block[a->info->i].priority = ((a->state[2] = 0), 1);
+	}
 	return (a);
 }

@@ -36,7 +36,7 @@ int	st_blk(int sts, int op, int next_op)
 	status[BLOCK_EMPTY][0][BLOCK_OR] = 0;
 	status[BLOCK_EMPTY][1][BLOCK_OR] = 1;
 	status[BLOCK_OR][0][BLOCK_OR] = 1;
-	status[BLOCK_OR][1][BLOCK_OR] = 1;
+	status[BLOCK_OR][1][BLOCK_OR] = 0;
 	status[BLOCK_OR][0][BLOCK_AND] = 0;
 	status[BLOCK_OR][1][BLOCK_AND] = 1;
 	status[BLOCK_AND][0][BLOCK_AND] = 0;

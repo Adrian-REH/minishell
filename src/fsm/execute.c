@@ -70,11 +70,8 @@ int	ft_waiting_pid(t_exec *exec, int len)
 	return (exec[len - 1].status);
 }
 
-int	execute_block_sequence(t_handler *s, int i)
+int	execute_block_sequence(t_block	*b, int l_blk, int i)
 {
-	t_block	*b;
-
-	b = s->block;
 	if (b[i].len_exec_prev)
 	{
 		if (i == 0 && st_blk(0, BLOCK_EMPTY, b[i].op))
@@ -84,17 +81,21 @@ int	execute_block_sequence(t_handler *s, int i)
 		execute_cmds(&(b[i]), 0);
 		b[i].status = ft_waiting_pid(b[i].prev_exec, b[i].len_exec_prev);
 	}
+	else
+		b[i].status = b[i - 1].status;
 	if (b[i].len_exec_next)
 	{
 		if (st_blk(b[i].status, b[i].op, b[i].op))
 			return (1);
 		execute_cmds(&(b[i]), 1);
 		b[i].status = ft_waiting_pid(b[i].next_exec, b[i].len_exec_next);
-		if (i == s->len_block - 1 && st_blk(b[i].status, b[i].op, BLOCK_EMPTY))
+		if (i == l_blk - 1 && st_blk(b[i].status, b[i].op, BLOCK_EMPTY))
 			return (1);
-		else if (i != s->len_block - 1 && st_blk(b[i].status, b[i].op, b[i].op))
+		else if (i != l_blk - 1 && st_blk(b[i].status, b[i].op, b[i].op))
 			return (1);
 	}
+	else
+		b[i].status = b[i - 1].status;
 	return (0);
 }
 
@@ -109,7 +110,14 @@ t_handler	*ft_execute(t_handler *s)
 		return (s);
 	while (++i < s->len_block)
 	{
-		if (execute_block_sequence(s, i) == -1)
+		if (!s->block[i - 1].priority && s->block[i].priority && \
+		s->block[i - 1].status)
+		{
+			if (s->block[i + 1].op)
+				s->block[i].status = s->block[i - 1].status;
+			continue ;
+		}
+		if (execute_block_sequence(s->block, s->len_block, i) == -1)
 			continue ;
 	}
 	return ((s->code = s->block[i - 1].status), s);
