@@ -34,7 +34,7 @@ char	*ft_process_quote(char **env, char *line, int code)
 			arr = ft_sarradd(arr, resolve_wildcard(&result[i], &i));
 			continue ;
 		}
-		if (result[i] == '$' && result[i + 1] == '?' && flag != 2)
+		else if (result[i] == '$' && result[i + 1] == '?' && flag != 2)
 		{
 			arr = ft_sarradd(arr, ft_itoa(code));
 			i++;
