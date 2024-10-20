@@ -25,9 +25,9 @@ char	*get_env_substr(char**env, char *line, int *i, int j)
 	return (NULL);
 }
 
-int ft_ischrenv(char c)
+int	ft_ischrenv(char c)
 {
-	return ((ft_isalnum(c) || c == '_')  && c != ' ' && c != '$');
+	return ((ft_isalnum(c) || c == '_') && c != ' ' && c != '$');
 }
 
 char	*extract_envbyindex(char *line, char *result, char **env, int *i)

@@ -104,14 +104,15 @@ char	*resolve_wildcard(char *str, int *j)
 	char			**arr;
 	char			**tmp;
 	char			*tmpstr;
+	int				i;
 
 	arr = NULL;
 	tmp = NULL;
 	dir = opendir(".");
 	entry = readdir(dir);
-	int i;
 	i = 0;
-	while (str[i] != ' ' && str[i] != '\0' && str[i]!= '"' && str[i]!= '\'' && str[i] != ' ')
+	while (str[i] != ' ' && str[i] != '\0' && str[i] != '"'
+		&& str[i] != '\'' && str[i] != ' ')
 		i++;
 	tmpstr = ft_substr(str, 0, i);
 	if (!tmpstr)
@@ -123,10 +124,7 @@ char	*resolve_wildcard(char *str, int *j)
 			result = match_name(entry->d_name, tmpstr);
 			tmp = arr;
 			if (result)
-			{
 				arr = ft_sarradd(tmp, result);
-				//ft_free_p2(tmp);
-			}
 		}
 		entry = readdir(dir);
 	}

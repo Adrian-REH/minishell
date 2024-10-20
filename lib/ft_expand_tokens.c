@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_duparr.c                                        :+:      :+:    :+:   */
+/*   ft_expand_tokens.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msantill <msantill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 06:10:57 by adherrer          #+#    #+#             */
-/*   Updated: 2024/09/15 06:34:25 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:50:48 by msantill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*ft_process_quote(char **env, char *line, int code)
 	return (ft_sarrtostr(arr, ""));
 }
 
-void ft_expand_tokens(t_handler *s)
+void	ft_expand_tokens(t_handler *s)
 {
 	int		i;
 	char	*tmp;

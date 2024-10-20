@@ -23,7 +23,8 @@ int	reemplace_env(t_cmd *cmd, char **str, char *line)
 		{
 			if (ft_strchr(cmd->handler->env[i] + ft_strlen(str[0]), '='))
 			{
-				cmd->handler->env[i] = (free(cmd->handler->env[i]), ft_strdup(line));
+				cmd->handler->env[i]
+					= (free(cmd->handler->env[i]), ft_strdup(line));
 				return (0);
 			}
 		}
