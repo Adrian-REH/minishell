@@ -34,20 +34,11 @@ void	ft_process_quote_andprint(struct s_cmd *cmd, char *line)
 
 	result = ft_strtrim(line, " ");
 	flag = ((i = -1), 2);
+	(void)cmd;
 	while (result[++i])
 	{
 		if (toggle_flag_printquote(&flag, result, i))
 			continue ;
-		if (result[i] == '$' && result[i + 1] == '?' && flag)
-		{
-			(printf("%d", cmd->handler->code), i++);
-			continue ;
-		}
-		else if (result[i] == '$' \
-		&& ft_isalpha(result[i + 1]) && flag)
-			line = extract_and_print_env(result, result, cmd->handler->env, &i);
-		else if (result[i] == '\\' && result[i + 1] == 'n' && flag)
-			i += (printf("%c", '\n'), 1);
 		else
 			printf("%c", result[i]);
 	}
