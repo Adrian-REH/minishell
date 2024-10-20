@@ -22,9 +22,9 @@ int	handle_wildcard(char **arr[], char *result, int *i, int flag)
 	return (0);
 }
 
-int	handle_exit_code(char **arr[], char *result, int *i, int flag, int code)
+int	handle_exit_code(char **arr[], char *result, int *i, int code)
 {
-	if (result[*i] == '$' && result[*i + 1] == '?' && flag != 2)
+	if (result[*i] == '$' && result[*i + 1] == '?')
 	{
 		*arr = ft_sarradd(*arr, ft_itoa(code));
 		(*i)++;
@@ -35,7 +35,7 @@ int	handle_exit_code(char **arr[], char *result, int *i, int flag, int code)
 
 int	handle_env_var(char **arr[], char *result, char **env, int *i)
 {
-	char *line;
+	char	*line;
 
 	if (result[*i] == '$' && ft_isalpha(result[*i + 1]))
 	{

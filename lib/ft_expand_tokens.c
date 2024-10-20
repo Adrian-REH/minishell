@@ -52,7 +52,7 @@ char	*ft_process_quote(char **env, char *result, int code)
 			continue ;
 		if (handle_wildcard(&arr, result, &i, flag))
 			continue ;
-		if (handle_exit_code(&arr, result, &i, flag, code))
+		if (flag != 2 && handle_exit_code(&arr, result, &i, code))
 			continue ;
 		if (flag != 2 && handle_env_var(&arr, result, env, &i))
 			continue ;

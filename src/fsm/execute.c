@@ -12,23 +12,19 @@
 
 #include "../headers/minishell.h"
 
-void	setup_exec_io(int j, int i, t_block *b, t_exec *exec)
+t_exec	*select_exec_block(t_block *b, int isnext)
 {
-	if ((j == b->len_exec - 1) && \
-	(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
+	if (isnext)
 	{
-		close(b->fd[1]);
-		exec[i].file.input = b->fd[0];
-		exec[i].file.output = 1;
-		if (exec[i].cmd[1].cmd)
-			exec[i].cmd[1].towait = 1;
+		b->len_exec = b->len_exec_next;
+		return (b->next_exec);
 	}
-	if (j < (b->len_exec) && j > 0 && \
-	(exec[i].op == 3 || exec[i].op == 7 || exec[i].op == 5 || exec[i].op == 6))
+	else
 	{
-		exec[i].file.input = b->fd[0];
-		exec[i].file.output = (pipe(b->fd), b->fd[1]);
+		b->len_exec = b->len_exec_prev;
+		return (b->prev_exec);
 	}
+	return (NULL);
 }
 
 int	execute_cmds(t_block *b, int isnext)
@@ -38,25 +34,12 @@ int	execute_cmds(t_block *b, int isnext)
 	t_exec	*exec;
 
 	j = ((i = -1), 0);
-	if (isnext)
-		b->len_exec = ((exec = b->next_exec), b->len_exec_next);
-	else
-		b->len_exec = ((exec = b->prev_exec), b->len_exec_prev);
+	exec = select_exec_block(b, isnext);
 	while (++i < b->len_exec && get_error() == 0)
 	{
 		if (exec[i].func[0][0])
 		{
 			j += (setup_exec_io(j, i, b, exec), 1);
-			if (j == 1 && 1 != b->len_exec && \
-			(exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == 5))
-			{
-				exec[i].file.output = (b->fd[1]);
-				if (exec[i].op == 5)
-					exec[i].file.input = (b->fd[0]);
-			}
-			else if (j == b->len_exec && \
-			(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
-				exec[i].file.output = 1;
 			if (exec[i].func[EMPTY][EMPTY])
 				exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
 		}

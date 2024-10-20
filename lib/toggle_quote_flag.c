@@ -57,4 +57,3 @@ int	toggle_flag_printquote(int *flag, char *result, int i)
 	}
 	return (0);
 }
-

@@ -12,21 +12,6 @@
 
 #include "../headers/minishell.h"
 
-char	*ft_strchgchr(char *str, char c, char chg)
-{
-	int	i;
-
-	i = -1;
-	if (!str)
-		return (NULL);
-	while (str[++i])
-	{
-		if (str[i] == c)
-			str[i] = chg;
-	}
-	return (str);
-}
-
 int	evaluate_quotes(t_automata *a)
 {
 	a->ostate = 0;
@@ -49,16 +34,44 @@ int	evaluate_quotes(t_automata *a)
 	return (a->state);
 }
 
+char	**process_arr_and_tmp(char **arr)
+{
+	char	**tmp;
+
+	if (!ft_strchr(arr[0], '"') && !ft_strchr(arr[0], '\''))
+	{
+		tmp = ft_split(arr[0], ' ');
+		if (tmp && arr)
+		{
+			tmp = ft_sarrjoin(tmp, arr + 1);
+			ft_free_p2(arr);
+			return (tmp);
+		}
+	}
+	return (arr);
+}
+
+void	remove_quotes_from_arr(char **arr)
+{
+	int	i;
+
+	i = -1;
+	while (arr[++i])
+	{
+		if (*arr[i] == '"')
+			ft_strdelchr(arr[i], '\"');
+		if (*arr[i] == '\'')
+			ft_strdelchr(arr[i], '\'');
+	}
+}
+
 char	**ft_resolve_quotes(char *line)
 {
-	char		**tmp;
 	char		**arr;
-	int			i;
 	t_automata	a;
 	t_data		info;
 
 	arr = NULL;
-	tmp = NULL;
 	ft_bzero(&a, sizeof(t_automata));
 	ft_bzero(&info, sizeof(t_data));
 	automata_init(&a, &info);
@@ -68,24 +81,8 @@ char	**ft_resolve_quotes(char *line)
 	if (!arr)
 		return (NULL);
 	ft_free_p2(info.tokens);
-	if (!ft_strchr(arr[0], '"') && !ft_strchr(arr[0], '\''))
-	{
-		tmp = ft_split(arr[0], ' ');
-		if (tmp && arr)
-		{
-			tmp = ft_sarrjoin(tmp, arr + 1);
-			ft_free_p2(arr);
-			arr = tmp;
-		}
-	}
-	i = -1;
-	while (arr[++i])
-	{
-		if (*arr[i] == '"')
-			ft_strdelchr(arr[i], '\"');
-		if (*arr[i] == '\'')
-			ft_strdelchr(arr[i], '\'');
-	}
+	arr = process_arr_and_tmp(arr);
+	remove_quotes_from_arr(arr);
 	return (arr);
 }
 

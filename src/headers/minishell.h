@@ -180,6 +180,7 @@ typedef struct s_handler
 }						t_handler;
 
 /*------------EXECUTE--------------*/
+void		setup_exec_io(int j, int i, t_block *b, t_exec *exec);
 int			ft_execute_heredocs(char *end_heredoc, int *index, int output);
 void		heredoc_read(t_exec *e, int i, int j);
 void		get_execute_files(t_exec *e, int i);
@@ -243,8 +244,9 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		*concat_and_release(char *val, char *result, char **arr);
 int			handle_wildcard(char **arr[], char *result, int *i, int flag);
-int			handle_exit_code(char **arr[], char *result, int *i, int flag, int code);
+int			handle_exit_code(char **arr[], char *result, int *i, int code);
 int			handle_env_var(char **arr[], char *result, char **env, int *i);
 char		**ft_sarrjoin(char **arr1, char **arr2);
 int			evaluate_quotes(t_automata *a);
