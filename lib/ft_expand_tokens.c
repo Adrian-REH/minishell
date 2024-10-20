@@ -20,13 +20,18 @@ char	*ft_process_quote(char **env, char *line, int code)
 	char	**arr;
 
 	result = ft_strtrim(line, " ");
-	flag = ((i = -1), 2);
+	flag = ((i = -1), 0);
 	arr = NULL;
 	while (result[++i])
 	{
 		if (toggle_quote_flag(&flag, result, i))
 		{
 			arr = ft_sarraddchr(arr, result[i]);
+			continue ;
+		}
+		if (result[i] == '*' && flag == 0)
+		{
+			arr = ft_sarradd(arr, resolve_wildcard(&result[i], &i));
 			continue ;
 		}
 		if (result[i] == '$' && result[i + 1] == '?' && flag)

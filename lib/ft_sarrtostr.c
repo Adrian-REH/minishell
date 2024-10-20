@@ -19,6 +19,8 @@ char	*ft_sarrtostr(char **arr, char *sep)
 	int		i;
 
 	i = -1;
+	if (!arr)
+		return (NULL);
 	str = ft_strdup("");
 	while (arr[++i])
 	{

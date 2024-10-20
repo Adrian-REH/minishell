@@ -87,7 +87,7 @@ char	*ft_process_wildcards(char **arr)
 	{
 		if (ft_strchr(*arr, '*') && !ft_strchr(*arr, '"' ) \
 		&& !ft_strchr(*arr, '\'') && flag)
-			val = resolve_wildcard(*arr);
+			val = resolve_wildcard(*arr, NULL);
 		else if (ft_strchr(*arr, '\'') || ft_strchr(*arr, '\"'))
 			flag = !flag;
 		result = concat_and_release(val, result, arr);
@@ -96,29 +96,42 @@ char	*ft_process_wildcards(char **arr)
 	return (result);
 }
 
-char	*resolve_wildcard(char *str)
+char	*resolve_wildcard(char *str, int *j)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	char			*result;
 	char			**arr;
 	char			**tmp;
+	char			*tmpstr;
 
 	arr = NULL;
 	tmp = NULL;
 	dir = opendir(".");
 	entry = readdir(dir);
+	int i;
+	i = 0;
+	while (str[i] != ' ' && str[i] != '\0' && str[i]!= '"' && str[i]!= '\'' && str[i] != ' ')
+		i++;
+	tmpstr = ft_substr(str, 0, i);
+	if (!tmpstr)
+		return (NULL);
 	while (entry)
 	{
 		if (entry->d_type == DT_REG)
 		{
-			result = match_name(entry->d_name, str);
+			result = match_name(entry->d_name, tmpstr);
 			tmp = arr;
 			if (result)
+			{
 				arr = ft_sarradd(tmp, result);
-			ft_free_p2(tmp);
+				//ft_free_p2(tmp);
+			}
 		}
 		entry = readdir(dir);
 	}
+	free(tmpstr);
+	if (j && i)
+		*j += i - 1;
 	return (ft_sarrtostr(arr, " "));
 }

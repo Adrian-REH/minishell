@@ -63,7 +63,6 @@ void	operators_init(t_handler *a)
 	a->operators = ft_sarradd(a->operators, "&&");
 	a->operators = ft_sarradd(a->operators, "(");
 	a->operators = ft_sarradd(a->operators, ")");
-	a->operators = ft_sarradd(a->operators, "*");
 }
 
 void	errors_init_amper(t_handler *h)

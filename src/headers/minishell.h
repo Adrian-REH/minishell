@@ -183,7 +183,7 @@ typedef struct s_handler
 int			ft_execute_heredocs(char *end_heredoc, int *index, int output);
 void		heredoc_read(t_exec *e, int i, int j);
 void		get_execute_files(t_exec *e, int i);
-char		*resolve_wildcard(char *str);
+char		*resolve_wildcard(char *str, int *i);
 char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
 int			ft_exec_echo(t_cmd *cmd);
