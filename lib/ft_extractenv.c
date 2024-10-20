@@ -25,21 +25,23 @@ char	*get_env_substr(char**env, char *line, int *i, int j)
 	return (NULL);
 }
 
+int ft_ischrenv(char c)
+{
+	return ((ft_isalnum(c) || c == '_')  && c != ' ' && c != '$');
+}
+
 char	*extract_envbyindex(char *line, char *result, char **env, int *i)
 {
 	char	*tmp;
 	int		limit;
 	int		j;
 
-	if (ft_strchr(result + *i + 1, '$'))
-		line = ft_strchr(result + *i + 1, '$') - 1;
-	if (ft_strchr(result + *i + 1, ' '))
-		limit = (ft_strchr(result + *i + 1, ' ') - result) - 1;
-	else
-		limit = ft_strlen(result);
-	if (limit - *i > 0)
+	limit = 0;
+	while (ft_ischrenv(result[*i + limit + 1]))
+		limit++;
+	if (limit > 0)
 	{
-		tmp = ft_substr(result, *i + 1, limit - *i);
+		tmp = ft_substr(result, *i + 1, limit);
 		line = ft_strtrim(tmp, "\"");
 		free(tmp);
 	}

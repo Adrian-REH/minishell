@@ -6,3 +6,8 @@ minishell
 .default
 libft.a
 Out
+*.html
+*.gcov
+*.gcno
+*.gcda
+*.css

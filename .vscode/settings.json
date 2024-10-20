@@ -13,5 +13,8 @@
     "minishell.h": "c",
     "numbers": "c"
   },
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "gcovViewer.buildDirectories": [
+    "/mnt/c/Users/Usuario/Desktop/Proyectos/c/minishell/minishell/obj"
+  ]
 }

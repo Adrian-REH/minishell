@@ -178,6 +178,7 @@ typedef struct s_handler
 	int					(*ferror[15][15][15])(void *, int error);
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
+
 /*------------EXECUTE--------------*/
 int			ft_execute_heredocs(char *end_heredoc, int *index, int output);
 void		heredoc_read(t_exec *e, int i, int j);

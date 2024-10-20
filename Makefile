@@ -15,13 +15,12 @@ NAME_B = minishell_bonus
 
 CC = gcc
 
-CFLAGS = -Werror -Wall -Wextra -g3 # -g3 -fsanitize=thread 
+CFLAGS = -Werror -Wall -Wextra -g3  --coverage # -fsanitize=thread 
+LDFLAGS = -lgcov
 
 RM = rm -rf
 OBJ_DIRS = obj/
-SRCS = 	 lib/ft_sarrprint.c \
-src/excep/service_excep.c\
-src/excep/syntax_error.c\
+SRCS =	lib/ft_sarrprint.c \
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
 lib/ft_sarrjoin.c \
@@ -63,6 +62,8 @@ lib/ft_keep_content_byquote.c \
 lib/ft_keep_content_byspace.c \
 lib/ft_handler_keep_content.c \
 lib/ft_count_blocks.c \
+src/excep/service_excep.c\
+src/excep/syntax_error.c\
 src/minishell.c \
 src/fsm/parser.c \
 src/fsm/config.c \
@@ -107,7 +108,7 @@ LIBFT = lib/libft/libft.a
 OBJ = $(patsubst %.c, $(OBJ_DIRS)%.o, $(SRCS))
 
 obj/%.o: %.c | $(OBJ_DIRS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 
 CYAN = \033[0;96m
@@ -116,7 +117,7 @@ DEF_COLOR = \033[0;49m
 $(NAME) : $(OBJ)
 	@echo "$(CYAN) ☕ EXECUTE DEFAULT PART! ☕ $(DEF_COLOR)"
 	make all -C lib/libft
-	gcc $(CFLAGS)  $(OBJ) $(LIBFT) -o $(NAME) -lreadline
+	gcc $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline $(LDFLAGS)
 	@echo "$(CYAN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
 $(NAME_B) : $(OBJ)
@@ -148,8 +149,7 @@ fclean : clean
 
 clean :
 	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
-	$(RM) $(OBJ)
-	$(RM) $(OBJ_DIRS)
+	$(RM)  $(OBJ) $(OBJ_DIRS) *.gcno *.gcda *.gcov *.html *.css
 	make clean -C lib/libft
 
 re : fclean all
@@ -157,4 +157,13 @@ re : fclean all
 norm :
 	norminette | grep -i "error"
 
-.PHONY:     all clean fclean re bonus norm
+cov:
+	gcov --object-directory=obj/lib lib/ft_sarrprint.c;
+	@for src in $(SRCS); do \
+		echo "Processing $$src"; \
+		dir=$$(dirname "$$src"); \
+		gcov --object-directory=obj/$$dir "$$src"; \
+	done
+	gcovr -r . --html --html-details -o coverage.html
+
+.PHONY:     all clean fclean re bonus norm cov
