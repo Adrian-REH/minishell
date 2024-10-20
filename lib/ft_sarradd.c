@@ -60,7 +60,7 @@ char	**ft_sarraddchr(char **arr, char c)
 		}
 		ft_sarrfree(&arr);
 	}
-	new_arr[size++] = ft_substr(&c, 0 , 1);
+	new_arr[size++] = ft_substr(&c, 0, 1);
 	new_arr[size] = NULL;
 	return (new_arr);
 }

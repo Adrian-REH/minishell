@@ -12,7 +12,6 @@
 
 #include "../../headers/minishell.h"
 
-
 char	*extract_and_print_env(char *line, char *result, char **env, int *i)
 {
 	char	*tmp;

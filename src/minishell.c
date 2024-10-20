@@ -58,6 +58,7 @@ void	clean_and_finish(t_handler *handler)
 	ft_free_p2(handler->operators);
 	handler->operators = NULL;
 }
+
 void	automata_initss(t_automata *a, void *data)
 {
 	alphabet_init(a);
@@ -66,6 +67,7 @@ void	automata_initss(t_automata *a, void *data)
 	a->data = data;
 	a->get_state = get_state;
 }
+
 int	main(int argc, char **argv, char **argenv)
 {
 	char				*comand;

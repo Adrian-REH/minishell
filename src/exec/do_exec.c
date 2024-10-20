@@ -11,20 +11,22 @@
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-char *ft_strchgchr(char *str, char c, char chg)
+
+char	*ft_strchgchr(char *str, char c, char chg)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (!str)
-		return NULL;
+		return (NULL);
 	while (str[++i])
 	{
 		if (str[i] == c)
 			str[i] = chg;
 	}
-	return str;
+	return (str);
 }
+
 int	evaluate_quotes(t_automata *a)
 {
 	a->ostate = 0;
@@ -47,12 +49,13 @@ int	evaluate_quotes(t_automata *a)
 	return (a->state);
 }
 
-char **ft_resolve_quotes(char *line)
+char	**ft_resolve_quotes(char *line)
 {
-	char	**tmp;
-	char	**arr;
-	t_automata a;
-	t_data info;
+	char		**tmp;
+	char		**arr;
+	int			i;
+	t_automata	a;
+	t_data		info;
 
 	arr = NULL;
 	tmp = NULL;
@@ -65,7 +68,7 @@ char **ft_resolve_quotes(char *line)
 	if (!arr)
 		return (NULL);
 	ft_free_p2(info.tokens);
- 	if (!ft_strchr(arr[0], '"') && !ft_strchr(arr[0], '\''))
+	if (!ft_strchr(arr[0], '"') && !ft_strchr(arr[0], '\''))
 	{
 		tmp = ft_split(arr[0], ' ');
 		if (tmp && arr)
@@ -75,7 +78,7 @@ char **ft_resolve_quotes(char *line)
 			arr = tmp;
 		}
 	}
-	int i = -1;
+	i = -1;
 	while (arr[++i])
 	{
 		if (*arr[i] == '"')
