@@ -12,44 +12,53 @@
 
 #include "../src/headers/minishell.h"
 
-char	*ft_process_quote(char **env, char *line, int code)
+int	handle_quote_flag(int *flag, char **arr[], char *result, int i)
 {
-	char	*result;
+	if (toggle_quote_flag(flag, result, i))
+	{
+		*arr = ft_sarraddchr(*arr, result[i]);
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_special_sequence(char **arr[], char *result, int *i, int flag)
+{
+	if (result[*i] == '\\' && result[*i + 1] == 'n' && flag != 2)
+	{
+		*arr = ft_sarradd(*arr, "\n");
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+void	handle_normal_char(char **arr[], char *result, int i)
+{
+	*arr = ft_sarraddchr(*arr, result[i]);
+}
+
+char	*ft_process_quote(char **env, char *result, int code)
+{
+	char	**arr;
 	int		i;
 	int		flag;
-	char	**arr;
 
-	result = ft_strtrim(line, " ");
 	flag = ((i = -1), 0);
 	arr = NULL;
 	while (result[++i])
 	{
-		if (toggle_quote_flag(&flag, result, i))
-		{
-			arr = ft_sarraddchr(arr, result[i]);
+		if (handle_quote_flag(&flag, &arr, result, i))
 			continue ;
-		}
-		if (result[i] == '*' && flag == 0)
-		{
-			arr = ft_sarradd(arr, resolve_wildcard(&result[i], &i));
+		if (handle_wildcard(&arr, result, &i, flag))
 			continue ;
-		}
-		else if (result[i] == '$' && result[i + 1] == '?' && flag != 2)
-		{
-			arr = ft_sarradd(arr, ft_itoa(code));
-			i++;
+		if (handle_exit_code(&arr, result, &i, flag, code))
 			continue ;
-		}
-		else if (result[i] == '$' \
-		&& ft_isalpha(result[i + 1]) && flag != 2)
-		{
-			line = extract_envbyindex(result, result, env, &i);
-			arr = ft_sarradd(arr, line);
-		}
-		else if (result[i] == '\\' && result[i + 1] == 'n' && flag != 2)
-			i += (ft_sarradd(arr, "\n"), 1);
-		else
-			arr = ft_sarraddchr(arr, result[i]);
+		if (flag != 2 && handle_env_var(&arr, result, env, &i))
+			continue ;
+		if (handle_special_sequence(&arr, result, &i, flag))
+			continue ;
+		handle_normal_char(&arr, result, i);
 	}
 	if (!arr)
 		return (ft_strdup(""));

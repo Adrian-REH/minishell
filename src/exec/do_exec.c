@@ -82,7 +82,7 @@ char	**ft_resolve_quotes(char *line)
 	while (arr[++i])
 	{
 		if (*arr[i] == '"')
-			ft_strdelchr(arr[i], '"');
+			ft_strdelchr(arr[i], '\"');
 		if (*arr[i] == '\'')
 			ft_strdelchr(arr[i], '\'');
 	}

@@ -32,7 +32,7 @@ void	ft_process_quote_andprint(struct s_cmd *cmd, char *line)
 	int		flag;
 
 	result = ft_strtrim(line, " ");
-	flag = ((i = -1), 2);
+	flag = ((i = -1), 0);
 	(void)cmd;
 	while (result[++i])
 	{

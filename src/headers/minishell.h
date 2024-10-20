@@ -243,6 +243,9 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+int			handle_wildcard(char **arr[], char *result, int *i, int flag);
+int			handle_exit_code(char **arr[], char *result, int *i, int flag, int code);
+int			handle_env_var(char **arr[], char *result, char **env, int *i);
 char		**ft_sarrjoin(char **arr1, char **arr2);
 int			evaluate_quotes(t_automata *a);
 char		**ft_resolve_quotes(char *line);

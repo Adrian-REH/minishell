@@ -15,7 +15,7 @@ NAME_B = minishell_bonus
 
 CC = gcc
 
-CFLAGS = -Werror -Wall -Wextra -g3  --coverage # -fsanitize=thread 
+CFLAGS = -Werror -Wall -Wextra -g3  #--coverage # -fsanitize=thread 
 LDFLAGS = -lgcov
 
 RM = rm -rf
@@ -28,6 +28,7 @@ lib/ft_sarrtostr.c \
 lib/ft_extractenv.c \
 lib/ft_swap_lst_cmd.c \
 lib/is_open_fd.c \
+lib/handler_expansion.c \
 lib/ft_free_execs.c \
 lib/toggle_quote_flag.c \
 lib/ft_expand_tokens.c \
