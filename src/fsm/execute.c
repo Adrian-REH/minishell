@@ -104,7 +104,7 @@ t_handler	*ft_execute(t_handler *s)
 	int	i;
 
 	i = -1;
-	if (get_error() == 2)
+	if (get_error() == 2 || get_error() == 1)
 		return (s);
 	if (s->len_block == 0)
 		return (s);

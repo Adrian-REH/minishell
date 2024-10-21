@@ -30,22 +30,25 @@ static int	evaluate(t_automata *a)
 
 static int	verify_syntax(t_handler *s)
 {
-	int	i;
-	int	state[3];
+	char	**tkn;
+	int		state[3];
 
-	i = -1;
 	state[0] = 0;
 	state[1] = 0;
 	state[2] = 0;
-	while (s->info->tokens[++i])
+	tkn = s->info->tokens;
+	while (*tkn)
 	{
-		state[2] = idstr(s->operators, s->info->tokens[i]);
+		state[2] = idstr(s->operators, *tkn);
+		if (ft_strcmp(*tkn, "*") == 0)
+			state[2] = OP_WILDCARD;
 		if (s->ferror[state[0]][state[1]][state[2]])
 			return (s->ferror[state[0]][state[1]][state[2]]("", 2));
 		state[0] = state[1];
 		state[1] = state[2];
+		(tkn)++;
 	}
-	return (s->code);
+	return (0);
 }
 
 void	automata_init(t_automata *a, void *data)
@@ -55,6 +58,19 @@ void	automata_init(t_automata *a, void *data)
 	tactions_init(a);
 	a->data = data;
 	a->get_state = get_state;
+}
+
+void	ft_handler_error(t_handler *s)
+{
+	int	code;
+
+	code = 0;
+	s->code = get_error();
+	code = verify_syntax(s);
+	if (code != 2 && code != 1)
+		save_error(0);
+	else
+		s->code = get_error();
 }
 
 t_handler	*ft_parser(t_handler *s)
@@ -77,11 +93,8 @@ t_handler	*ft_parser(t_handler *s)
 		return (parser_error(s, finalstate - 4), s);
 	s->info->tokens = ft_sarradd(s->info->tokens, " ");
 	s->info->len_tokens = ft_sarrsize(s->info->tokens);
-	split_tokens(s);
-	(move_tokens(s), joins_tokens(s));
+	(split_tokens(s), move_tokens(s), joins_tokens(s));
+	ft_handler_error(s);
 	ft_expand_tokens(s);
-	s->code = verify_syntax(s);
-	s->code = get_error();
-	save_error(0);
 	return (s);
 }

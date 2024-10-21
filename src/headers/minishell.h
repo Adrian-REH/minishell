@@ -310,6 +310,8 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			empty_wildcard(char *operator, int type);
+int			ambiguous_redirect(char *operator, int type);
 int			get_error(void);
 int			syntax_error(char *operator, int type);
 void		parser_error(t_handler *s, int error);

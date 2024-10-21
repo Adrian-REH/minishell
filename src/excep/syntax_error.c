@@ -15,14 +15,26 @@
 int	syntax_error(char *operator, int type)
 {
 	if (type == 2)
-		ft_putstr_fd(" syntax error near unexpected token '", 2);
-	else if (type == 1)
-	{
-		ft_putstr_fd(" ambiguous redirect", 2);
-		return (type);
-	}
+		ft_putstr_fd(" syntax error near unexpected token `", 2);
 	ft_putstr_fd(operator, 2);
 	ft_putstr_fd("'\n", 2);
+	save_error(2);
+	return (2);
+}
+
+int	ambiguous_redirect(char *operator, int type)
+{
+	(void)operator;
+	(void)type;
+	ft_putstr_fd(" ambiguous redirect\n", 2);
+	save_error(1);
+	return (1);
+}
+
+int	empty_wildcard(char *operator, int type)
+{
+	(void)operator;
+	(void)type;
 	save_error(2);
 	return (2);
 }
