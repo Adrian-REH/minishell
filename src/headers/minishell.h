@@ -244,6 +244,7 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		*ft_chrtostr(char c);
 char		*concat_and_release(char *val, char *result, char **arr);
 int			handle_wildcard(char **arr[], char *result, int *i, int flag);
 int			handle_exit_code(char **arr[], char *result, int *i, int code);

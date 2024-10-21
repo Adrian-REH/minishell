@@ -48,20 +48,25 @@ char	**ft_sarraddchr(char **arr, char c)
 
 	if (!c)
 		return (arr);
-	size = ft_sarrsize(arr) + 2;
-	new_arr = malloc(sizeof(char *) * (size));
+	new_arr = malloc(sizeof(char *) * (ft_sarrsize(arr) + 2));
+	if (!new_arr)
+		return (NULL);
 	size = 0;
 	if (arr)
 	{
 		while (arr[size])
 		{
 			new_arr[size] = ft_strdup(arr[size]);
+			if (!new_arr[size])
+				return (ft_free_p2(new_arr), NULL);
 			size++;
 		}
-		ft_sarrfree(&arr);
+		ft_free_p2(arr);
 	}
-	new_arr[size++] = ft_substr(&c, 0, 1);
-	new_arr[size] = NULL;
+	new_arr[size] = ft_chrtostr(c);
+	if (!new_arr[size])
+		return (ft_free_p2(new_arr), NULL);
+	new_arr[++size] = NULL;
 	return (new_arr);
 }
 

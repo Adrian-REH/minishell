@@ -24,6 +24,7 @@ SRCS =	lib/ft_sarrprint.c \
 lib/ft_sarrsize.c lib/ft_chrpos.c \
 lib/ft_sarradd.c \
 lib/ft_sarrjoin.c \
+lib/ft_chrtostr.c \
 lib/ft_sarrtostr.c \
 lib/ft_extractenv.c \
 lib/ft_swap_lst_cmd.c \

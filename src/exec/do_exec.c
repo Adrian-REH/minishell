@@ -83,6 +83,8 @@ char	**ft_resolve_quotes(char *line)
 	ft_free_p2(info.tokens);
 	arr = process_arr_and_tmp(arr);
 	remove_quotes_from_arr(arr);
+	ft_free_p2(a.alphabet);
+	ft_free_p2(a.errors);
 	return (arr);
 }
 

@@ -43,6 +43,7 @@ char	*ft_process_quote(char **env, char *result, int code)
 	char	**arr;
 	int		i;
 	int		flag;
+	char	*tmp;
 
 	flag = ((i = -1), 0);
 	arr = NULL;
@@ -58,11 +59,12 @@ char	*ft_process_quote(char **env, char *result, int code)
 			continue ;
 		if (handle_special_sequence(&arr, result, &i, flag))
 			continue ;
-		handle_normal_char(&arr, result, i);
+		arr = ft_sarraddchr(arr, result[i]);
 	}
 	if (!arr)
 		return (ft_strdup(""));
-	return (ft_sarrtostr(arr, ""));
+	tmp = ft_sarrtostr(arr, "");
+	return (ft_free_p2(arr), tmp);
 }
 
 void	ft_expand_tokens(t_handler *s)
@@ -78,7 +80,7 @@ void	ft_expand_tokens(t_handler *s)
 		if (idstr(s->operators, tmp) == NOT_OPERATOR)
 		{
 			s->info->tokens[i] = ft_process_quote(s->env, tmp, s->code);
-			if (s->info->tokens[i] && tmp)
+			if (!s->info->tokens[i] && tmp)
 				free(tmp);
 		}
 	}
