@@ -81,7 +81,7 @@ int	execute_block_sequence(t_block	*b, int l_blk, int i)
 		execute_cmds(&(b[i]), 0);
 		b[i].status = ft_waiting_pid(b[i].prev_exec, b[i].len_exec_prev);
 	}
-	else
+	else if (b[i].op != OP_EMPTY)
 		b[i].status = b[i - 1].status;
 	if (b[i].len_exec_next)
 	{
@@ -94,7 +94,7 @@ int	execute_block_sequence(t_block	*b, int l_blk, int i)
 		else if (i != l_blk - 1 && st_blk(b[i].status, b[i].op, b[i].op))
 			return (1);
 	}
-	else
+	else if (b[i].op != OP_EMPTY)
 		b[i].status = b[i - 1].status;
 	return (0);
 }
