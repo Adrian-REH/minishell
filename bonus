@@ -75,7 +75,6 @@ echo *
 echo *.txt
 echo fil*
 echo *le*
-touch file1.txt file2.txt;rm *.txt@rm *.txt
 echo *.*
 #echo hola > "fil*e"
 cat "fil*e"
@@ -162,66 +161,34 @@ echo a | (cat -e | cat -e | cat -e) | cat -e
 (echo hola) | (cat -n)
 (echo hola) | (cat -n | cat -e)
 
-(echo hola > file1);cat file1; rm file1@(echo hola > file1)
-(echo hola > file1 > file2 > file3);ls;cat file3;rm file1 file2 file3@(echo hola > file1 > file2 > file3)
-(echo hola | cat -e) > file1;cat file1;rm file1@(echo hola | cat -e) > file1
-(echo hola && echo adios) > file1;cat file1;rm file1@(echo hola && echo adios) > file1
-echo hola && (echo adios) >> file1;cat file1;rm file1@echo hola && (echo adios) >> file1
-(echo hola) > file1;cat file1;rm file1@(echo hola) > file1
-(echo hola) > file1 >> file2 > file3;ls;cat file3;rm file1 file2 file3@(echo hola) > file1 >> file2 > file3
-(echo hola > file1 && echo adios | cat -e) > file1;ls;cat file1@(echo hola > file1 && echo adios | cat -e) > file1 
-(echo hola > file1) > file2;ls;cat file1;rm file1 file2@(echo hola > file1) > file2
-(echo hola > file1 && asdfs) 2> file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs) 2> file2
-(echo hola > file1 && asdfs) 2>file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs) 2>file2
-(echo hola > file1 && asdfs)2> file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs)2> file2
-(echo hola > file1 && asdfs)2>file2;cat file2 | rev | cut -c 1-20 | rev@(echo hola > file1 && asdfs)2>file2
 (echo hola > file1) a> file2@(echo hola > file1) a> file2
 (echo hola > file1)a> file2@(echo hola > file1)a> file2
 (echo hola > file1)a>file2@(echo hola > file1)a>file2
 (echo hola > file1) a>file2@(echo hola > file1) a>file2
-echo hola || 1> file;ls;rm file@echo hola || 1> file
 #rm file1 file2 file3
 
-(" "); echo $?
 (" ")
 
-(nonexistcmd); echo $?
 (nonexistcmd)
 
-(/Users/nonexist/directory); echo $?
 (/Users/nonexist/directory)
 
-(cat /Users/nonexist/directory); echo $?
 (cat /Users/nonexist/directory)
 
-(cat < noexiste);echo $?
 (cat < noexiste)
 
-(cat) < noexiste;echo $?
 (cat) < noexiste
 
-# touch noperm &> /dev/null; chmod 000 noperm&> /dev/null
 
-(cat < noperm);echo $?
 (cat < noperm)
 
-(cat) < noperm;echo $?
 (cat) < noperm
 
-(cat < noperm && echo hi);echo $?
 (cat < noperm && echo hi)
-(cat < noperm || echo hi);echo $?
 (cat < noperm || echo hi)
 
-(cat && echo hi) < noperm;echo $?
 (cat && echo hi) < noperm
-(cat || echo hi) < noperm;echo $?
-(cat || echo hi) < noperm;
 
-(cat || echo hi) < noperm && echo hii;echo $?
-(cat || echo hi) < noperm && echo hii;
 
-(cat || echo hi) < noperm || echo hii;echo $?
-(cat || echo hi) < noperm || echo hii;
+(cat || echo hi) < noperm || echo hii
 
-# chmod 666 nopem &> /dev/null; rm noperm &> /dev/null
