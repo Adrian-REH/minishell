@@ -21,14 +21,15 @@ int	reemplace_env(t_cmd *cmd, char **str, char *line)
 	{
 		if (!ft_strncmp(cmd->handler->env[i], *str, ft_strlen(*str)))
 		{
-			if (!ft_strchr(cmd->handler->env[i] + ft_strlen(str[0]), '='))
+			if (ft_strchr(cmd->handler->env[i] + ft_strlen(str[0]), '='))
 			{
-				cmd->handler->env[i] = (free(cmd->handler->env[i]), line);
-				return (1);
+				cmd->handler->env[i]
+					= (free(cmd->handler->env[i]), ft_strdup(line));
+				return (0);
 			}
 		}
 	}
-	return (0);
+	return (1);
 }
 
 static void	ft_save_env(t_cmd *cmd, char **str, char *line)
@@ -52,7 +53,7 @@ static void	ft_save_env(t_cmd *cmd, char **str, char *line)
 		cmd->status = (ft_putstr_fd(" not a valid identifier\n", 2), 1);
 	if (cmd->status)
 		return (ft_free_p2(str));
-	if (!reemplace_env(cmd, str, line))
+	if (reemplace_env(cmd, str, line))
 		cmd->handler->env = ft_sarradd(cmd->handler->env, line);
 	(ft_free_p2(str));
 }
@@ -70,7 +71,7 @@ char	*expand_env(char *result, struct s_cmd *cmd)
 		return (NULL);
 	while (arr[++j])
 	{
-		tmp = extract_env(arr[j], arr[j], cmd);
+		tmp = extract_env(arr[j], arr[j], cmd->handler->env);
 		if (tmp)
 			arr[j] = (tmp);
 		else

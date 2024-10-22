@@ -12,37 +12,12 @@
 
 #include "../../headers/minishell.h"
 
-int	toggle_quote_flag(int *flag, char *result, int i)
-{
-	if (result[i] == '\'')
-	{
-		if (*flag == 1 && ft_strchr(result + i, '\"'))
-			printf("\'");
-		if (*flag == 0)
-			*flag = 2;
-		else
-			*flag = 0;
-		return (1);
-	}
-	if (result[i] == '\"')
-	{
-		if (!*flag && ft_strchr(result + i, '\''))
-			printf("\"");
-		if (*flag == 1)
-			*flag = 2;
-		else
-			*flag = 1;
-		return (1);
-	}
-	return (0);
-}
-
-char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int *i)
+char	*extract_and_print_env(char *line, char *result, char **env, int *i)
 {
 	char	*tmp;
 
 	tmp = NULL;
-	tmp = extract_envbyindex(line, result, cmd, i);
+	tmp = extract_envbyindex(line, result, env, i);
 	if (tmp)
 		(printf("%s", tmp));
 	else
@@ -50,28 +25,19 @@ char	*extract_and_print_env(char *line, char *result, t_cmd *cmd, int *i)
 	return (tmp);
 }
 
-void	ft_process_quote(struct s_cmd *cmd, char *line)
+void	ft_process_quote_andprint(struct s_cmd *cmd, char *line)
 {
 	char	*result;
 	int		i;
 	int		flag;
 
 	result = ft_strtrim(line, " ");
-	flag = ((i = -1), 2);
+	flag = ((i = -1), 0);
+	(void)cmd;
 	while (result[++i])
 	{
-		if (toggle_quote_flag(&flag, result, i))
+		if (toggle_flag_printquote(&flag, result, i))
 			continue ;
-		if (result[i] == '$' && result[i + 1] == '?' && flag)
-		{
-			(printf("%d", cmd->handler->code), i++);
-			continue ;
-		}
-		else if (result[i] == '$' \
-		&& ft_isalpha(result[i + 1]) && flag)
-			line = extract_and_print_env(result, result, cmd, &i);
-		else if (result[i] == '\\' && result[i + 1] == 'n' && flag)
-			i += (printf("%c", '\n'), 1);
 		else
 			printf("%c", result[i]);
 	}
@@ -90,7 +56,7 @@ int	ft_exec_echo(struct s_cmd *cmd)
 	}
 	else
 		ft_print_error("command not found ", 2, cmd->line);
-	ft_process_quote(cmd, line);
+	ft_process_quote_andprint(cmd, line);
 	printf("\n");
 	exit(0);
 }
@@ -112,6 +78,6 @@ int	ft_exec_echon(struct s_cmd *cmd)
 	if (line[len] != ' ' && line[len] != '\0')
 		ft_exec_echo(cmd);
 	ft_memmove(line, line + len, strlen(line + len) + 1);
-	ft_process_quote(cmd, line);
+	ft_process_quote_andprint(cmd, line);
 	exit(0);
 }

@@ -24,7 +24,6 @@ void	sigint_handler(int signum)
 	}
 	if (signum == SIGQUIT)
 	{
-		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		save_error(131);
@@ -58,6 +57,15 @@ void	clean_and_finish(t_handler *handler)
 	handler->builtins = NULL;
 	ft_free_p2(handler->operators);
 	handler->operators = NULL;
+}
+
+void	automata_initss(t_automata *a, void *data)
+{
+	alphabet_init(a);
+	errors_init(a);
+	tactions_init(a);
+	a->data = data;
+	a->get_state = get_state;
 }
 
 int	main(int argc, char **argv, char **argenv)

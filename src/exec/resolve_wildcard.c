@@ -41,84 +41,70 @@ char	*match_name(char *fname, char *pattern)
 	return (NULL);
 }
 
-char	*add_space(char **arr, char	*result)
+int	get_substring_length(char *str)
 {
-	char	*tmp;
+	int	i;
 
-	tmp = NULL;
-	if (*arr)
-	{
-		result = ((tmp = result), ft_strjoin(tmp, " "));
-		if (tmp)
-			free(tmp);
-	}
-	return (result);
+	i = 0;
+	while (str[i] && str[i] != ' ' && str[i] != '"' && \
+	str[i] != '\'' && str[i] != ' ')
+		i++;
+	return (i);
 }
 
-char	*concat_and_release(char *val, char *result, char **arr)
+DIR	*open_directory(void)
 {
-	char	*tmp;
+	DIR	*dir;
 
-	tmp = result;
-	if (val)
-	{
-		result = ft_strjoin(tmp, val);
-		val = (free(tmp), (tmp = NULL), free(val), NULL);
-	}
-	else
-	{
-		result = ft_strjoin(tmp, *arr);
-		free(tmp);
-	}
-	if (!result && val)
-		return (free(val), NULL);
-	return (result);
+	dir = opendir(".");
+	if (!dir)
+		return (NULL);
+	return (dir);
 }
 
-char	*ft_process_wildcards(char **arr)
+char	**resolve_matching_files(DIR *dir, char *substr)
 {
-	char	*val;
-	char	*result;
-	int		flag;
-
-	result = ((val = NULL), ft_strdup(""));
-	flag = 1;
-	while (*arr)
-	{
-		if (ft_strchr(*arr, '*') && !ft_strchr(*arr, '"' ) \
-		&& !ft_strchr(*arr, '\'') && flag)
-			val = resolve_wildcard(*arr);
-		else if (ft_strchr(*arr, '\'') || ft_strchr(*arr, '\"'))
-			flag = !flag;
-		result = concat_and_release(val, result, arr);
-		result = add_space(++arr, result);
-	}
-	return (result);
-}
-
-char	*resolve_wildcard(char *str)
-{
-	DIR				*dir;
 	struct dirent	*entry;
-	char			*result;
 	char			**arr;
-	char			**tmp;
+	char			*result;
 
 	arr = NULL;
-	tmp = NULL;
-	dir = opendir(".");
 	entry = readdir(dir);
 	while (entry)
 	{
 		if (entry->d_type == DT_REG)
 		{
-			result = match_name(entry->d_name, str);
-			tmp = arr;
+			result = match_name(entry->d_name, substr);
 			if (result)
-				arr = ft_sarradd(tmp, result);
-			ft_free_p2(tmp);
+				arr = ft_sarradd(arr, result);
 		}
 		entry = readdir(dir);
 	}
+	return (arr);
+}
+
+char	*resolve_wildcard(char *str, int *j)
+{
+	char	**arr;
+	char	*substr;
+	DIR		*dir;
+	int		length;
+
+	arr = NULL;
+	dir = open_directory();
+	if (!dir)
+		return (NULL);
+	length = get_substring_length(str);
+	substr = ft_substr(str, 0, length);
+	if (!substr)
+	{
+		closedir(dir);
+		return (NULL);
+	}
+	arr = resolve_matching_files(dir, substr);
+	free(substr);
+	closedir(dir);
+	if (j && length)
+		*j += length - 1;
 	return (ft_sarrtostr(arr, " "));
 }

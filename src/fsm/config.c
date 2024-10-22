@@ -61,7 +61,7 @@ t_handler	*ft_config(t_handler *s)
 {
 	int	i;
 
-	if (get_error() == 2)
+	if (get_error() == 2 || get_error() == 1)
 		return (s);
 	s->state[0] = 0;
 	s->state[1] = 0;

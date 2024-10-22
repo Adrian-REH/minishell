@@ -63,7 +63,6 @@ void	operators_init(t_handler *a)
 	a->operators = ft_sarradd(a->operators, "&&");
 	a->operators = ft_sarradd(a->operators, "(");
 	a->operators = ft_sarradd(a->operators, ")");
-	a->operators = ft_sarradd(a->operators, "*");
 }
 
 void	errors_init_amper(t_handler *h)
@@ -77,6 +76,10 @@ void	errors_init_amper(t_handler *h)
 
 void	tactions_errors_init(t_handler *h)
 {
+	h->ferror[0][11][0] = (int (*)(void *, int))empty_wildcard;
+	h->ferror[OP_APPEND][11][0] = (int (*)(void *, int))ambiguous_redirect;
+	h->ferror[OP_GREATER][11][0] = (int (*)(void *, int))ambiguous_redirect;
+	h->ferror[OP_LESS][11][0] = (int (*)(void *, int))ambiguous_redirect;
 	h->ferror[0][OP_OR][14] = (int (*)(void *, int))syntax_error;
 	h->ferror[0][OP_AND][14] = (int (*)(void *, int))syntax_error;
 	h->ferror[0][OP_OR][0] = (int (*)(void *, int))syntax_error;

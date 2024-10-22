@@ -12,47 +12,49 @@
 
 #include "../src/headers/minishell.h"
 
-char	*get_env_substr(t_cmd *cmd, char *line, int *i, int j)
+char	*get_env_substr(char**env, char *line, int *i, int j)
 {
-	while (cmd->handler->env[++j])
+	while (env[++j])
 	{
-		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
+		if (!ft_strncmp(env[j], line, ft_strlen(line)))
 		{
 			*i += ft_strlen(line) - 1;
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
+			return (ft_strdup(env[j] + ft_strlen(line)));
 		}
 	}
 	return (NULL);
 }
 
-char	*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i)
+int	ft_ischrenv(char c)
+{
+	return ((ft_isalnum(c) || c == '_') && c != ' ' && c != '$');
+}
+
+char	*extract_envbyindex(char *line, char *result, char **env, int *i)
 {
 	char	*tmp;
 	int		limit;
 	int		j;
 
-	if (ft_strchr(result + *i + 1, '$'))
-		line = ft_strchr(result + *i + 1, '$') - 1;
-	if (ft_strchr(result + *i + 1, ' '))
-		limit = (ft_strchr(result + *i + 1, ' ') - result) - 1;
-	else
-		limit = ft_strlen(result);
-	if (limit - *i > 0)
+	limit = 0;
+	while (ft_ischrenv(result[*i + limit + 1]))
+		limit++;
+	if (limit > 0)
 	{
-		tmp = ft_substr(result, *i + 1, limit - *i);
+		tmp = ft_substr(result, *i + 1, limit);
 		line = ft_strtrim(tmp, "\"");
 		free(tmp);
 	}
 	if (ft_strchr(line, '=') == 0)
 		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
 	j = -1;
-	tmp = get_env_substr(cmd, line, i, j);
+	tmp = get_env_substr(env, line, i, j);
 	if (!tmp)
-		return (NULL);
+		return ((*i += ft_strlen(line) - 1), NULL);
 	return (tmp);
 }
 
-char	*extract_env(char *line, char *result, t_cmd *cmd)
+char	*extract_env(char *line, char *result, char **env)
 {
 	char	*tmp;
 	int		j;
@@ -70,10 +72,10 @@ char	*extract_env(char *line, char *result, t_cmd *cmd)
 	if (ft_strchr(line, '=') == 0)
 		line = ((tmp = ft_strjoin(line, "=")), free(line), tmp);
 	j = -1;
-	while (cmd->handler->env[++j])
+	while (env[++j])
 	{
-		if (!ft_strncmp(cmd->handler->env[j], line, ft_strlen(line)))
-			return (ft_strdup(cmd->handler->env[j] + ft_strlen(line)));
+		if (!ft_strncmp(env[j], line, ft_strlen(line)))
+			return (ft_strdup(env[j] + ft_strlen(line)));
 	}
 	return (NULL);
 }

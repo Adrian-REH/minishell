@@ -178,11 +178,13 @@ typedef struct s_handler
 	int					(*ferror[15][15][15])(void *, int error);
 	void				(*fta[20][20][20])(void *, int i);
 }						t_handler;
+
 /*------------EXECUTE--------------*/
+void		setup_exec_io(int j, int i, t_block *b, t_exec *exec);
 int			ft_execute_heredocs(char *end_heredoc, int *index, int output);
 void		heredoc_read(t_exec *e, int i, int j);
 void		get_execute_files(t_exec *e, int i);
-char		*resolve_wildcard(char *str);
+char		*resolve_wildcard(char *str, int *i);
 char		*ft_process_wildcards(char **arr);
 int			dispatch_command_built(t_exec *e);
 int			ft_exec_echo(t_cmd *cmd);
@@ -242,9 +244,22 @@ void		ft_conf_greater(t_handler *s, int i);
 void		ft_conf_less(t_handler *s, int i);
 void		ft_conf_cmd(t_handler *s, int i);
 /*------------UTILS--------------*/
+char		*ft_chrtostr(char c);
+char		*concat_and_release(char *val, char *result, char **arr);
+int			handle_wildcard(char **arr[], char *result, int *i, int flag);
+int			handle_exit_code(char **arr[], char *result, int *i, int code);
+int			handle_env_var(char **arr[], char *result, char **env, int *i);
+char		**ft_sarrjoin(char **arr1, char **arr2);
+int			evaluate_quotes(t_automata *a);
+char		**ft_resolve_quotes(char *line);
+char		*ft_process_quote(char **env, char *line, int code);
+char		**ft_sarraddchr(char **arr, char string);
+int			toggle_quote_flag(int *flag, char *result, int i);
+int			toggle_flag_printquote(int *flag, char *result, int i);
+void		ft_expand_tokens(t_handler *s);
 int			count_redirects(t_exec *e, int i);
-char		*extract_env(char *line, char *result, t_cmd *cmd);
-char		*extract_envbyindex(char *line, char *result, t_cmd *cmd, int *i);
+char		*extract_env(char *line, char *result, char **cmd);
+char		*extract_envbyindex(char *line, char *result, char **cmd, int *i);
 char		*ft_sarrtostr(char **arr, char *sep);
 void		swap_lst_cmd(t_exec *exec, int i_exec, t_handler *a);
 int			is_fd_open(int fd);
@@ -295,6 +310,8 @@ void		ft_print_cmds(t_cmd *c);
 void		ft_print_execs(t_exec *e, int len);
 void		ft_print_blocks(t_block *b, int len);
 /*-----------EXCEPTIONS-------------------*/
+int			empty_wildcard(char *operator, int type);
+int			ambiguous_redirect(char *operator, int type);
 int			get_error(void);
 int			syntax_error(char *operator, int type);
 void		parser_error(t_handler *s, int error);

@@ -12,23 +12,19 @@
 
 #include "../headers/minishell.h"
 
-void	setup_exec_io(int j, int i, t_block *b, t_exec *exec)
+t_exec	*select_exec_block(t_block *b, int isnext)
 {
-	if ((j == b->len_exec - 1) && \
-	(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
+	if (isnext)
 	{
-		close(b->fd[1]);
-		exec[i].file.input = b->fd[0];
-		exec[i].file.output = 1;
-		if (exec[i].cmd[1].cmd)
-			exec[i].cmd[1].towait = 1;
+		b->len_exec = b->len_exec_next;
+		return (b->next_exec);
 	}
-	if (j < (b->len_exec) && j > 0 && \
-	(exec[i].op == 3 || exec[i].op == 7 || exec[i].op == 5 || exec[i].op == 6))
+	else
 	{
-		exec[i].file.input = b->fd[0];
-		exec[i].file.output = (pipe(b->fd), b->fd[1]);
+		b->len_exec = b->len_exec_prev;
+		return (b->prev_exec);
 	}
+	return (NULL);
 }
 
 int	execute_cmds(t_block *b, int isnext)
@@ -38,21 +34,12 @@ int	execute_cmds(t_block *b, int isnext)
 	t_exec	*exec;
 
 	j = ((i = -1), 0);
-	if (isnext)
-		b->len_exec = ((exec = b->next_exec), b->len_exec_next);
-	else
-		b->len_exec = ((exec = b->prev_exec), b->len_exec_prev);
+	exec = select_exec_block(b, isnext);
 	while (++i < b->len_exec && get_error() == 0)
 	{
 		if (exec[i].func[0][0])
 		{
 			j += (setup_exec_io(j, i, b, exec), 1);
-			if (j == 1 && 1 != b->len_exec && \
-			(exec[i].op == PIPE || exec[i + 1].op == PIPE || exec[i].op == 5))
-				exec[i].file.output = (b->fd[1]);
-			else if (j == b->len_exec && \
-			(exec[i].op == PIPE || exec[i].op == HEREDOC || exec[i].op == LESS))
-				exec[i].file.output = 1;
 			if (exec[i].func[EMPTY][EMPTY])
 				exec[i].state = exec[i].func[EMPTY][EMPTY](exec, i);
 		}
@@ -83,11 +70,8 @@ int	ft_waiting_pid(t_exec *exec, int len)
 	return (exec[len - 1].status);
 }
 
-int	execute_block_sequence(t_handler *s, int i)
+int	execute_block_sequence(t_block	*b, int l_blk, int i)
 {
-	t_block	*b;
-
-	b = s->block;
 	if (b[i].len_exec_prev)
 	{
 		if (i == 0 && st_blk(0, BLOCK_EMPTY, b[i].op))
@@ -97,17 +81,21 @@ int	execute_block_sequence(t_handler *s, int i)
 		execute_cmds(&(b[i]), 0);
 		b[i].status = ft_waiting_pid(b[i].prev_exec, b[i].len_exec_prev);
 	}
+	else if (b[i].op != OP_EMPTY)
+		b[i].status = b[i - 1].status;
 	if (b[i].len_exec_next)
 	{
 		if (st_blk(b[i].status, b[i].op, b[i].op))
 			return (1);
 		execute_cmds(&(b[i]), 1);
 		b[i].status = ft_waiting_pid(b[i].next_exec, b[i].len_exec_next);
-		if (i == s->len_block - 1 && st_blk(b[i].status, b[i].op, BLOCK_EMPTY))
+		if (i == l_blk - 1 && st_blk(b[i].status, b[i].op, BLOCK_EMPTY))
 			return (1);
-		else if (i != s->len_block - 1 && st_blk(b[i].status, b[i].op, b[i].op))
+		else if (i != l_blk - 1 && st_blk(b[i].status, b[i].op, b[i].op))
 			return (1);
 	}
+	else if (b[i].op != OP_EMPTY)
+		b[i].status = b[i - 1].status;
 	return (0);
 }
 
@@ -116,13 +104,20 @@ t_handler	*ft_execute(t_handler *s)
 	int	i;
 
 	i = -1;
-	if (get_error() == 2)
+	if (get_error() == 2 || get_error() == 1)
 		return (s);
 	if (s->len_block == 0)
 		return (s);
 	while (++i < s->len_block)
 	{
-		if (execute_block_sequence(s, i) == -1)
+		if (!s->block[i - 1].priority && s->block[i].priority && \
+		s->block[i - 1].status)
+		{
+			if (s->block[i + 1].op)
+				s->block[i].status = s->block[i - 1].status;
+			continue ;
+		}
+		if (execute_block_sequence(s->block, s->len_block, i) == -1)
 			continue ;
 	}
 	return ((s->code = s->block[i - 1].status), s);
