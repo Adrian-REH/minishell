@@ -47,7 +47,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
     write(1, "\n", 1);
     write(1, "Expected result: 10\n", 20);
 
-    if (result == 10 && strcmp(dst, "worldHello") == 0) {
+    if (result == 10 && ft_strcmp(dst, "worldHello") == 0) {
         write(1, "Test passed.\n", 13);
     } else {
         write(1, "Test failed.\n", 13);

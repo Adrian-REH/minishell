@@ -39,7 +39,7 @@ char	*ft_strdup(const char *s1)
     write(1, "\"\n", 2);
     write(1, "Expected result: \"Hello, world!\"\n", 29);
 
-    if (strcmp(result, "Hello, world!") == 0) {
+    if (ft_strcmp(result, "Hello, world!") == 0) {
         write(1, "Test passed.\n", 13);
     } else {
         write(1, "Test failed.\n", 13);

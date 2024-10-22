@@ -48,7 +48,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
     write(1, exp_str, strlen(exp_str));
     write(1, "\n", 1);
 
-    if (result == strlen(src) && strcmp(dst, src) == 0) {
+    if (result == strlen(src) && ft_strcmp(dst, src) == 0) {
         write(1, "Test passed.\n", 13);
     } else {
         write(1, "Test failed.\n", 13);

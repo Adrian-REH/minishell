@@ -32,7 +32,7 @@ static int	init_cmd(t_cmd *cmd, t_handler *s, int i, int k)
 {
 	if (s->info->oid != (i + k) && s->info->tokens[i + k])
 	{
-		if (k == 1 && !strcmp(s->info->tokens[i + k], " "))
+		if (k == 1 && !ft_strcmp(s->info->tokens[i + k], " "))
 			return (1);
 		cmd->line = s->info->tokens[i + k];
 		cmd->pid = 0;
