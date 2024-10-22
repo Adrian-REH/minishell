@@ -22,7 +22,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 /* write_str(const char *str) {
-    write(1, str, strlen(str));
+    write(1, str, ft_strlen(str));
 }
 
 void write_char(char c) {

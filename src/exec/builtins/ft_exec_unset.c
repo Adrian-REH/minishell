@@ -40,7 +40,7 @@ int	ft_exec_unset(struct s_cmd *cmd)
 	if (line && (line[5] == ' ' || line[5] == 0))
 	{
 		len = ft_strlen("unset");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, ft_strlen(line + len) + 1);
 	}
 	else
 	{

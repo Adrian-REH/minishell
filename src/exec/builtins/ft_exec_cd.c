@@ -102,7 +102,7 @@ int	ft_exec_cd(t_cmd *cmd)
 	if (line && (line[2] == ' ' || line[2] == 0))
 	{
 		len = ft_strlen("cd");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, ft_strlen(line + len) + 1);
 	}
 	line = ft_strtrim(line, " ");
 	if (!line)

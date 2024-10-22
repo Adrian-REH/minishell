@@ -32,23 +32,23 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
     size_t result = ft_strlcpy(dst, src, sizeof(dst));
     write(1, "Test case:\n", 11);
     write(1, "Source string: \"", 16);
-    write(1, src, strlen(src));
+    write(1, src, ft_strlen(src));
     write(1, "\"\n", 2);
     write(1, "Copied string: \"", 16);
-    write(1, dst, strlen(dst));
+    write(1, dst, ft_strlen(dst));
     write(1, "\"\n", 2);
     write(1, "Return value: ", 14);
     char ret_str[20];
     sprintf(ret_str, "%zu", result);
-    write(1, ret_str, strlen(ret_str));
+    write(1, ret_str, ft_strlen(ret_str));
     write(1, "\n", 1);
     write(1, "Expected result: ", 17);
     char exp_str[20];
-    sprintf(exp_str, "%zu", strlen(src));
-    write(1, exp_str, strlen(exp_str));
+    sprintf(exp_str, "%zu", ft_strlen(src));
+    write(1, exp_str, ft_strlen(exp_str));
     write(1, "\n", 1);
 
-    if (result == strlen(src) && ft_strcmp(dst, src) == 0) {
+    if (result == ft_strlen(src) && ft_strcmp(dst, src) == 0) {
         write(1, "Test passed.\n", 13);
     } else {
         write(1, "Test failed.\n", 13);

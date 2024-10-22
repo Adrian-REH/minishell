@@ -52,7 +52,7 @@ int	ft_exec_echo(struct s_cmd *cmd)
 	if (line && (line[4] == ' ' || line[4] == 0))
 	{
 		len = ft_strlen("echo");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, ft_strlen(line + len) + 1);
 	}
 	else
 		ft_print_error("command not found ", 2, cmd->line);
@@ -77,7 +77,7 @@ int	ft_exec_echon(struct s_cmd *cmd)
 		len++;
 	if (line[len] != ' ' && line[len] != '\0')
 		ft_exec_echo(cmd);
-	ft_memmove(line, line + len, strlen(line + len) + 1);
+	ft_memmove(line, line + len, ft_strlen(line + len) + 1);
 	ft_process_quote_andprint(cmd, line);
 	exit(0);
 }

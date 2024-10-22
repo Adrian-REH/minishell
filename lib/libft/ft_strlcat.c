@@ -35,15 +35,15 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
     size_t result = ft_strlcat(dst, src, sizeof(dst));
     write(1, "Test case:\n", 11);
     write(1, "Source string: \"", 16);
-    write(1, src, strlen(src));
+    write(1, src, ft_strlen(src));
     write(1, "\"\n", 2);
     write(1, "Destination string: \"", 21);
-    write(1, dst, strlen(dst));
+    write(1, dst, ft_strlen(dst));
     write(1, "\"\n", 2);
     write(1, "Return value: ", 14);
     char ret_str[20];
     sprintf(ret_str, "%zu", result);
-    write(1, ret_str, strlen(ret_str));
+    write(1, ret_str, ft_strlen(ret_str));
     write(1, "\n", 1);
     write(1, "Expected result: 10\n", 20);
 

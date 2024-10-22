@@ -32,10 +32,10 @@ char	*ft_strdup(const char *s1)
     char *result = ft_strdup(s1);
     write(1, "Test case:\n", 11);
     write(1, "Source string: \"", 16);
-    write(1, s1, strlen(s1));
+    write(1, s1, ft_strlen(s1));
     write(1, "\"\n", 2);
     write(1, "Duplicated string: \"", 20);
-    write(1, result, strlen(result));
+    write(1, result, ft_strlen(result));
     write(1, "\"\n", 2);
     write(1, "Expected result: \"Hello, world!\"\n", 29);
 

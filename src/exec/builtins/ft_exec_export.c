@@ -95,7 +95,7 @@ int	ft_exec_export(struct s_cmd *cmd)
 		if (line[6] == 0)
 			return (ft_tsarrprint(cmd->handler->env, "declare -x "), 0);
 		len = ft_strlen("export");
-		ft_memmove(line, line + len, strlen(line + len) + 1);
+		ft_memmove(line, line + len, ft_strlen(line + len) + 1);
 	}
 	else
 	{
